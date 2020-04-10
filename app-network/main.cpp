@@ -1,6 +1,7 @@
 #include <iostream>
+#include "AppNetwork.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    AppNetwork * test = AppNetwork::shared();
     return 0;
 }

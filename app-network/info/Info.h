@@ -5,7 +5,15 @@
 #ifndef APP_NETWORK_INFO_H
 #define APP_NETWORK_INFO_H
 
-class MyAccount {
+#include "Codeble.h"
+
+
+
+using namespace std;
+
+class MyAccount : public Codeble {
+
+
 
 };
 
@@ -26,7 +34,8 @@ class ChatRoom {
 };
 
 class ChatChange {
-
+public:
+    unsigned int idChat;
 };
 
 #endif //APP_NETWORK_INFO_H

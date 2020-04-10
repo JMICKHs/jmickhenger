@@ -7,7 +7,10 @@
 
 
 class Client {
+public:
+    bool start();
 
+private:
 };
 
 

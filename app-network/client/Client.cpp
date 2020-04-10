@@ -3,3 +3,7 @@
 //
 
 #include "Client.h"
+
+bool Client::start() {
+    return false;
+}
