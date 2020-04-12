@@ -4,14 +4,14 @@
 #include <cstdlib>
 #include <cstdio>
 #include "test_chat.h"
+#include "test_group.h"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-    freopen("testing.log", "w", stdout);
     QApplication a(argc, argv);
     QTest::qExec(new test_chat(), argc, argv);
-    cout << endl;
+    QTest::qExec(new test_group(), argc, argv);
     return 0;
 }
