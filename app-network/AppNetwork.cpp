@@ -17,6 +17,7 @@ AppNetwork * AppNetwork::shared() {
 //    }
 //
 //    return singleton;
+    return nullptr;
 }
 
 AppNetwork::~AppNetwork() {
@@ -71,5 +72,6 @@ void AppNetwork::saveAvatar(string path, const function<void(const bool)> &callb
 bool AppNetwork::check() {
     return false;
 }
+
 
 

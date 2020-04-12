@@ -5,15 +5,17 @@
 #ifndef APP_NETWORK_CODEBLE_H
 #define APP_NETWORK_CODEBLE_H
 
+
 #include <string>
 #include "../parser-json/Parser.h"
 using namespace std;
 
 class Codeble {
 public:
+    virtual string encode() = 0;
+    virtual void decode(string pathToJson) = 0;
 protected:
     Parser parser;
-private:
 };
 
 

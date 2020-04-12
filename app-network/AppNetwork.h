@@ -5,9 +5,8 @@
 #ifndef APP_NETWORK_APPNETWORK_H
 #define APP_NETWORK_APPNETWORK_H
 
-#include "announser/Announcer.h"
+#include "announcer/Announcer.h"
 #include "client/Client.h"
-#include "info/Info.h"
 #include <string>
 #include <functional>
 #include <vector>
