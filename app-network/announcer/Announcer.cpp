@@ -6,11 +6,11 @@
 
 Announcer::Announcer() = default;
 
-void Announcer::addCallback(unsigned int idChat, const function<void(const ChatChange)>& callback) {
+void Announcer::addCallback(unsigned int idChat, const function<void(const Info::ChatChange)>& callback) {
     callbacks.insert(pair(idChat, callback));
 }
 
-void Announcer::notify(ChatChange change) {
+void Announcer::notify(Info::ChatChange change) {
 //    const function<void(const ChatChange)> f = callbacks[change.idChat];
 //    f(change);
 }

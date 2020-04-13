@@ -8,16 +8,16 @@
 
 #include <map>
 #include <functional>
-#include "../info/Info.h"
+#include "../../info/Info.h"
 
 
 class Announcer {
 public:
     Announcer();
-    void addCallback(unsigned int idChat, const function<void(const ChatChange)>& callback);
-    void notify(ChatChange change);
+    void addCallback(unsigned int idChat, const function<void(const Info::ChatChange)>& callback);
+    void notify(Info::ChatChange change);
 private:
-    map<unsigned int, const function<void(const ChatChange)>& > callbacks;
+    map<unsigned int, const function<void(const Info::ChatChange)>& > callbacks;
 };
 
 
