@@ -1,9 +1,9 @@
 //
-// Created by Sergei Alexeev on 11.04.2020.
+// Created by Sergei Alexeev on 13.04.2020.
 //
 
-#ifndef APP_NETWORK_ANNOUNCER_H
-#define APP_NETWORK_ANNOUNCER_H
+#ifndef NETWORK_CACHE_ANNOUNCER_H
+#define NETWORK_CACHE_ANNOUNCER_H
 
 
 #include <map>
@@ -21,4 +21,4 @@ private:
 };
 
 
-#endif //APP_NETWORK_ANNOUNCER_H
+#endif //NETWORK_CACHE_ANNOUNCER_H

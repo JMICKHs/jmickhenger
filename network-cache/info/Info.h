@@ -1,15 +1,13 @@
 //
-// Created by Sergei Alexeev on 11.04.2020.
+// Created by Sergei Alexeev on 13.04.2020.
 //
 
-#ifndef APP_NETWORK_INFO_H
-#define APP_NETWORK_INFO_H
-
-#endif //APP_NETWORK_INFO_H
-
+#ifndef NETWORK_CACHE_INFO_H
+#define NETWORK_CACHE_INFO_H
 
 #include "Codeble.h"
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -58,3 +56,5 @@ namespace Info {
         unsigned int idChat;
     };
 }
+
+#endif //NETWORK_CACHE_INFO_H

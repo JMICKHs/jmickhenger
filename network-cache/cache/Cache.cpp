@@ -3,6 +3,7 @@
 //
 
 #include "Cache.h"
+#include "../info/Info.h"
 
 Cache::Cache() {
     singleton = nullptr;
@@ -35,5 +36,3 @@ Info::UserInfo *Cache::getUser(int idUser) {
 vector<Info::ChatInfo> Cache::getChatList() {
     return vector<Info::ChatInfo>();
 }
-
-

@@ -1,13 +1,13 @@
 //
-// Created by Sergei Alexeev on 11.04.2020.
+// Created by Sergei Alexeev on 13.04.2020.
 //
 
-#ifndef APP_NETWORK_CODEBLE_H
-#define APP_NETWORK_CODEBLE_H
+#ifndef NETWORK_CACHE_CODEBLE_H
+#define NETWORK_CACHE_CODEBLE_H
 
 
 #include <string>
-#include "../app-network/parser-json/Parser.h"
+#include "../network/parser/Parser.h"
 using namespace std;
 
 class Codeble {
@@ -19,4 +19,4 @@ protected:
 };
 
 
-#endif //APP_NETWORK_CODEBLE_H
+#endif //NETWORK_CACHE_CODEBLE_H

@@ -2,11 +2,10 @@
 // Created by Sergei Alexeev on 13.04.2020.
 //
 
-#ifndef APP_CACHE_CACHE_H
-#define APP_CACHE_CACHE_H
+#ifndef NETWORK_CACHE_CACHE_H
+#define NETWORK_CACHE_CACHE_H
 
-#include "info/Info.h"
-#include <vector>
+#include "../info/Info.h"
 
 class Cache {
 public:
@@ -24,4 +23,5 @@ private:
 };
 
 
-#endif //APP_CACHE_CACHE_H
+
+#endif //NETWORK_CACHE_CACHE_H
