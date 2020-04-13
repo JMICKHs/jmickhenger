@@ -13,42 +13,48 @@
 
 using namespace std;
 
-class MyAccount : public Codeble {
-public:
-    unsigned int id;
-    string login;
-    string password;
-    vector<unsigned int> chats;
-    string pathToAvatar;
-    MyAccount(unsigned int id = 0,
-              string login = "",
-              string password = "",
-              vector<unsigned int> chats = vector<unsigned int>(0),
-              string pathToAvatar = "");
-    string encode() override;
-    void decode(string pathToJson) override;
-};
+namespace Info {
 
-class UserInfo {
-public:
-};
+    class MyAccount : public Codeble {
+    public:
+        unsigned int id;
+        string login;
+        string password;
+        vector<unsigned int> chats;
+        string pathToAvatar;
 
-class Message {
-public:
-private:
-};
+        MyAccount(unsigned int id = 0,
+                  string login = "",
+                  string password = "",
+                  vector<unsigned int> chats = vector<unsigned int>(0),
+                  string pathToAvatar = "");
 
-class ChatInfo {
-public:
-private:
-};
+        string encode() override;
 
-class ChatRoom {
-public:
-private:
-};
+        void decode(string pathToJson) override;
+    };
 
-class ChatChange {
-public:
-    unsigned int idChat;
-};
+    class UserInfo {
+    public:
+    };
+
+    class Message {
+    public:
+    private:
+    };
+
+    class ChatInfo {
+    public:
+    private:
+    };
+
+    class ChatRoom {
+    public:
+    private:
+    };
+
+    class ChatChange {
+    public:
+        unsigned int idChat;
+    };
+}

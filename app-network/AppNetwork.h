@@ -17,14 +17,14 @@ class AppNetwork {
 public:
     ~AppNetwork();
     static AppNetwork * shared();
-    void login(string name, string password, const function<void(const MyAccount)>& callback);
-    void registration(MyAccount acc, const function<void(const int)>& callback); //если id == 0, то неудачно
-    void getListChat(unsigned int idUser, const function<void(const vector<ChatInfo>)>& callback);
-    void getChatRoom(unsigned int idChat, const function<void(const ChatRoom)>& callback);
-    void setObserverChat(unsigned int idChat, const function<void(const ChatChange)>& callback);
-    void sendMessage(Message msg, const function<void(const bool)>& callback); // отправилось или нет bool
-    void getUser(unsigned int id, const function<void(const UserInfo)>& callback);
-    void getMyAccount(MyAccount acc, const function<void(const MyAccount)>& callback);
+    void login(string name, string password, const function<void(const Info::MyAccount)>& callback);
+    void registration(Info::MyAccount acc, const function<void(const int)>& callback); //если id == 0, то неудачно
+    void getListChat(unsigned int idUser, const function<void(const vector<Info::ChatInfo>)>& callback);
+    void getChatRoom(unsigned int idChat, const function<void(const Info::ChatRoom)>& callback);
+    void setObserverChat(unsigned int idChat, const function<void(const Info::ChatChange)>& callback);
+    void sendMessage(Info::Message msg, const function<void(const bool)>& callback); // отправилось или нет bool
+    void getUser(unsigned int id, const function<void(const Info::UserInfo)>& callback);
+    void getMyAccount(Info::MyAccount acc, const function<void(const Info::MyAccount)>& callback);
     void saveAvatar(string path, const function<void(const bool)>& callback); // отправилось или нет bool
     bool check();
 private:
