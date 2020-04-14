@@ -1,6 +1,6 @@
 #include <iostream>
 #include "network/AppNetwork.h"
-#include "cache/Cache.h"
+#include "network/cache/Cache.h"
 
 using namespace std;
 

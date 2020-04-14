@@ -8,7 +8,7 @@
 
 #include <map>
 #include <functional>
-#include "../../info/Info.h"
+#include "../info/Info.h"
 
 
 class Announcer {
