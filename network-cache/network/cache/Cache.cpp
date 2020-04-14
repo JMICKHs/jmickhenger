@@ -6,11 +6,7 @@
 #include "../info/Info.h"
 
 Cache::Cache() {
-    singleton = nullptr;
-}
-
-Cache *Cache::shared() {
-    return nullptr;
+    //
 }
 
 bool Cache::save(Info::MyAccount acc) {

@@ -8,53 +8,91 @@
 #include "Codeble.h"
 #include <vector>
 #include <string>
+#include <ctime>
 
 using namespace std;
 
 namespace Info {
 
-    class MyAccount : public Codeble {
+    class MyAccount: virtual Codeble {
     public:
-        unsigned int id;
+        int id;
         string login;
-        string password;
-        vector<unsigned int> chats;
         string pathToAvatar;
-
-        MyAccount(unsigned int id = 0,
-                  string login = "",
-                  string password = "",
-                  vector<unsigned int> chats = vector<unsigned int>(0),
-                  string pathToAvatar = "");
-
-        string encode() override;
-
-        void decode(string pathToJson) override;
+        string password;
+        vector<int> chats;
+        MyAccount() {}
+        string encode() { return "NIL"; }
+        void decode(string json) {}
     };
 
-    class UserInfo {
+    class UserInfo: virtual Codeble {
     public:
+        int id;
+        string login;
+        string pathToAvatar;
+        UserInfo() {}
+        string encode() { return "NIL"; }
+        void decode(string json) {}
     };
 
-    class Message {
+    class Message: virtual Codeble {
     public:
+        int chatId;
+        int number;
+        string text;
+        int idOwner;
+        time_t timesend;
+        bool checked;
+        Message() {}
+        string encode() { return "NIL"; }
+        void decode(string json) {}
     private:
     };
 
-    class ChatInfo {
+    class ChatInfo: virtual Codeble {
     public:
+        int idChat;
+        string name;
+        ChatInfo(int id, string name) {}
+        string encode() { return "NIL"; }
+        void decode(string json) {}
     private:
     };
 
-    class ChatRoom {
+    class ChatRoom: virtual Codeble {
     public:
+        string name;
+        int idChat;
+        vector<int> idUsers;
+        vector<int> idAdmins;
+        ChatRoom() {}
+        string encode() { return "NIL"; }
+        void decode(string json) {}
     private:
     };
 
-    class ChatChange {
+    class ChatChange: Codeble {
     public:
-        unsigned int idChat;
+        int idChat;
+        string action;
+        vector<Info::Message> messages;
+        ChatChange() {}
+        string encode() { return "NIL"; }
+        void decode(string json) {}
     };
+
+    class Reply: Codeble {
+    public:
+        string err;
+        int status;
+        int cmd;
+        string body;
+        Reply() {}
+        string encode() { return "NIL"; }
+        void decode(string json) {}
+    };
+
 }
 
 #endif //NETWORK_CACHE_INFO_H

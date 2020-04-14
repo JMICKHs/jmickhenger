@@ -9,7 +9,7 @@
 
 class Cache {
 public:
-    static Cache * shared();
+    Cache();
     bool save(Info::MyAccount acc);
     bool save(Info::UserInfo user);
     bool save(vector<Info::ChatInfo> chatList);
@@ -18,8 +18,6 @@ public:
     vector<Info::ChatInfo> getChatList();
 private:
     // sqlite3 db;
-    Cache * singleton;
-    Cache();
 };
 
 

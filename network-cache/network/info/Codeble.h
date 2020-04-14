@@ -13,7 +13,7 @@ using namespace std;
 class Codeble {
 public:
     virtual string encode() = 0;
-    virtual void decode(string pathToJson) = 0;
+    virtual void decode(string json) = 0;
 protected:
     Parser parser;
 };
