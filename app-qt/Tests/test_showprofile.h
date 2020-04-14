@@ -4,18 +4,19 @@
 #include <QtTest>
 #include "../mainwindow.h"
 
-class test_ShowProfile : public MainWindow
+class test_showprofile : public MainWindow
 {
     Q_OBJECT
 
 public:
-    test_ShowProfile();
-    ~test_ShowProfile();
+    test_showprofile();
+    ~test_showprofile();
 
 
 
 private slots:
     void test_ShowProfile1();
+    void test_ShowProfile2();
 };
 
 #endif // TEST_SHOWPROFILE_H

@@ -1,20 +1,42 @@
 #include "chatlist.h"
 #include <QDebug>
-
+#include <QLabel>
 ChatList::ChatList(QWidget *parent)
     : QListWidget(parent)
 {
-
+    getChatRoomCallback = [](std::vector<Message> &items){};
 }
 
-std::vector<QListWidgetItem> ChatList::getItems()
+std::list<QListWidgetItem*> ChatList::getItems()
 {
-    return items;
+    std::list<QListWidgetItem*> listItems;
+    for(int i = 0; i < this->count(); ++i){
+        listItems.push_back(this->item(i));
+    }
+    qDebug()<<itemWidget(listItems.back())->findChild<QLabel*>("text")->text();
+    return listItems;
 }
 
+void ChatList::getItemsFromNet()
+{
+
+}
 void ChatList::newMessage(const Message &message)
 {
-    QListWidgetItem item;
-    item.setText(message.text);
-    items.push_back(item);
+}
+
+
+MessageWidget::MessageWidget()
+{
+
+}
+
+int MessageWidget::getId() const
+{
+    return id;
+}
+
+void MessageWidget::setId(int _id)
+{
+    id = _id;
 }

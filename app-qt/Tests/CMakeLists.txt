@@ -4,11 +4,12 @@ set(SOURCE_FILES  ../mainwindow.cpp
     ../grouplist.cpp
     ../menuwidget.cpp
     ../chatlist.cpp
-    ../datashowwidget.cpp)
+    ../datashowwidget.cpp
+    ../authwidget.cpp)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-
+include_directories("${PROJECT_SOURCE_DIR}/include")
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -27,9 +28,21 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
      test_group.h
      test_showprofile.cpp
      test_showprofile.h
+     test_client.cpp
      ${SOURCE_FILES}
     )
 add_test(NAME test_chat COMMAND test_chat)
 add_test(NAME test_group COMMAND test_group)
 
-target_link_libraries(Tests PRIVATE Qt5::Widgets Qt5::Test)
+foreach(file ${tests})
+    set(name)
+    get_filename_component(name ${file} NAME_WE)
+    add_executable("${name}_tests"
+            ${sources}
+            ${file}
+            "${PROJECT_SOURCE_DIR}/Tests/main.cpp")
+    target_link_libraries("${name}_tests" gtest_main)
+    add_test(NAME ${name} COMMAND "${name}_tests")
+endforeach()
+
+target_link_libraries(Tests PRIVATE Qt5::Widgets Qt5::Test gtest_main gmock_main)

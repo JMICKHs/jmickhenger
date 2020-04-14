@@ -16,7 +16,9 @@ public:
 
 private slots:
     void test_gr1();
-
+    void test_gr2();
+    void test_gr3();
+    void test_gr4();
 
 };
 

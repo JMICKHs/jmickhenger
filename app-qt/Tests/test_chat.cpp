@@ -4,8 +4,7 @@
 
 test_chat::test_chat()
 {
-    createObjects();
-    linkObjects();
+
 }
 
 test_chat::~test_chat()
