@@ -10,7 +10,6 @@
 #include <functional>
 #include "../info/Info.h"
 
-
 class Announcer {
 public:
     Announcer() {}

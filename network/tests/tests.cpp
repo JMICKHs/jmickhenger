@@ -5,7 +5,9 @@
 #include "vector"
 #include "../client/Client.h"
 #include "../AppNetwork.h"
-
+#include "stack"
+using ::testing::_;
+using ::testing::Return;
 
 TEST(cache, test1) {
     Cache cache;
@@ -172,28 +174,49 @@ TEST(codeble, test4) {
     ASSERT_EQ(info1.idUsers, info2.idUsers);
     ASSERT_EQ(info1.idAdmins, info2.idAdmins);
 }
-//TEST(codeble, test5) {
-//    // проверить ChatChange
-//}
-//
-//TEST(codeble, test6) {
-//    // проверить MyAccount
-//}
-//
-//TEST(codeble, test7) {
-//    // проверить UserInfo
-//}
-//
-//TEST(codeble, test8) {
-//    // проверить Message
-//}
-//
-
+TEST(codeble, test5) {
+    string json = "{"
+                  "\"idChat\": 22"
+                  "\"action\": \"add\""
+                  "\"messages\": ["
+                    "\"chatId\": 22"
+                    "\"number\": 0"
+                    "\"text\": \"text\""
+                    "\"timesend\": 22"
+                    "\"checked\": true"
+                  "]"
+                  "\"idAdmins\": [3]"
+                  "}";
+    Info::Message msg;
+    msg.chatId = 22;
+    msg.number = 0;
+    msg.text = "text";
+    msg.timesend = 22;
+    msg.checked = true;
+    vector<Info::Message> vec;
+    vec.push_back(msg);
+    Info::ChatChange info;
+    info.idChat = 22;
+    info.action = "add";
+    info.messages = vec;
+    Info::ChatChange test;
+    test.decode(json);
+    ASSERT_EQ(test.idChat, info.idChat);
+    ASSERT_EQ(test.action, info.action);
+    ASSERT_EQ(test.messages.size(), info.messages.size());
+    ASSERT_EQ(test.messages[0].chatId, info.messages[0].chatId);
+    ASSERT_EQ(test.messages[0].number, info.messages[0].number);
+    ASSERT_EQ(test.messages[0].text, info.messages[0].text);
+    ASSERT_EQ(test.messages[0].timesend, info.messages[0].timesend);
+    ASSERT_EQ(test.messages[0].checked, info.messages[0].checked);
+}
 
 class MockClient: public Client {
+public:
     MOCK_METHOD2(login, Info::MyAccount(string nick, string pass));
     MOCK_METHOD1(registration, int(Info::MyAccount));
     MOCK_METHOD1(getChatList, vector<Info::ChatInfo>(int));
+    MOCK_METHOD0(cacthChange, Info::ChatChange());
 };
 
 TEST(network, test1) {
@@ -204,9 +227,56 @@ TEST(network, test1) {
         ASSERT_EQ(net == nullptr, false);
         return;
     }
-    EXPECT_CALL(client, make_query(_, _)).Times(0);
+    EXPECT_CALL(client, login(_, _)).Times(1).WillRepeatedly(Return(Info::MyAccount()));
     net->clientDelegate = client;
     net->login("test", "123", []( Info::MyAccount acc){});
+}
 
+TEST(network, test2) {
+    //проверка регистрации
+    MockClient client;
+    AppNetwork *net = AppNetwork::shared();
+    if (net == nullptr) {
+        ASSERT_EQ(net == nullptr, false);
+        return;
+    }
+    EXPECT_CALL(client, registration(_)).Times(1).WillRepeatedly(Return(202));
+    net->clientDelegate = client;
+    net->registration(Info::MyAccount(), [](int a){
+        ASSERT_EQ(a, 202);
+    });
+}
 
+TEST(network, test3) {
+    //проверка получения листа чатов
+    MockClient client;
+    AppNetwork *net = AppNetwork::shared();
+    if (net == nullptr) {
+        ASSERT_EQ(net == nullptr, false);
+        return;
+    }
+    EXPECT_CALL(client, getChatList(_)).Times(1).WillRepeatedly(Return(vector<Info::ChatInfo>(10)));
+    net->clientDelegate = client;
+    net->getListChat(5, [](vector<Info::ChatInfo> vec) {
+        ASSERT_EQ(vec.size(), 10);
+    });
+}
+
+TEST(network, test4) {
+    MockClient client;
+    AppNetwork *net = AppNetwork::shared();
+    if (net == nullptr) {
+        ASSERT_EQ(net == nullptr, false);
+        return;
+    }
+    Info::ChatChange change;
+    change.idChat = 30;
+    stack<Info::ChatChange> st;
+    st.push(change);
+    st.push(change);
+    int c = 0;
+    EXPECT_CALL(client, cacthChange).Times(2).WillRepeatedly(Return(st.top()));
+    net->clientDelegate = client;
+    net->setObserverChat(30, [&c](Info::ChatChange){ c++; });
+    ASSERT_EQ(c, 2);
 }

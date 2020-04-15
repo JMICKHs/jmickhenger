@@ -17,7 +17,6 @@ public:
     void start() {}
     void close() {}
     Info::ChatChange cacthChage() {}
-
     Info::MyAccount login(string, string) {}
     int registration(Info::MyAccount) {}
     vector<Info::ChatInfo> getChatList(int idUser) {}

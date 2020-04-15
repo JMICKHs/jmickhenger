@@ -37,20 +37,17 @@ namespace Info {
         void decode(string json) {}
     };
 
-    class UserInfo : virtual Codeble {
+    class UserInfo : protected Codeble {
     public:
         int id;
         string login;
         string pathToAvatar;
-
         UserInfo() {}
-
         string encode() { return "NIL"; }
-
         void decode(string json) {}
     };
 
-    class Message : virtual Codeble {
+    class Message : protected Codeble {
     public:
         int chatId;
         int number;
@@ -58,70 +55,53 @@ namespace Info {
         int idOwner;
         time_t timesend;
         bool checked;
-
         Message() {}
-
         string encode() { return "NIL"; }
-
         void decode(string json) {}
-
     private:
     };
 
-    class ChatInfo : virtual Codeble {
+    class ChatInfo : protected Codeble {
     public:
         int idChat;
         string name;
-
+        ChatInfo() {}
         ChatInfo(int id, string name) {}
-
         string encode() { return "NIL"; }
-
         void decode(string json) {}
-
     private:
     };
 
-    class ChatRoom : virtual Codeble {
+    class ChatRoom : protected Codeble {
     public:
         string name;
         int idChat;
         vector<int> idUsers;
         vector<int> idAdmins;
-
         ChatRoom() {}
-
         string encode() { return "NIL"; }
-
         void decode(string json) {}
-
     private:
     };
 
-    class ChatChange : Codeble {
+    class ChatChange : protected Codeble {
     public:
         int idChat;
         string action;
         vector<Message> messages;
-
         ChatChange() {}
-
         string encode() { return "NIL"; }
-
         void decode(string json) {}
     };
 
-    class Reply : Codeble {
+    class Reply : protected Codeble {
     public:
         string err;
         int status;
         int cmd;
         string body;
-
         Reply() {}
-
         string encode() { return "NIL"; }
-
         void decode(string json) {}
     };
 }
