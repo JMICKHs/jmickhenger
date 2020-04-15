@@ -19,7 +19,7 @@ using namespace std;
 class AbstractNetwork {
 public:
     AbstractNetwork() = default;
-    Client clientDelegate;
+
     virtual Info::MyAccount * getMe() { return nullptr; }
     virtual void login(string name, string password, const function<void(const Info::MyAccount)>& callback) = 0;
     virtual void registration(Info::MyAccount acc, const function<void(const int)>& callback) = 0; //если id == 0, то неудачно
