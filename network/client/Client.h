@@ -11,9 +11,10 @@
 #include "../info/Info.h"
 using namespace std;
 
+
 class Client {
 public:
-    Client() {}
+    Client() = default;
     void start() {}
     void close() {}
     Info::ChatChange cacthChage() {}

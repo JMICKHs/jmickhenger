@@ -17,7 +17,7 @@ public:
     virtual string encode() = 0;
     virtual void decode(string json) = 0;
 protected:
-    Parser parser;
+    AbstractParser * parser;
 };
 
 namespace Info {

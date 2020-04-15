@@ -11,11 +11,30 @@
 #include "../info/Info.h"
 
 
-class Parser {
+class AbstractParser {
+public:
+    std::string json;
+    AbstractParser() = default;
+    virtual void createJson() = 0;
+    virtual void setJson(std::string body) = 0;
+    virtual void setInt(int n, std::string name) = 0;
+    virtual void setString(std::string n, std::string name) = 0;
+    virtual void setDate(std::string n, std::string name) = 0;
+    virtual void setBool(bool b, std::string name) = 0;
+    virtual void setMatrixInt(std::vector<int> n, std::string name) = 0;
+    virtual int getInt(std::string name) = 0;
+    virtual std::string getString(std::string name) = 0;
+    virtual int getDate(std::string name) = 0;
+    virtual bool getBool(std::string name) = 0;
+    virtual std::vector<int> setMatrixInt(std::string name) = 0;
+};
+
+class Parser: public AbstractParser {
 private:
     // boost::property_tree::ptree
 public:
     Parser() {}
+    ~Parser() {}
     std::string json;
     void createJson() {}
     void setJson(std::string body) {}

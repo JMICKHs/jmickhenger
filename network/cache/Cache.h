@@ -8,7 +8,18 @@
 
 #include "../info/Info.h"
 
-class Cache {
+class AbstractCache {
+public:
+    AbstractCache() = default;
+    virtual bool save(Info::MyAccount acc) = 0;
+    virtual bool save(Info::UserInfo user) = 0;
+    virtual bool save(vector<Info::ChatInfo> chatList) = 0;
+    virtual Info::MyAccount * getMyAccount() = 0;
+    virtual Info::UserInfo * getUser(int idUser) = 0;
+    virtual vector<Info::ChatInfo> getChatList() = 0;
+};
+
+class Cache: public AbstractCache {
 public:
     Cache() {}
     bool save(Info::MyAccount acc) {}
