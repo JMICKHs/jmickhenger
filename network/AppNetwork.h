@@ -1,14 +1,15 @@
 //
-// Created by Sergei Alexeev on 13.04.2020.
+// Created by Sergei Alexeev on 15.04.2020.
 //
 
-#ifndef NETWORK_CACHE_APPNETWORK_H
-#define NETWORK_CACHE_APPNETWORK_H
+#ifndef NETWORK_APPNETWORK_H
+#define NETWORK_APPNETWORK_H
 
 
 #include "announcer/Announcer.h"
 #include "client/Client.h"
 #include "cache/Cache.h"
+#include "info/Info.h"
 #include <string>
 #include <functional>
 #include <vector>
@@ -39,6 +40,4 @@ private:
     AppNetwork();
 };
 
-
-
-#endif //NETWORK_CACHE_APPNETWORK_H
+#endif //NETWORK_APPNETWORK_H

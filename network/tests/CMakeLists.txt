@@ -1,6 +1,9 @@
-include_directories("${PROJECT_SOURCE_DIR}/network")
 
-file(GLOB sources "${PROJECT_SOURCE_DIR}/*.cpp")
+
+file(GLOB sources
+        "${PROJECT_SOURCE_DIR}/*.h"
+        "${PROJECT_SOURCE_DIR}/*.cpp")
+#file(GLOB sources "${PROJECT_SOURCE_DIR}/*.cpp")
 list(REMOVE_ITEM sources "${PROJECT_SOURCE_DIR}/main.cpp")
 
 file(GLOB tests "${PROJECT_SOURCE_DIR}/tests/*.cpp")

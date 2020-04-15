@@ -3,11 +3,7 @@
 //
 
 #include "Cache.h"
-#include "../info/Info.h"
 
-Cache::Cache() {
-    //
-}
 
 bool Cache::save(Info::MyAccount acc) {
     return false;

@@ -1,16 +1,19 @@
 //
-// Created by Sergei Alexeev on 13.04.2020.
+// Created by Sergei Alexeev on 15.04.2020.
 //
 
-#ifndef NETWORK_CACHE_CLIENT_H
-#define NETWORK_CACHE_CLIENT_H
+#ifndef NETWORK_CLIENT_H
+#define NETWORK_CLIENT_H
+
 
 #include "string"
 #include <vector>
 #include "../info/Info.h"
+using namespace std;
 
 class Client {
 public:
+    Client() {}
     void start() {}
     void close() {}
     Info::ChatChange cacthChage() {}
@@ -28,4 +31,4 @@ private:
 };
 
 
-#endif //NETWORK_CACHE_CLIENT_H
+#endif //NETWORK_CLIENT_H

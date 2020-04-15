@@ -1,9 +1,9 @@
 #include "gtest/gtest.h"
-#include "../network/cache/Cache.h"
+#include "../cache/Cache.h"
 #include "string"
-#include "../network/info/Info.h"
-#include "../network/client/Client.h"
-#include "../network/AppNetwork.h"
+#include "vector"
+#include "../client/Client.h"
+#include "../AppNetwork.h"
 
 
 TEST(cache, test1) {
@@ -19,7 +19,10 @@ TEST(cache, test1) {
     if (test == nullptr) {
         ASSERT_EQ(test == nullptr, false);
     } else {
-        ASSERT_EQ(info, *(test));
+        ASSERT_EQ(info.id, test->id);
+        ASSERT_EQ(info.login, test->login);
+        ASSERT_EQ(info.pathToAvatar, test->pathToAvatar);
+        ASSERT_EQ(info.chats, test->chats);
     }
 }
 
@@ -39,14 +42,18 @@ TEST(cache, test2) {
     if (test == nullptr) {
         ASSERT_EQ(test == nullptr, false);
     } else {
-        ASSERT_EQ(u2, *(test));
+        ASSERT_EQ(u2.id, test->id);
+        ASSERT_EQ(u2.login, test->login);
+        ASSERT_EQ(u2.pathToAvatar, test->pathToAvatar);
     }
 
     test = cache.getUser(203);
     if (test == nullptr) {
         ASSERT_EQ(test == nullptr, false);
     } else {
-        ASSERT_EQ(u1, *(test));
+        ASSERT_EQ(u1.id, test->id);
+        ASSERT_EQ(u1.login, test->login);
+        ASSERT_EQ(u1.pathToAvatar, test->pathToAvatar);
     }
 }
 
@@ -58,11 +65,38 @@ TEST(cache, test3) {
     vector<Info::ChatInfo> vec = {i1, i2, i3};
     cache.save(vec);
     vector<Info::ChatInfo> test = cache.getChatList();
-    ASSERT_EQ(vec, test);
+    ASSERT_EQ(test.size(), vec.size());
+    for(size_t i = 0; i < vec.size(); ++i) {
+        ASSERT_EQ(vec[i].idChat, test[i].idChat);
+        ASSERT_EQ(vec[i].name, test[i].name);
+    }
+
 }
 
 TEST(announcer, test1) {
-    ASSERT_EQ(true, true);
+    int counter = 0;
+    function<void(const Info::ChatChange)> f = [&counter](const Info::ChatChange change) {counter++;};
+    Announcer announcer;
+    announcer.addCallback(3, f);
+    announcer.addCallback(4, f);
+    announcer.addCallback(5, f);
+    Info::ChatChange change;
+    change.idChat = 5;
+    announcer.notify(change);
+    announcer.notify(change);
+    announcer.notify(change);
+    announcer.notify(change);
+    change.idChat = 7;
+    announcer.notify(change);
+    announcer.notify(change);
+    announcer.notify(change);
+    announcer.notify(change);
+    change.idChat = 3;
+    announcer.notify(change);
+    announcer.notify(change);
+    announcer.notify(change);
+    announcer.notify(change);
+    ASSERT_EQ(counter, 8);
 }
 
 TEST(codeble, test1) {
@@ -152,18 +186,18 @@ TEST(codeble, test7) {
 TEST(codeble, test8) {
     // проверить Message
 }
-
-////мок для Client
 //
-//class MockClient : public Client {
-//public:
-//    MockClient() {}
-//    ~MockClient();
-//private:
-//};
-//
-//TEST(network, test1) {
-//    AppNetwork * net = AppNetwork::shared();
-//    net->clientDelegate = MockClient();
-//    ASSERT_EQ(true, true);
+//////мок для Client
+////
+////class MockClient : public Client {
+////public:
+////    MockClient() {}
+////    ~MockClient();
+////private:
+////};
+////
+////TEST(network, test1) {
+////    AppNetwork * net = AppNetwork::shared();
+////    net->clientDelegate = MockClient();
+////    ASSERT_EQ(true, true);
 //}
