@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 #include "../cache/Cache.h"
 #include "string"
 #include "vector"
@@ -171,33 +172,41 @@ TEST(codeble, test4) {
     ASSERT_EQ(info1.idUsers, info2.idUsers);
     ASSERT_EQ(info1.idAdmins, info2.idAdmins);
 }
-TEST(codeble, test5) {
-    // проверить ChatChange
-}
-
-TEST(codeble, test6) {
-    // проверить MyAccount
-}
-
-TEST(codeble, test7) {
-    // проверить UserInfo
-}
-
-TEST(codeble, test8) {
-    // проверить Message
-}
-//
-//////мок для Client
-////
-////class MockClient : public Client {
-////public:
-////    MockClient() {}
-////    ~MockClient();
-////private:
-////};
-////
-////TEST(network, test1) {
-////    AppNetwork * net = AppNetwork::shared();
-////    net->clientDelegate = MockClient();
-////    ASSERT_EQ(true, true);
+//TEST(codeble, test5) {
+//    // проверить ChatChange
 //}
+//
+//TEST(codeble, test6) {
+//    // проверить MyAccount
+//}
+//
+//TEST(codeble, test7) {
+//    // проверить UserInfo
+//}
+//
+//TEST(codeble, test8) {
+//    // проверить Message
+//}
+//
+
+
+class MockClient: public Client {
+    MOCK_METHOD2(login, Info::MyAccount(string nick, string pass));
+    MOCK_METHOD1(registration, int(Info::MyAccount));
+    MOCK_METHOD1(getChatList, vector<Info::ChatInfo>(int));
+};
+
+TEST(network, test1) {
+    // проверить Message
+    MockClient client;
+    AppNetwork * net = AppNetwork::shared();
+    if (net == nullptr) {
+        ASSERT_EQ(net == nullptr, false);
+        return;
+    }
+    EXPECT_CALL(client, make_query(_, _)).Times(0);
+    net->clientDelegate = client;
+    net->login("test", "123", []( Info::MyAccount acc){});
+
+
+}

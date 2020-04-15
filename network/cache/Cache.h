@@ -14,8 +14,8 @@ public:
     bool save(Info::MyAccount acc) {}
     bool save(Info::UserInfo user) {}
     bool save(vector<Info::ChatInfo> chatList) {}
-    Info::MyAccount * getMyAccount() {}
-    Info::UserInfo * getUser(int idUser) {}
+    Info::MyAccount * getMyAccount() { return nullptr; }
+    Info::UserInfo * getUser(int idUser) { return nullptr; }
     vector<Info::ChatInfo> getChatList() { return {}; }
 private:
     // sqlite3 db;

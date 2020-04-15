@@ -16,6 +16,6 @@ foreach(file ${tests})
             ${sources}
             ${file}
             "${PROJECT_SOURCE_DIR}/tests/main.cpp")
-    target_link_libraries("${name}_tests" gtest_main)
+    target_link_libraries("${name}_tests" gtest_main gmock_main)
     add_test(NAME ${name} COMMAND "${name}_tests")
 endforeach()
