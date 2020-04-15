@@ -1,5 +1,4 @@
 #include <QtTest>
-#include "../mainwindow.h"
 #include "test_chat.h"
 
 test_chat::test_chat()

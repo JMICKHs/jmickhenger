@@ -29,21 +29,21 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
  add_executable(jmichkenger
     main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    chatlist.cpp
-    chatlist.h
-    customButton.h
-    custombutton.cpp
-    menuwidget.cpp
-    menuwidget.h
-    datashowwidget.cpp
-    datashowwidget.h
-    profiledata.h
-    grouplist.cpp
-    grouplist.h
-    authwidget.cpp
-    authwidget.h
+    mainwindow/mainwindow.cpp
+    mainwindow/mainwindow.h
+    chatlist/chatlist.cpp
+    chatlist/chatlist.h
+    custommbutton/customButton.h
+    custommbutton/custombutton.cpp
+    menuwidget/menuwidget.cpp
+    menuwidget/menuwidget.h
+    datashowwidget/datashowwidget.cpp
+    datashowwidget/datashowwidget.h
+    profiledata/profiledata.h
+    grouplist/grouplist.cpp
+    grouplist/grouplist.h
+    authwidget/authwidget.cpp
+    authwidget/authwidget.h
  )
 
 

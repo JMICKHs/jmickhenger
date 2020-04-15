@@ -2,7 +2,7 @@
 #define TEST_SHOWPROFILE_H
 
 #include <QtTest>
-#include "../mainwindow.h"
+#include "../mainwindow/mainwindow.h"
 
 class test_showprofile : public MainWindow
 {

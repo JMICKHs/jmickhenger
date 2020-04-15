@@ -2,7 +2,7 @@
 #define TEST_CHAT_H
 
 #include <QtTest>
-#include "../mainwindow.h"
+#include "../mainwindow/mainwindow.h"
 
 
 

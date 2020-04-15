@@ -1,11 +1,11 @@
 INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR} )
-set(SOURCE_FILES  ../mainwindow.cpp
-    ../custombutton.cpp
-    ../grouplist.cpp
-    ../menuwidget.cpp
-    ../chatlist.cpp
-    ../datashowwidget.cpp
-    ../authwidget.cpp)
+set(SOURCE_FILES  ../mainwindow/mainwindow.cpp
+    ../custommbutton/custombutton.cpp
+    ../grouplist/grouplist.cpp
+    ../menuwidget/menuwidget.cpp
+    ../chatlist/chatlist.cpp
+    ../datashowwidget/datashowwidget.cpp
+    ../authwidget/authwidget.cpp)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

@@ -1,35 +1,58 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include <iostream>
-#include "../mainwindow.h"
+#include "../mainwindow/mainwindow.h"
 #include <functional>
 
-//struct UserInfo{
-//    int i;
-//    QString name;
-//};
-//using ::testing::AtLeast;
-//using ::testing::Return;
-//using ::testing::_;
+using namespace  std;
+using ::testing::AtLeast;
+using ::testing::Return;
+using ::testing::_;
 
-//class AppNetwork{
+class AppNetwork{
 
-//public:
-//    virtual void getUser(unsigned int, const std::function<void(const UserInfo)> &) = 0;
-//    virtual void getChatRoom(unsigned int, const std::function<void(const ChatRoom)> &) = 0;
-//};
+public:
+   void getMessages(int id, std::function<void( std::function<void(std::vector<Message>)>)> func);
+   void getChatRoom(int id, std::function<void(const ChatRoom)&> func );
+};
 
-//class MockAppNetwork : public AppNetwork
-//{
-//public:
-//  MOCK_METHOD2(getUser,void(unsigned int, const std::function<void(const UserInfo)>&));
-//  MOCK_METHOD2(getChatRoom,void(unsigned int, const std::function<void(const ChatRoom)>&));
-//};
+class MockAppNetwork : public AppNetwork
+{
+public:
+  MOCK_METHOD2(getMessages,void(int id,  std::function<void( std::function<void(std::vector<Message>)>)> func));
+  MOCK_METHOD2(getChatRoom,void(int id ,  std::function<void(const ChatRoom)> func));
 
-//TEST( network, case1 ) {
-//    MainWindow window;
-//    MockAppNetwork mock;
-//    window.searchById(3);
+};
+template<typename T, typename... U>
 
-//    EXPECT_CALL(mock, getChatRoom(3,window.getGroupList().getChatRoomCallback)).WillOnce(Return(3));
-//}
+size_t getAddress(std::function<T(U...)> f) {
+    typedef T(fnType)(U...);
+    fnType ** fnPointer = f.template target<fnType*>();
+    return (size_t) *fnPointer;
+}
+
+MATCHER_P(data1AreEqual, parg ,"") { return (getAddress(arg) == getAddress(parg)); }
+
+TEST( network, caseGroupCall ) {
+    MainWindow window;
+
+    MockAppNetwork mock;
+    window.client = &mock;
+    std::function<void(const ChatRoom)> func = window.getGroupList().getChatRoomCallback;
+    int a = 3;
+    EXPECT_CALL(mock, getChatRoom(a,data1AreEqual(func))).Times(1);
+    window.searchById(3);
+}
+
+
+TEST( network, caseMessageCall ) {
+    MainWindow window;
+
+    MockAppNetwork mock;
+    window.client = &mock;
+    std::function<void(std::vector<Message>)> func = window.getChatList().getChatCallback;
+    int a = 3;
+    EXPECT_CALL(mock, getMessages(a,data1AreEqual(func))).Times(1);
+    Message message;
+    window.createMessage(message);
+}

@@ -6,18 +6,24 @@
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QFrame>
-#include "chatlist.h"
+#include "chatlist/chatlist.h"
 #include <QSplitter>
 #include <QResizeEvent>
 #include <QMoveEvent>
 #include <QLabel>
-#include "CustomButton.h"
-#include "menuwidget.h"
-#include "profiledata.h"
-#include "datashowwidget.h"
-#include "authwidget.h"
+#include "custommbutton/CustomButton.h"
+#include "menuwidget/menuwidget.h"
+#include "profiledata/profiledata.h"
+#include "datashowwidget/datashowwidget.h"
+#include "authwidget/authwidget.h"
 
 class AppNetwork;
+
+enum class Buttons{
+    SEND_MESSAGE_BUTTON,
+    MENU_BUTTON,
+    GROUP_BUTTON,
+};
 
 class MainWindow : public QWidget
 {
@@ -37,6 +43,7 @@ public:
     GroupList &getGroupList();
     void createMessage(const Message& message);
     void addProfileData(const ProfileData &data);
+    AppNetwork *client;
 
 public slots:
     void menuClicked();
@@ -59,7 +66,7 @@ protected:
     QHBoxLayout *topHLayout;
     QHBoxLayout *bottomHLayout;
 
-    AppNetwork *client;
+
     QSplitter *splitter;
 
     GroupList *listObject;

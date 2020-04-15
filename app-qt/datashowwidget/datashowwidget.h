@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QVBoxLayout>
-#include "profiledata.h"
+#include "profiledata/profiledata.h"
 
 class DataShowWidget : public QWidget
 {

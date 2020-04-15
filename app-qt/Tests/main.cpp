@@ -13,7 +13,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication a(argc, argv); 
     QTest::qExec(new test_chat(), argc, argv);
     QTest::qExec(new test_showprofile(), argc, argv);
     QTest::qExec(new test_group(), argc, argv);

@@ -1,6 +1,5 @@
 #include "test_showprofile.h"
 #include <QtTest>
-#include "../mainwindow.h"
 
 test_showprofile::test_showprofile()
 {

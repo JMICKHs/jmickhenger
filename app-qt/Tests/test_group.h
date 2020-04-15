@@ -2,7 +2,7 @@
 #define TEST_GROUP_H
 
 #include <QtTest>
-#include "../mainwindow.h"
+#include "../mainwindow/mainwindow.h"
 
 class test_group : public  MainWindow
 {

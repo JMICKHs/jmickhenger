@@ -8,10 +8,10 @@
 #include <QPoint>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include "CustomButton.h"
+#include "custommbutton/CustomButton.h"
 #include <QLabel>
 #include <QFrame>
-#include "grouplist.h"
+#include "grouplist/grouplist.h"
 
 class MenuWidget : public QFrame
 {

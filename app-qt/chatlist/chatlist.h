@@ -22,12 +22,11 @@ public:
 class ChatList : public QListWidget
 {
     Q_OBJECT
-private:
-    std::function<void(std::vector<Message> &items)> getChatRoomCallback;
 public:
     explicit ChatList(QWidget *parent = nullptr);
     std::list<QListWidgetItem*> getItems();
     void getItemsFromNet();
+    std::function<void(std::vector<Message> items)> getChatCallback;
 
 public slots:
     void newMessage(const Message& message);

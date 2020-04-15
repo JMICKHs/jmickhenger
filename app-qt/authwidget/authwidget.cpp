@@ -5,16 +5,8 @@ AuthWidget::AuthWidget(QWidget *parent)
 {
     number =  new QLineEdit;
     password  = new QLineEdit;
-}
-
-void AuthWidget::getUserInfoCallback(const UserInfo &user)
-{
-
-}
-
-void AuthWidget::registrationCallback(const int &id)
-{
-
+    getChatCallback = [](const UserInfo& user){};
+    registrationCallback = [](const int& id){};
 }
 
 void AuthWidget::registration()

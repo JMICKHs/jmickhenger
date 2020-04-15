@@ -15,8 +15,8 @@ private:
     QLineEdit *number;
     QLineEdit *password;
     int id;
-    void getUserInfoCallback(const UserInfo& user);
-    void registrationCallback(const int& id);
+    std::function<void(const UserInfo& user)> getChatCallback;
+    std::function<void(const int& id)> registrationCallback;
 
 public:
     AuthWidget(QWidget *parent = nullptr);
