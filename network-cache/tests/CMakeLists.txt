@@ -1,4 +1,4 @@
-#include_directories("${PROJECT_SOURCE_DIR}/include")
+include_directories("${PROJECT_SOURCE_DIR}/network")
 
 file(GLOB sources "${PROJECT_SOURCE_DIR}/*.cpp")
 list(REMOVE_ITEM sources "${PROJECT_SOURCE_DIR}/main.cpp")

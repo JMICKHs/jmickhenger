@@ -17,4 +17,17 @@ add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
 enable_testing()
 add_subdirectory(tests)
 
-add_executable(network_cache main.cpp network/info/Info.h network/info/Codeble.h network/info/Info.cpp network/cache/Cache.cpp network/cache/Cache.h network/AppNetwork.cpp network/AppNetwork.h network/announcer/Announcer.cpp network/announcer/Announcer.h network/parser/Parser.cpp network/parser/Parser.h network/client/Client.cpp network/client/Client.h)
+include_directories("${PROJECT_SOURCE_DIR}/network")
+include_directories("${PROJECT_SOURCE_DIR}/network/announcer")
+include_directories("${PROJECT_SOURCE_DIR}/network/cache")
+include_directories("${PROJECT_SOURCE_DIR}/network/client")
+include_directories("${PROJECT_SOURCE_DIR}/network/info")
+include_directories("${PROJECT_SOURCE_DIR}/network/parser")
+
+
+file(GLOB sources
+        "${PROJECT_SOURCE_DIR}/network/*.h"
+        "${PROJECT_SOURCE_DIR}/network/*.cpp")
+
+add_executable(network_cache ${sources})
+#add_executable(network_cache main.cpp network/info/Info.h network/info/Codeble.h network/info/Info.cpp network/cache/Cache.cpp network/cache/Cache.h network/AppNetwork.cpp network/AppNetwork.h network/announcer/Announcer.cpp network/announcer/Announcer.h network/parser/Parser.cpp network/parser/Parser.h network/client/Client.cpp network/client/Client.h ${sources})

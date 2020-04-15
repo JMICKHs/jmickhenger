@@ -57,9 +57,6 @@ void AppNetwork::getUser(unsigned int id, const function<void(const Info::UserIn
 
 }
 
-void AppNetwork::getMyAccount(Info::MyAccount acc, const function<void(const Info::MyAccount)> &callback) {
-
-}
 
 void AppNetwork::saveAvatar(string path, const function<void(const bool)> &callback) {
 

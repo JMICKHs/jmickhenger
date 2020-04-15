@@ -16,6 +16,7 @@ public:
     virtual void decode(string json) = 0;
 protected:
     Parser parser;
+    //Parser parser;
 };
 
 
