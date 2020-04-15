@@ -4,7 +4,7 @@
 ChatList::ChatList(QWidget *parent)
     : QListWidget(parent)
 {
-    getChatCallback = [](std::vector<Message> items){};
+    ChatCallback = [](std::vector<Message> items){};
     this->setStyleSheet(
                         "QListWidget{ outline: 0;}"
                         "QListWidget::item:hover{  background-color:  rgb(255, 255, 255);selection-color: transperent;}"
@@ -25,6 +25,11 @@ std::list<QListWidgetItem*> ChatList::getItems()
 void ChatList::getItemsFromNet()
 {
 
+}
+
+std::function<void (std::vector<Message> items)> ChatList::getChatCallback() const
+{
+    return ChatCallback;
 }
 void ChatList::newMessage(const Message &message)
 {

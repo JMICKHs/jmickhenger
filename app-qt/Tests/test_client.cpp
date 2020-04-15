@@ -12,8 +12,9 @@ using ::testing::_;
 class AppNetwork{
 
 public:
-   void getMessages(int id, std::function<void( std::function<void(std::vector<Message>)>)> func);
+   void getMessages(int id, std::function<void( std::function<void(std::vector<Message>&)>)> func);
    void getChatRoom(int id, std::function<void(const ChatRoom)&> func );
+   void getListChat(int id, std::function<void( std::function<void(std::vector<ChatInfo>&)>)> func);
 };
 
 class MockAppNetwork : public AppNetwork
@@ -21,6 +22,7 @@ class MockAppNetwork : public AppNetwork
 public:
   MOCK_METHOD2(getMessages,void(int id,  std::function<void( std::function<void(std::vector<Message>)>)> func));
   MOCK_METHOD2(getChatRoom,void(int id ,  std::function<void(const ChatRoom)> func));
+  MOCK_METHOD2(getListChat,void(int id, std::function<void( std::function<void(std::vector<ChatInfo>)>)> func));
 
 };
 template<typename T, typename... U>
@@ -38,7 +40,7 @@ TEST( network, caseGroupCall ) {
 
     MockAppNetwork mock;
     window.client = &mock;
-    std::function<void(const ChatRoom)> func = window.getGroupList().getChatRoomCallback;
+    std::function<void(const ChatRoom)> func = window.getGroupList().getChatRoomCallback();
     int a = 3;
     EXPECT_CALL(mock, getChatRoom(a,data1AreEqual(func))).Times(1);
     window.searchById(3);
@@ -50,9 +52,21 @@ TEST( network, caseMessageCall ) {
 
     MockAppNetwork mock;
     window.client = &mock;
-    std::function<void(std::vector<Message>)> func = window.getChatList().getChatCallback;
+    std::function<void(std::vector<Message>)> func = window.getChatList().getChatCallback();
     int a = 3;
     EXPECT_CALL(mock, getMessages(a,data1AreEqual(func))).Times(1);
     Message message;
     window.createMessage(message);
+}
+
+TEST( network, caseChatInfoCall ) {
+    MainWindow window;
+
+    MockAppNetwork mock;
+    window.client = &mock;
+    std::function<void(std::vector<ChatInfo>)> func = window.getGroupList().getChatCallback();
+    int a  = 3;
+    EXPECT_CALL(mock, getMessages(a,data1AreEqual(func))).Times(1);
+    Message message;
+    window.getGroupList().getChatById();
 }

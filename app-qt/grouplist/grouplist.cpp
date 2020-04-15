@@ -19,8 +19,8 @@ GroupList::GroupList(QWidget *parent)
                        );
     this->addItem(item);
 
-    getChatRoomCallback = [](const ChatRoom chatroom) {};
-    getChatCallback = [](std::vector<chatinfo> &items){};
+    ChatRoomCallback = [](const ChatRoom chatroom) {};
+    ChatCallback = [](const std::vector<ChatInfo> items){};
 }
 
 std::list<QListWidgetItem *> GroupList::getItems()
@@ -40,4 +40,14 @@ void GroupList::getChatById()
 void GroupList::getItemsFromNet()
 {
 
+}
+
+std::function<void (const ChatRoom chatroom)> GroupList::getChatRoomCallback() const
+{
+    return ChatRoomCallback;
+}
+
+std::function<void (const std::vector<ChatInfo> items)> GroupList::getChatCallback() const
+{
+    return ChatCallback;
 }
