@@ -8,6 +8,7 @@ class ProfileData
 private:
     int Id;
     QString login;
+
 public:
     void setId(int _Id){ Id = _Id;}
     void setLogin(QString &_login){login = _login;}

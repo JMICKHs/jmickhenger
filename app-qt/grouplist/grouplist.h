@@ -14,8 +14,8 @@ struct Chat{
    QString lastMessage;
 };
 
+struct ChatChange{};
 struct ChatInfo{};
-
 struct ChatRoom{
     QString name;
     int id;
@@ -31,16 +31,19 @@ public slots:
 
 private:
     std::function<void(const ChatRoom chatroom)> ChatRoomCallback;
-    std::function<void(const std::vector<ChatInfo> items)> ChatCallback;
+    std::function<void(const std::vector<ChatInfo>items)> ChatCallback;
+    std::function<void(const ChatChange changeChat)> observerChat;
 
 public:
     explicit GroupList(QWidget *parent = nullptr);
     std::list<QListWidgetItem *> getItems();
+
     void getChatById();
     void getItemsFromNet();
+
     std::function<void(const ChatRoom chatroom)> getChatRoomCallback() const;
     std::function<void(const std::vector<ChatInfo> items)> getChatCallback() const;
-
+    std::function<void(const ChatChange changeChat)> getObserverChat() const;
 };
 
 #endif // GROUPLIST_H

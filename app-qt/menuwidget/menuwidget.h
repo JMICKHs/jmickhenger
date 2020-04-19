@@ -21,18 +21,22 @@ private:
     CustomButton *settings;
     CustomButton *createGroup;
     CustomButton *friends;
-    QLabel *label;
     CustomButton *avatar;
+
+    QLabel *label;
     QVBoxLayout *topLayout;
     QWidget *topWidget;
-    int Id;
 
+    int Id;
     float height;
+
 public:
     explicit MenuWidget(QFrame *parent = nullptr, const QSize size = QSize());
     CustomButton* getCreateButton();
+
 public slots:
     void setPosition();
+
 signals:
     void createGroupSignal(Chat &chat);
 };

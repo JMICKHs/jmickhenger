@@ -37,12 +37,16 @@ private:
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
     void resizeEvent(QResizeEvent *event) override;
     void moveEvent(QMoveEvent *event) override;
+
     ChatList &getChatList();
     GroupList &getGroupList();
+
     void createMessage(const Message& message);
     void addProfileData(const ProfileData &data);
+
     AppNetwork *client;
 
 public slots:
@@ -55,6 +59,7 @@ signals:
     void sendData(const ProfileData&);
 
 protected:
+
     std::vector<ProfileData> profileData;
     MenuWidget *menuWidget;
     DataShowWidget *dataShow;

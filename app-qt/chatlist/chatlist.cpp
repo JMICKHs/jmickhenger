@@ -27,7 +27,7 @@ void ChatList::getItemsFromNet()
 
 }
 
-std::function<void (std::vector<Message> items)> ChatList::getChatCallback() const
+std::function<void (std::vector<Message>items)> ChatList::getChatCallback() const
 {
     return ChatCallback;
 }
