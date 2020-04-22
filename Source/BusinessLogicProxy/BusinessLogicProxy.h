@@ -15,6 +15,7 @@ class BusinessLogicProxy {
 private:
     ResponseStruct read_buffer;
     std::string write_buffer;
+
 public:
     int enqueue(std::string msg);
     ResponseStruct dequeue();

@@ -4,5 +4,17 @@
 
 #include "Server.h"
 
-void Server::run_server();
-void Server::stop_server();
+void Server::run_server() {
+
+}
+void Server::stop_server() {
+
+}
+
+void Server::handle_accept() {
+
+}
+
+void Server::start_accept() {
+
+}

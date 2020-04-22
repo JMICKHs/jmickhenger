@@ -7,17 +7,22 @@
 
 
 class Server {
+
+public:
+    Server();
+    ~Server;
+    void run_server();
+    void stop_server();
 private:
     boost::asio::io_service service;
     ip::tcp::acceptor acceptor;
     endpoint endpoint;
     std::vector<std::thread> threads;
     std::map(Connection client, int connection_id);
+    BusinessLogicProxy BusinessLogicProxy_;
 
-public:
-    Server();
-    void run_server();
-    void stop_server();
+    void handle_accept();
+    void start_accept();
 };
 
 

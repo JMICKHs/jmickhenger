@@ -11,16 +11,23 @@ struct ResponseStruct {
 
 
 class Connection {
-private:
-    ip::tcp::socket socket;
-    int connection_id;
-    std::string read_buffer;
-    ResponseStruct write_buffer;
+
 public:
     void new_session();
     void start_session();
     void stop_session();
     bool is_active();
+    tcp::socket &get_socket();
+
+private:
+    void handle_write();
+    void handle_read();
+
+
+    ip::tcp::socket socket;
+    int connection_id;
+    std::string read_buffer;
+    ResponseStruct write_buffer;
 };
 
 
