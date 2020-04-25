@@ -76,12 +76,12 @@ CustomButton::CustomButton(int id, QWidget *parent)
 
 }
 
-void CustomButton::setButtonIcon(const QIcon icon)
+void CustomButton::setButtonIcon(const QIcon &icon)
 {
     this->setIcon(icon);
 }
 
-void CustomButton::setButtonRect(const QRect rect)
+void CustomButton::setButtonRect(const QRect &rect)
 {
     this->setGeometry(rect);
 }

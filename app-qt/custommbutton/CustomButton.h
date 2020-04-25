@@ -15,8 +15,8 @@ public:
     CustomButton(const char* name,QSize size, QWidget *parent = nullptr);
 
     CustomButton(int id, QWidget *parent = nullptr);
-    void setButtonIcon(const QIcon icon);
-    void setButtonRect(const QRect rect);
+    void setButtonIcon(const QIcon &icon);
+    void setButtonRect(const QRect &rect);
 
 public slots:
     void clickedById();
