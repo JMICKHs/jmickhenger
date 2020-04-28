@@ -9,7 +9,7 @@ AppNetwork::~AppNetwork() {
 
 }
 
-unique_ptr<AppNetwork> AppNetwork::shared() {
+shared_ptr<AppNetwork> AppNetwork::shared() {
     return unique_ptr<AppNetwork>();
 }
 
