@@ -39,7 +39,7 @@ public:
 class AppNetwork: AbstractNetwork {
 public:
     ~AppNetwork();
-    static unique_ptr<AppNetwork> shared();
+    static shared_ptr<AppNetwork> shared();
     void setClietnDelegate(const AbstractClient & clientDelegate) {}
     optional<MyAccount> getMe() {}
     void login(const string & name, const string & password, const function<void(const MyAccount &)> & callback) override;
