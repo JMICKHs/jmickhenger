@@ -11,31 +11,32 @@
 #include <functional>
 #include "../info/Info.h"
 using namespace std;
+using namespace inf;
 
 class AbstractClient {
 public:
     AbstractClient()  = default;
     virtual void start() = 0;
-    virtual void close() {}
-    virtual Info::ChatChange cacthChage(int idChat, const function<void(const Info::ChatChange)>& callback) = 0;
-    virtual Info::MyAccount login(string, string) = 0;
-    virtual int registration(Info::MyAccount) = 0;
-    virtual vector<Info::ChatInfo> getChatList(int idUser) = 0;
-    virtual Info::ChatRoom getChatRoom(int idRoom) = 0;
-    virtual vector<Info::Message> getMessages(int idChat, int begin, int end) = 0;
+    virtual void close() = 0;
+    virtual ChatChange & observerChatChange(const int & idChat, const function<void(const ChatChange)>& callback) = 0;
+    virtual MyAccount & login(const string & nickname, const string & password) = 0;
+    virtual const int & registration(inf::MyAccount & acc) = 0;
+    virtual vector<ChatInfo> & getChatList(const int & idUser) = 0;
+    virtual ChatRoom & getChatRoom(const int & idRoom) = 0;
+    virtual vector<Message> & getMessages(const int & idChat, const int & begin, const int & end) = 0;
 };
 
-class Client : AbstractClient {
+class Client : public AbstractClient {
 public:
     Client() = default;
     void start() {}
     void close() {}
-    Info::ChatChange cacthChage(int idChat, const function<void(const Info::ChatChange)>& callback) {}
-    Info::MyAccount login(string, string) {}
-    int registration(Info::MyAccount) {}
-    vector<Info::ChatInfo> getChatList(int idUser) {}
-    Info::ChatRoom getChatRoom(int idRoom) {}
-    vector<Info::Message> getMessages(int idChat, int begin, int end) {}
+    ChatChange & observerChatChange(const int & idChat, const function<void(const ChatChange)>& callback) {}
+    MyAccount & login(const string & nickname, const string & password) {}
+    const int & registration(inf::MyAccount & acc) {}
+    vector<ChatInfo> & getChatList(const int & idUser) {}
+    ChatRoom & getChatRoom(const int & idRoom) {}
+    vector<Message> & getMessages(const int & idChat, const int & begin, const int & end) {}
 private:
     // сокет из буста ip::tcp::socket
     bool connect(int idUser) {}

@@ -13,10 +13,10 @@
 class Announcer {
 public:
     Announcer() {}
-    void addCallback(unsigned int idChat, const function<void(const Info::ChatChange)>& callback) {}
-    void notify(Info::ChatChange change) {}
+    void addCallback(const unsigned int & idChat, const function<void(const inf::ChatChange)>& callback) {}
+    void notify(inf::ChatChange & change) {}
 private:
-    map<unsigned int, const function<void(const Info::ChatChange)>& > callbacks;
+    map<unsigned int, const function<void(const inf::ChatChange)>& > callbacks;
 };
 
 

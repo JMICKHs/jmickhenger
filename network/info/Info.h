@@ -14,14 +14,13 @@ using namespace std;
 
 class Codeble {
 public:
-    virtual string encode() = 0;
-    virtual void decode(string json) = 0;
+    virtual const string & encode() = 0;
+    virtual void decode(const string & json) = 0;
 protected:
     AbstractParser * parser;
 };
 
-namespace Info {
-
+namespace inf {
     class MyAccount : virtual Codeble {
     public:
         int id;
@@ -29,12 +28,9 @@ namespace Info {
         string pathToAvatar;
         string password;
         vector<int> chats;
-
         MyAccount() {}
-
-        string encode() { return "NIL"; }
-
-        void decode(string json) {}
+        const string & encode() { return "NIL"; }
+        void decode(const string & json) {}
     };
 
     class UserInfo : protected Codeble {
@@ -43,8 +39,8 @@ namespace Info {
         string login;
         string pathToAvatar;
         UserInfo() {}
-        string encode() { return "NIL"; }
-        void decode(string json) {}
+        const string & encode() { return "NIL"; }
+        void decode(const string & json) {}
     };
 
     class Message : protected Codeble {
@@ -56,8 +52,8 @@ namespace Info {
         time_t timesend;
         bool checked;
         Message() {}
-        string encode() { return "NIL"; }
-        void decode(string json) {}
+        const string & encode() { return "NIL"; }
+        void decode(const string & json) {}
     private:
     };
 
@@ -67,8 +63,8 @@ namespace Info {
         string name;
         ChatInfo() {}
         ChatInfo(int id, string name) {}
-        string encode() { return "NIL"; }
-        void decode(string json) {}
+        const string & encode() { return "NIL"; }
+        void decode(const string & json) {}
     private:
     };
 
@@ -79,8 +75,8 @@ namespace Info {
         vector<int> idUsers;
         vector<int> idAdmins;
         ChatRoom() {}
-        string encode() { return "NIL"; }
-        void decode(string json) {}
+        const string & encode() { return "NIL"; }
+        void decode(const string & json) {}
     private:
     };
 
@@ -90,8 +86,8 @@ namespace Info {
         string action;
         vector<Message> messages;
         ChatChange() {}
-        string encode() { return "NIL"; }
-        void decode(string json) {}
+        const string & encode() { return "NIL"; }
+        void decode(const string & json) {}
     };
 
     class Reply : protected Codeble {
@@ -101,8 +97,8 @@ namespace Info {
         int cmd;
         string body;
         Reply() {}
-        string encode() { return "NIL"; }
-        void decode(string json) {}
+        const string & encode() { return "NIL"; }
+        void decode(const string & json) {}
     };
 }
 
