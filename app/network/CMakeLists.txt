@@ -20,6 +20,8 @@ add_subdirectory(tests)
 
 file(GLOB sources
         "${PROJECT_SOURCE_DIR}/*.h"
-        "${PROJECT_SOURCE_DIR}/*.cpp")
+        "${PROJECT_SOURCE_DIR}/*.cpp"
+        "${PROJECT_SOURCE_DIR}/cache/Cache.cpp"
+        "${PROJECT_SOURCE_DIR}/announcer/Announcer.cpp")
 
 add_executable(network ${sources} main.cpp)

@@ -23,15 +23,15 @@ public:
 
 class Cache: public AbstractCache {
 public:
-    Cache() {}
-    bool save(inf::MyAccount & acc) {}
-    bool save(inf::UserInfo & user) {}
-    bool save(vector<inf::ChatInfo> & chatList) {}
-    std::optional<inf::MyAccount> & getMyAccount() { }
-    std::optional<inf::UserInfo> & getUser(int idUser) { }
-    vector<inf::ChatInfo> & getChatList() { vector<inf::ChatInfo> v; return v; }
+    Cache();
+    ~Cache();
+    bool save(inf::MyAccount & acc) override;
+    bool save(inf::UserInfo & user) override;
+    bool save(vector<inf::ChatInfo> & chatList) override;
+    std::optional<inf::MyAccount> & getMyAccount() override;
+    std::optional<inf::UserInfo> & getUser(int idUser) override;
+    vector<inf::ChatInfo> & getChatList() override;
 private:
-    int count;
     // sqlite3 db;
 };
 

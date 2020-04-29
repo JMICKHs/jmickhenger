@@ -4,27 +4,41 @@
 
 #include "Cache.h"
 
+using namespace std;
+using namespace inf;
 
-bool Cache::save(Info::MyAccount acc) {
+
+Cache::Cache() {
+
+}
+
+Cache::~Cache() {
+
+}
+
+bool Cache::save(inf::MyAccount &acc) {
     return false;
 }
 
-bool Cache::save(Info::UserInfo user) {
+bool Cache::save(inf::UserInfo &user) {
     return false;
 }
 
-bool Cache::save(vector<Info::ChatInfo> chatList) {
+bool Cache::save(vector<inf::ChatInfo> &chatList) {
     return false;
 }
 
-Info::MyAccount *Cache::getMyAccount() {
-    return nullptr;
+std::optional<inf::MyAccount> &Cache::getMyAccount() {
+    optional<MyAccount> acc = nullopt;
+    return acc;
 }
 
-Info::UserInfo *Cache::getUser(int idUser) {
-    return nullptr;
+std::optional<inf::UserInfo> &Cache::getUser(int idUser) {
+    optional<UserInfo> user = nullopt;
+    return user;
 }
 
-vector<Info::ChatInfo> Cache::getChatList() {
-    return vector<Info::ChatInfo>();
+vector<inf::ChatInfo> &Cache::getChatList() {
+    vector<ChatInfo> v;
+    return v;
 }

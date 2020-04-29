@@ -57,3 +57,7 @@ void AppNetwork::addChat(ChatRoom &room, const function<void(const ChatRoom &)> 
 bool AppNetwork::check() {
     return false;
 }
+
+optional<MyAccount> AppNetwork::getMe() {
+    return nullopt;
+}

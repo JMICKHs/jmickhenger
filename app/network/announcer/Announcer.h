@@ -12,11 +12,14 @@
 
 class Announcer {
 public:
-    Announcer() {}
-    void addCallback(const unsigned int & idChat, const function<void(const inf::ChatChange)>& callback) {}
-    void notify(inf::ChatChange & change) {}
+    Announcer();
+    ~Announcer();
+    void addCallback(const int & idChat, const function<void(const inf::ChatChange)>& callback);
+    void setGeneralCallback(const function<void(const inf::ChatChange)>& callback);
+    void notify(inf::ChatChange & change);
 private:
-    map<unsigned int, const function<void(const inf::ChatChange)>& > callbacks;
+    std::map<int, std::function<void(inf::ChatChange)>> callbacks;
+    std::optional<function<void(const inf::ChatChange)>> generalCallback;
 };
 
 

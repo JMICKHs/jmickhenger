@@ -38,10 +38,14 @@ public:
 
 class AppNetwork: AbstractNetwork {
 public:
+    AppNetwork(const AppNetwork &other) = delete;
+    AppNetwork(AppNetwork &&other) = delete;
+    AppNetwork& operator=(const AppNetwork &other) = delete;
+    AppNetwork& operator=(AppNetwork &&other) = delete;
     ~AppNetwork();
     static shared_ptr<AppNetwork> shared();
     void setClietnDelegate(const AbstractClient & clientDelegate) {}
-    optional<MyAccount> getMe() {}
+    optional<MyAccount> getMe() override;
     void login(const string & name, const string & password, const function<void(const MyAccount &)> & callback) override;
     void registration(const MyAccount & acc, const function<void(const int &)>& callback) override;//если id == 0, то неудачно
     void getListChat(const int & idUser, const function<void(const vector<ChatInfo> &)> & callback) override;
@@ -60,5 +64,7 @@ private:
     AbstractCache * cache;
     AbstractClient * client;
 };
+
+AppNetwork * AppNetwork::singleton = nullptr;
 
 #endif //NETWORK_APPNETWORK_H
