@@ -1,3 +1,7 @@
+//
+// Created by nick on 01.05.2020.
+//
+
 #ifdef WIN32
 #define _WIN32_WINNT 0x0501
 #include <stdio.h>
@@ -12,12 +16,14 @@
 using namespace boost::asio;
 using namespace boost::posix_time;
 io_service service;
+//ip::tcp::acceptor acceptor(service, ip::tcp::endpoint(ip::tcp::v4(), 8001));
+ip::tcp::endpoint ep( ip::address::from_string("127.0.0.1"), 8000);
 
 #define MEM_FN1(x,y)    boost::bind(&self_type::x, shared_from_this(),y)
 #define MEM_FN2(x,y,z)  boost::bind(&self_type::x, shared_from_this(),y,z)
 
 int a = 0;
-class connection : public boost::enable_shared_from_this<connection>, boost::noncopyable {
+class connection : public boost::enable_shared_from_this<connection> {
     typedef connection self_type;
     connection() : sock_(service), started_(false), index_connection(a) {
         a++;
@@ -32,8 +38,7 @@ public:
         std::cout << read_buffer_;
     }
     static ptr new_() {
-        ptr new_(new connection);
-        return new_;
+        return ptr(new connection);
     }
 
     ip::tcp::socket & sock() { return sock_;}
@@ -63,20 +68,42 @@ private:
     bool started_;
     int index_connection;
 };
-ip::tcp::endpoint ep( ip::address::from_string("192.168.1.101"), 8001);
 
-ip::tcp::acceptor acceptor(service, ep );
+using boost::asio::ip::tcp;
 
-void handle_accept(connection::ptr client, const boost::system::error_code & err) {
-    client->start();
-    connection::ptr new_client = connection::new_();
-    acceptor.async_accept(new_client->sock(), boost::bind(handle_accept,new_client,_1));
-}
+class server  {
+public: server(boost::asio::io_service& io_service)
+            : io_service_(io_service), acceptor_(io_service,ep) {
+        connection::ptr new_connection = connection::new_();
+        acceptor_.async_accept(new_connection->sock(),
+                               boost::bind(&server::handle_accept, this, new_connection,
+                                           boost::asio::placeholders::error));
 
+    }
+    typedef boost::shared_ptr<server> ptr;
+    static ptr create() {
+        return ptr(new server(service));
+    }
+private:
+    void handle_accept(const connection::ptr& new_connection,
+                       const boost::system::error_code & error) {
+        if (!error) {
+            new_connection->start();
+            connection::ptr new_connection2 = connection::new_();
+            acceptor_.async_accept(new_connection2->sock(),
+                                   boost::bind(&server::handle_accept, this, new_connection2,
+                                               boost::asio::placeholders::error));
+        }
+
+    }
+
+private:
+    boost::asio::io_service &io_service_;
+    boost::asio::ip::tcp::acceptor acceptor_;
+};
 
 int main(int argc, char* argv[]) {
-    connection::ptr client = connection::new_();
-    acceptor.async_accept(client->sock(), boost::bind(handle_accept,client,_1));
+    server::ptr server = server::create();
     service.run();
 }
 
