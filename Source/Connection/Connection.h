@@ -2,33 +2,53 @@
 // Created by nick on 15.04.2020.
 //
 
-#ifndef JMICKHENGER_CONNECTION_H
-#define JMICKHENGER_CONNECTION_H
-
-struct ResponseStruct {
-
-}typedef ResponseStruct;
+#ifndef TCP_CONNECTION_H
+#define TCP_CONNECTION_H
 
 
-class Connection {
+#include <iostream>
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/asio.hpp>
+#include <boost/bind.hpp>
 
+class Connection : public std::enable_shared_from_this<Connection> {
+    typedef Connection self_type;
+    Connection();
 public:
+    typedef boost::system::error_code error_code;
+    typedef std::shared_ptr<Connection> ptr;
+
+    void start();
+    static ptr new_();
+
     void new_session();
+
     void start_session();
     void stop_session();
     bool is_active();
-    tcp::socket &get_socket();
 
+    boost::asio::ip::tcp::socket &get_socket();
 private:
+    void on_read(const error_code & err, size_t bytes);
+
+    void on_write(const error_code & err, size_t bytes);
+    void do_write(const std::string & msg);
+
     void handle_write();
     void handle_read();
-
-
-    ip::tcp::socket socket;
+private:
+    boost::asio::ip::tcp::socket socket;
+    enum { max_msg = 1024 };
+//    std::string read_buffer;
+//    ResponseStruct write_buffer;
+    char read_buffer_[max_msg];
+    char write_buffer_[max_msg];
+    bool started_;
     int connection_id;
-    std::string read_buffer;
-    ResponseStruct write_buffer;
 };
 
+#endif //TCP_CONNECTION_H
 
-#endif //JMICKHENGER_CONNECTION_H
+
+

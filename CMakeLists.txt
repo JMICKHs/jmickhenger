@@ -31,12 +31,12 @@ ENDIF(Boost_FOUND)
 
 SET(USED_LIBS ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${Boost_REGEX_LIBRARY})
 
-
-##
-### Source definitions ###
-##
-
-ADD_EXECUTABLE(server RunServer.cpp)
-TARGET_LINK_LIBRARIES(server ${USED_LIBS})
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 
 
+ADD_EXECUTABLE(async_server RunServer.cpp Source/Server/Server.cpp Source/Connection/Connection.cpp)
+TARGET_LINK_LIBRARIES(async_server ${USED_LIBS})
+
+
+ADD_EXECUTABLE(async_client Source/async_client_for_serGay/async_client_for_serGay.cpp)
+TARGET_LINK_LIBRARIES(async_client ${USED_LIBS})

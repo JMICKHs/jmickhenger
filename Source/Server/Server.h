@@ -6,24 +6,37 @@
 #define JMICKHENGER_SERVER_H
 
 
-class Server {
+#include <boost/shared_ptr.hpp>
+#include <boost/asio.hpp>
+#include "../Connection/Connection.h"
 
+using namespace boost::asio;
+//extern ip::tcp::endpoint ep;
+
+extern io_service service;
+
+
+using boost::asio::ip::tcp;
+
+class Server: public std::enable_shared_from_this<Server>  {
 public:
-    Server();
-    ~Server;
+    explicit Server(boost::asio::io_service& io_service);
+    ~Server() = default;
+    typedef std::shared_ptr<Server> ptr;
+    static ptr create();
     void run_server();
     void stop_server();
 private:
-    boost::asio::io_service service;
-    ip::tcp::acceptor acceptor;
-    endpoint endpoint;
-    std::vector<std::thread> threads;
-    std::map(Connection client, int connection_id);
-    BusinessLogicProxy BusinessLogicProxy_;
-
-    void handle_accept();
+    void handle_accept(const Connection::ptr& new_Connection,
+                       const boost::system::error_code & error);
     void start_accept();
+private:
+    boost::asio::io_service &io_service_;
+    boost::asio::ip::tcp::acceptor acceptor_;
+//    endpoint endpoint;
+//    std::vector<std::thread> threads;
+//    std::map(Connection client, int connection_id);
+//    BusinessLogicProxy BusinessLogicProxy_;
 };
-
 
 #endif //JMICKHENGER_SERVER_H
