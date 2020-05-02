@@ -18,8 +18,8 @@ void Connection::start() {
     std::cout << read_buffer_;
 }
 
-Connection::ptr Connection::new_() {
-    return ptr(new Connection);
+Connection::ptr Connection::new_(int index) {
+    return ptr(new Connection(std::shared_ptr<Connection>(), index));
 }
 
 ip::tcp::socket &Connection::get_socket() {
@@ -46,9 +46,9 @@ void Connection::do_write(const std::string &msg) {
                             MEM_FN2(on_write,_1,_2));
 }
 
-Connection::Connection() : socket(service), started_(false), connection_id(a) {
-    a++;
-    std::cout << "new Connection #" << a <<std::endl;
+Connection::Connection(std::shared_ptr<Connection> sharedPtr, int index)
+        : socket(service), started_(false), connection_id(index) {
+    std::cout << "new Connection #" << index << std::endl;
 }
 
 void Connection::new_session() {

@@ -35,7 +35,9 @@ private:
     boost::asio::ip::tcp::acceptor acceptor_;
 //    endpoint endpoint;
 //    std::vector<std::thread> threads;
-//    std::map(Connection client, int connection_id);
+    std::map<int, std::shared_ptr<Connection>> client_collection;
+
+    int user_count;
 //    BusinessLogicProxy BusinessLogicProxy_;
 };
 

@@ -14,13 +14,13 @@
 
 class Connection : public std::enable_shared_from_this<Connection> {
     typedef Connection self_type;
-    Connection();
+    Connection(std::shared_ptr<Connection> sharedPtr, int index);
 public:
     typedef boost::system::error_code error_code;
     typedef std::shared_ptr<Connection> ptr;
 
     void start();
-    static ptr new_();
+    static ptr new_(int index);
 
     void new_session();
 
