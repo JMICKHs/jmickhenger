@@ -24,5 +24,6 @@ shared_ptr<AppNetwork> AppNetwork::shared() {
 }
 
 void AppNetwork::sendMessage(const Message &msg, const function<void(const bool &, optional<string> &)> &callback) {
-    client->write(msg.encode());
+    Reply reply("", 0, 5, msg.encode()); //временный код для отправки сообщений
+    client->write(reply.encode());
 }
