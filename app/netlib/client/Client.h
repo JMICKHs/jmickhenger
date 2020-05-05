@@ -20,7 +20,15 @@ using boost::asio::ip::tcp;
 namespace ba = boost::asio;
 using namespace std;
 
-class Client: public enable_shared_from_this<Client> {
+class AbstractClient {
+public:
+    virtual void run() = 0;
+    virtual void write(const string & msg) = 0;
+    virtual void close() = 0;
+    virtual void setMsgHandler(const function<void(const string &)> & f) = 0;
+};
+
+class Client: public enable_shared_from_this<Client>, public AbstractClient {
 public:
     Client(const Client &other) = delete;
     Client(Client &&other) = delete;

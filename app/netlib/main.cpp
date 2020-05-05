@@ -2,6 +2,7 @@
 #include "announcer/Announcer.h"
 #include "client/Client.h"
 #include <ctime>
+#include "AppNetwork.h"
 // мэин тут только для проверки, эта часть проекта должна быть либой
 using namespace std;
 using namespace inf;
@@ -119,5 +120,10 @@ int main() {
 //    Reply reply2;
 //    reply2.decode(json);
 //    cout << reply2.encode() << endl;
+
+//    auto net = AppNetwork::shared();
+//    while(true) {
+//
+//    }
     return 0;
 }
