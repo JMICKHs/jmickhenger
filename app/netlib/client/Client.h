@@ -1,9 +1,9 @@
 //
-// Created by Sergei Alexeev on 15.04.2020.
+// Created by Sergei Alexeev on 05.05.2020.
 //
 
-#ifndef NETWORK_CLIENT_H
-#define NETWORK_CLIENT_H
+#ifndef NETLIB_CLIENT_H
+#define NETLIB_CLIENT_H
 
 #include <cstdlib>
 #include <iostream>
@@ -74,7 +74,7 @@ private:
                 //отправка init сообщения
                 self->loopRead();
             } else {
-                cout << err.value() << endl;
+                cout << "err in connect " << err.value() << endl;
             }
         };
         ba::async_connect(sock, std::move(it), handler);
@@ -139,6 +139,4 @@ private:
 };
 
 
-
-
-#endif //NETWORK_CLIENT_H
+#endif //NETLIB_CLIENT_H

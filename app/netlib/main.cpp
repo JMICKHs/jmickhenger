@@ -1,6 +1,7 @@
 #include <iostream>
 #include "announcer/Announcer.h"
 #include "client/Client.h"
+#include <ctime>
 // мэин тут только для проверки, эта часть проекта должна быть либой
 using namespace std;
 using namespace inf;
@@ -61,6 +62,62 @@ int main() {
 //        cout << item << " ";
 //    }
 //    cout << "\n";
+//    cout << "names = " << p.getChild("names");
 //    cout << "-----------\n";
+
+//    //test codeble
+//    MyAccount acc(3, "testUser", "NIL", "1234", {1, 3, 18}, {167, 189});
+//    string json = acc.encode();
+//    cout << json << endl;
+//    MyAccount acc2;
+//    acc2.decode(json);
+//
+//    UserInfo user(178, "178user", "NIL");
+//    json = user.encode();
+//    cout << json << endl;
+//    UserInfo user2;
+//    user2.decode(json);
+
+//    string json;
+//    Message msg(56, 3, "text from me", 56, time(NULL), false);
+//    json = msg.encode();
+//    cout << json << endl;
+//    Message msg2;
+//    msg2.decode(json);
+
+//    ChatInfo info(3, "myChat");
+//    string json;
+//    json = info.encode();
+//    cout << json << endl;
+//    ChatInfo info2;
+//    info2.decode(json);
+//    cout << info2.encode();
+
+//    string json;
+//    ChatRoom room(4, "myChat", {3, 6, 7}, {7});
+//    json = room.encode();
+//    cout << json << endl;
+//    ChatRoom room2;
+//    room2.decode(json);
+//    cout << room2.encode() << endl;
+
+//    string json;
+//    Message msg(56, 3, "text from me", 56, time(NULL), false);
+//    ChatChange change(4, "add", {msg, msg, msg});
+//    json = change.encode();
+//    cout << json << endl;
+//    ChatChange change2;
+//    change2.decode(json);
+//    cout << change2.encode();
+
+//    string json;
+//    Message msg(56, 3, "text from me", 56, time(NULL), false);
+//    ChatChange change(4, "add", {msg, msg, msg});
+//    Reply reply("", 0, 2, change.encode());
+//    json = reply.encode();
+//    cout << json << endl;
+//    Reply reply2;
+//    reply2.decode(json);
+//    cout << reply2.encode() << endl;
     return 0;
 }

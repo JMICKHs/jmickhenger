@@ -1,9 +1,9 @@
 //
-// Created by Sergei Alexeev on 15.04.2020.
+// Created by Sergei Alexeev on 05.05.2020.
 //
 
-#ifndef NETWORK_ANNOUNCER_H
-#define NETWORK_ANNOUNCER_H
+#ifndef NETLIB_ANNOUNCER_H
+#define NETLIB_ANNOUNCER_H
 
 
 #include <map>
@@ -23,4 +23,4 @@ private:
 };
 
 
-#endif //NETWORK_ANNOUNCER_H
+#endif //NETLIB_ANNOUNCER_H
