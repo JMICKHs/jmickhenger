@@ -23,13 +23,13 @@ protected:
 namespace inf {
     class MyAccount : virtual Codeble {
     public:
+        MyAccount() = default;
         int id;
         string login;
         string pathToAvatar;
         string password;
         vector<int> chats;
-        MyAccount() {}
-        const string & encode() { return "NIL"; }
+        const string & encode() override;
         void decode(const string & json) {}
     };
 

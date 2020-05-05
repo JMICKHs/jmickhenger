@@ -12,7 +12,6 @@
 
 class AbstractCache {
 public:
-    AbstractCache() = default;
     virtual bool save(inf::MyAccount & acc) = 0;
     virtual bool save(inf::UserInfo & user) = 0;
     virtual bool save(vector<inf::ChatInfo> & chatList) = 0;

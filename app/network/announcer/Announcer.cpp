@@ -26,5 +26,4 @@ void Announcer::notify(inf::ChatChange &change) {
     } else if(generalCallback) {
         generalCallback.value()(change);
     }
-
 }

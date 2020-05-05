@@ -17,6 +17,11 @@ add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
 enable_testing()
 add_subdirectory(tests)
 
+find_package(Boost)
+include_directories(${Boost_INCLUDE_DIRS})
+add_executable(test1 main.cpp)
+target_link_libraries(test1 ${Boost_LIBRARIES})
+
 
 file(GLOB sources
         "${PROJECT_SOURCE_DIR}/*.h"
