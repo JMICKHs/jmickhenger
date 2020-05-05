@@ -1,13 +1,18 @@
-#include "gtest/gtest.h"
-#include "gmock/gmock.h"
-#include "../cache/Cache.h"
-#include "string"
-#include "vector"
-#include "../client/Client.h"
-#include "../AppNetwork.h"
-#include "stack"
-using ::testing::_;
-using ::testing::Return;
+// ТЕСТЫ НЕ РАБОЧИЕ, ТАК КАК МНОГО ЧЕГО ПОМЕНЯЛОСЬ В ИНТЕРФЕЙСАХ И АРХИТЕКТУРЕ
+
+
+//#include "gtest/gtest.h"
+//#include "gmock/gmock.h"
+//#include "../cache/Cache.h"
+//#include "string"
+//#include "vector"
+//#include "../client/Client.h"
+//#include "../AppNetwork.h"
+//#include "stack"
+
+
+//using ::testing::_;
+//using ::testing::Return;
 
 //TEST(cache, test1) {
 //    Cache cache;
