@@ -1,11 +1,21 @@
 INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR} )
-set(SOURCE_FILES  ../mainwindow/mainwindow.cpp
+set(SOURCE_FILES
     ../custommbutton/custombutton.cpp
     ../grouplist/grouplist.cpp
-    ../menuwidget/menuwidget.cpp
     ../chatlist/chatlist.cpp
     ../datashowwidget/datashowwidget.cpp
-    ../authwidget/authwidget.cpp)
+    ../authwidget/authwidget.cpp
+    ../chatmodel.cpp
+    ../groupmodel.cpp
+    ../grouplistview.cpp
+    ../groupdelegate.cpp
+    ../chatview.cpp
+    ../chatdelegate.cpp
+    ../menuwidget.cpp
+    ../mainwidget.cpp
+    ../creategroupwidget.cpp
+    ../messageitemwidget.cpp
+    ../avatarbutton.cpp)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -14,7 +24,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5Test REQUIRED)

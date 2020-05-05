@@ -22,21 +22,17 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
  add_executable(jmichkenger
     main.cpp
-    mainwindow/mainwindow.cpp
-    mainwindow/mainwindow.h
     chatlist/chatlist.cpp
     chatlist/chatlist.h
-    custommbutton/customButton.h
+    custommbutton/custombutton.h
     custommbutton/custombutton.cpp
-    menuwidget/menuwidget.cpp
-    menuwidget/menuwidget.h
     datashowwidget/datashowwidget.cpp
     datashowwidget/datashowwidget.h
     profiledata/profiledata.h
@@ -44,6 +40,32 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
     grouplist/grouplist.h
     authwidget/authwidget.cpp
     authwidget/authwidget.h
+    chatmodel.h
+    chatmodel.cpp
+    groupmodel.cpp
+    groupmodel.h
+    grouplistview.cpp
+    grouplistview.h
+    groupdelegate.cpp
+    groupdelegate.h
+    chatview.cpp
+    chatview.h
+    chatdelegate.cpp
+    chatdelegate.h
+    mainwidget.cpp
+    mainwidget.h
+    mainwidget.ui
+    menuwidget.cpp
+    menuwidget.h
+    menuwidget.ui
+    creategroupwidget.cpp
+    creategroupwidget.h
+    creategroupwidget.ui
+    messageitemwidget.cpp
+    messageitemwidget.h
+    messageitemwidget.ui
+    avatarbutton.cpp
+    avatarbutton.h
  )
 
 

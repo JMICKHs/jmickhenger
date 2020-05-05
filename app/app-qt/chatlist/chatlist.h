@@ -3,12 +3,16 @@
 
 #include <QListWidget>
 
-struct Message
-{
-public:
-    int id;
-    QString text;
+struct Message{
+    int chatId;
+    int number;
+    std::string text;
+    std::string name;
+    int idOwner;
+    time_t timesend;
+    bool checked;
 };
+Q_DECLARE_METATYPE(Message)
 class MessageWidget : public QWidget
 {
     Q_OBJECT

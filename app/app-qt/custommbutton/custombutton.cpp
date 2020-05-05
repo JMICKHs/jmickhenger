@@ -1,16 +1,14 @@
-#include "custombutton.h"
+#include "customButton.h"
 #include <QPainter>
 
 CustomButton::CustomButton(QWidget *parent)
     :QPushButton(parent)
 {
-    this->setMaximumSize(30,30);
     this->setWindowFlag(Qt::FramelessWindowHint);
     this->setCursor(Qt::PointingHandCursor);
     this->setStyleSheet("QPushButton{background: transparent;}"
                         "QPushButton:hover{ background: rgb(227, 227, 229); border:none;}"
                         "QPushButton:pressed{  background-color: rgb(218, 218, 220); background-position: bottom center;  background-repeat: repeat-xy;  widget-animation-duration: 100;}");
-
 
 }
 

@@ -6,25 +6,29 @@
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QFrame>
-#include "chatlist/chatlist.h"
 #include <QSplitter>
 #include <QResizeEvent>
 #include <QMoveEvent>
 #include <QLabel>
 #include "custommbutton/CustomButton.h"
-#include "menuwidget/menuwidget.h"
+#include "menuwidget.h"
 #include "profiledata/profiledata.h"
 #include "datashowwidget/datashowwidget.h"
 #include "authwidget/authwidget.h"
+#include "chatlist/chatlist.h"
+#include <QListView>
+#include <groupmodel.h>
+#include <grouplistview.h>
+#include <groupdelegate.h>
+#include <chatmodel.h>
+#include <chatview.h>
+#include <chatdelegate.h>
 
 class AppNetwork;
 
-enum class Buttons{
-    SEND_MESSAGE_BUTTON,
-    MENU_BUTTON,
-    GROUP_BUTTON,
-};
-
+namespace Ui {
+    class  mainwindowform;
+}
 class MainWindow : public QWidget
 {
     Q_OBJECT
@@ -71,7 +75,6 @@ protected:
     QHBoxLayout *topHLayout;
     QHBoxLayout *bottomHLayout;
 
-
     QSplitter *splitter;
 
     GroupList *listObject;
@@ -91,6 +94,13 @@ protected:
     CustomButton *inputFiles;
     CustomButton *send;
     QLineEdit *textMessage;
+
+    GroupListView *groupView;
+    GroupModel *groupModel;
+    ChatModel *chatModel;
+    ChatView *chatView;
+
+    Ui::mainwindowform *ui;
 
 };
 #endif // MAINWINDOW_H

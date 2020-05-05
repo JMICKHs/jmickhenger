@@ -2,11 +2,10 @@
 #define TEST_CHAT_H
 
 #include <QtTest>
-#include "../mainwindow/mainwindow.h"
+#include "../mainwidget.h"
 
 
-
-class test_chat : public MainWindow
+class test_chat : public MainWidget
 {
     Q_OBJECT
 

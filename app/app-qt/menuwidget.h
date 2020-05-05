@@ -13,26 +13,22 @@
 #include <QFrame>
 #include "grouplist/grouplist.h"
 
+
+namespace Ui {
+class MenuWidget;
+}
+
 class MenuWidget : public QFrame
 {
     Q_OBJECT
-private:
-    QVBoxLayout *vLayout;
-    CustomButton *settings;
-    CustomButton *createGroup;
-    CustomButton *friends;
-    CustomButton *avatar;
-
-    QLabel *label;
-    QVBoxLayout *topLayout;
-    QWidget *topWidget;
-
-    int Id;
-    float height;
 
 public:
-    explicit MenuWidget(QFrame *parent = nullptr, const QSize size = QSize());
-    CustomButton* getCreateButton();
+    explicit MenuWidget(QWidget *parent = nullptr);
+     CustomButton* getCreateButton();
+    ~MenuWidget();
+
+private:
+    Ui::MenuWidget *ui;
 
 public slots:
     void setPosition();

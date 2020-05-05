@@ -32,7 +32,7 @@ void MainWindow::linkObjects()
     firstVLayout->setSpacing(0);
 
     firstVLayout->addLayout(searchHLayout);
-    firstVLayout->addWidget(listObject);
+    firstVLayout->addWidget(groupView);
 
     topHLayout = new QHBoxLayout;
     topHLayout->addWidget(groupName);
@@ -52,7 +52,7 @@ void MainWindow::linkObjects()
     secondVLayout->setMargin(0);
     secondVLayout->setSpacing(0);
     secondVLayout->addLayout(topHLayout);
-    secondVLayout->addWidget(chatList);
+    secondVLayout->addWidget(chatView);
     secondVLayout->addLayout(bottomHLayout);
 
     leftSide->setLayout(firstVLayout);
@@ -64,12 +64,11 @@ void MainWindow::linkObjects()
 
     mainHLayout->addWidget(splitter);
     mainHLayout->setSpacing(0);
-    this->setLayout(mainHLayout);
 
-    connect(menu,&CustomButton::clicked,menuWidget,&MenuWidget::show);
+
+
     connect(menu,&CustomButton::clicked,this,&MainWindow::menuClicked);
     connect(send,&CustomButton::clicked,this,&MainWindow::messageButtonClicked);
-    connect(this,&MainWindow::sendMessage,chatList,&ChatList::newMessage);
     connect(this,&MainWindow::sendData,dataShow,&DataShowWidget::GetUserProfile);
 }
 
@@ -80,11 +79,41 @@ void MainWindow::getChats()
 
 void MainWindow::createObjects()
 {
+    groupModel = new GroupModel();
+    groupView = new GroupListView();
+    groupView->setModel(groupModel);
+    groupView->setItemDelegate(new GroupDelegate);
+    groupView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    GroupItem item1;
+    item1.id = 3;
+    item1.name = "kekdsfgfgdfgdfghfhtyurcvbcbbcvbcvbcvhjhjhjhjhjhjhjhjhjhjk";
+    item1.userIds = {3,2,1};
+    item1.lastMessage = "netghghghghghghghghghghghghghghgh";
+    item1.time = "23:44";
+    for(int i = 0 ; i < 30; ++i){
+        item1.time = QString::number(i);
+         groupModel->addItem(item1);
+    }
+
+    chatModel = new ChatModel();
+    chatView = new ChatView();
+    chatView->setModel(chatModel);
+    chatView->setItemDelegate(new ChatDelegate);
+    //chatView->setSelectionMode(QAbstractItemView::NoSelection);
+    chatView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    Message message;
+    message.text = "tretk";
+    message.timesend  = 0;
+    chatModel->createMessage(message);
+    for(int i = 0 ; i < 30; ++i){
+        message.timesend = i;
+        chatModel->createMessage(message);
+    }
+
     splitter = new QSplitter(Qt::Horizontal);
     splitter->setSizes(QList<int>() << 100 << 100);
     splitter->setHandleWidth(0);
-    listObject = new GroupList(this);
-    chatList = new ChatList(this);
     auth = new AuthWidget();
 
     search = new QLineEdit(this);
@@ -145,10 +174,10 @@ void MainWindow::menuClicked(){
 
 void MainWindow::messageButtonClicked()
 {
-    Message message;
-    message.text = textMessage->text();
-    message.id = auth->getId();
-    createMessage(message);
+//    Message message;
+//    message.text = textMessage->text();
+//    message.id = auth->getId();
+//    createMessage(message);
 }
 
 
@@ -166,26 +195,6 @@ void MainWindow::searchById(int id)
 
 void MainWindow::createMessage(const Message & message)
 {
-    MessageWidget *wgt = new MessageWidget;
-    wgt->setObjectName("message");
-    QLayout* l = new QHBoxLayout;
-    QLabel *text = new QLabel(message.text);
-    text->setObjectName("text");
-    CustomButton *btn = new CustomButton(message.id);
-    btn->setObjectName("profile");
-    int id = message.id;
-    wgt->setId(id);
-
-    connect(btn,&CustomButton::clicked,btn,&CustomButton::clickedById);
-    connect(btn,&CustomButton::sendId,this,&MainWindow::searchById);
-
-    l->addWidget( btn );
-    l->addWidget( text);
-    wgt->setLayout( l );
-
-    QListWidgetItem* item = new QListWidgetItem( chatList );
-    item->setSizeHint( wgt->sizeHint() );
-    chatList->setItemWidget( item, wgt );
 }
 
 void MainWindow::addProfileData(const ProfileData &data)

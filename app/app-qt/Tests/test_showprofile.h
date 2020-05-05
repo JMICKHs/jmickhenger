@@ -2,9 +2,9 @@
 #define TEST_SHOWPROFILE_H
 
 #include <QtTest>
-#include "../mainwindow/mainwindow.h"
+#include "../mainwidget.h"
 
-class test_showprofile : public MainWindow
+class test_showprofile : public MainWidget
 {
     Q_OBJECT
 

@@ -2,9 +2,9 @@
 #define TEST_GROUP_H
 
 #include <QtTest>
-#include "../mainwindow/mainwindow.h"
+#include "../mainwidget.h"
 
-class test_group : public  MainWindow
+class test_group : public MainWidget
 {
     Q_OBJECT
 
