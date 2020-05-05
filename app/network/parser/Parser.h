@@ -5,51 +5,84 @@
 #ifndef NETWORK_PARSER_H
 #define NETWORK_PARSER_H
 
-
+#include <cstdlib>
+#include <iostream>
 #include <string>
-#include <vector>
-#include "../info/Info.h"
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <string>
 
 using namespace std;
+namespace bptree = boost::property_tree;
 
-class AbstractParser {
-public:
-    AbstractParser() = default;
-    virtual void createJson() = 0;
-    virtual void setJson(const string & body) = 0;
-    virtual string & getJson() = 0;
-    virtual void setInt(const int & n, const string & name) = 0;
-    virtual void setString(const string & n, const string & name) = 0;
-    virtual void setDate(const string & n, const string & name) = 0;
-    virtual void setBool(const bool & b, const string & name) = 0;
-    virtual void setMatrixInt(const vector<int> & n, const string & name) = 0;
-    virtual int & getInt(const string & name) = 0;
-    virtual string & getString(const string & name) = 0;
-    virtual int & getDate(const string & name) = 0;
-    virtual bool & getBool(const string & name) = 0;
-    virtual vector<int> & getMatrixInt(const string & name) = 0;
-};
-
-class Parser: public AbstractParser {
+class Parser {
 private:
-    // boost::property_tree::ptree
+    bptree::ptree root;
 public:
-    Parser() {}
-    ~Parser() {}
-    std::string json;
-    void createJson() {}
-    void setJson(const string & body) {}
-    string & getJson() { }
-    void setInt(const int & n, const string & name) {}
-    void setString(const string & n, const string & name) {}
-    void setDate(const string & n, const string & name) {}
-    void setBool(const bool & b, const string & name) {}
-    void setMatrixInt(const vector<int> & n, const string & name) {}
-    int & getInt(const string & name) {}
-    string & getString(const string & name) {}
-    int & getDate(const string & name) {}
-    bool & getBool(const string & name) {}
-    vector<int> & getMatrixInt(const string & name) {}
+    Parser(): root() {}
+    void addBool(const bool & value, const string & name) {
+        root.put(name, value);
+    }
+    void addInt(const int & value, const string & name) {
+        root.put(name, value);
+    }
+    void addStr(const string & value, const string & name) {
+        root.put(name, value);
+    }
+    void addArrInt(const vector<int> & vec, const string & name) {
+        bptree::ptree tmp;
+        for(const auto & item: vec) {
+            bptree::ptree element;
+            element.put("", item);
+            tmp.push_back(make_pair("", element));
+        }
+        root.add_child(name, tmp);
+    }
+    void addArrStr(const vector<string> & vec, const string & name) {
+        bptree::ptree tmp;
+        for(const auto & item: vec) {
+            bptree::ptree element;
+            element.put("", item);
+            tmp.push_back(make_pair("", element));
+        }
+        root.add_child(name, tmp);
+    }
+    void clear() {
+        root.clear();
+    }
+    string getRes() {
+        std::stringstream result;
+        boost::property_tree::write_json(result, root);
+        return result.str();
+    }
+    void setJson(const string & jsonData) {
+        clear();
+        std::stringstream jsonEncodedData(jsonData);
+        boost::property_tree::read_json(jsonEncodedData, root);
+    }
+    bool getBool(const string & name) {
+        return root.get<bool>(name);
+    }
+    int getInt(const string & name) {
+        return root.get<int>(name);
+    }
+    string getStr(const string & name) {
+        return root.get<string>(name);
+    }
+    vector<int> getArrInt(const string & name) {
+        vector<int> res;
+        for(const auto & item: root.get_child(name)) {
+            res.push_back(item.second.get_value<int>());
+        }
+        return res;
+    }
+    vector<string> getArrStr(const string & name) {
+        vector<string> res;
+        for(const auto & item: root.get_child(name)) {
+            res.push_back(item.second.get_value<string>());
+        }
+        return res;
+    }
 };
 
 

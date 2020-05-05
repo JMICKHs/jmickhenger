@@ -17,7 +17,7 @@ public:
     virtual const string & encode() = 0;
     virtual void decode(const string & json) = 0;
 protected:
-    AbstractParser * parser;
+    //AbstractParser * parser;
 };
 
 namespace inf {

@@ -138,8 +138,7 @@ private:
     static optional<shared_ptr<Client>> single;
 };
 
-ba::io_service Client::service = ba::io_service();
-optional<shared_ptr<Client>> Client::single = nullopt;
+
 
 
 #endif //NETWORK_CLIENT_H

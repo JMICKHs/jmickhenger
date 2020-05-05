@@ -19,14 +19,14 @@ add_subdirectory(tests)
 
 find_package(Boost)
 include_directories(${Boost_INCLUDE_DIRS})
-add_executable(test1 main.cpp)
-target_link_libraries(test1 ${Boost_LIBRARIES})
 
 
 file(GLOB sources
         "${PROJECT_SOURCE_DIR}/*.h"
+        "${PROJECT_SOURCE_DIR}/*/*.h"
         "${PROJECT_SOURCE_DIR}/*.cpp"
-        "${PROJECT_SOURCE_DIR}/cache/Cache.cpp"
-        "${PROJECT_SOURCE_DIR}/announcer/Announcer.cpp")
+        "${PROJECT_SOURCE_DIR}/*/*.cpp")
+list(REMOVE_ITEM sources "${PROJECT_SOURCE_DIR}/tests/main.cpp"
+                         "${PROJECT_SOURCE_DIR}/tests/tests.cpp")
 
-add_executable(network ${sources} main.cpp)
+add_executable(network ${sources} ${Boost_LIBRARIES})
