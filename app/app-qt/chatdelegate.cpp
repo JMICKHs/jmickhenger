@@ -1,5 +1,5 @@
 #include "chatdelegate.h"
-#include "custommbutton/CustomButton.h"
+#include "custommbutton/custombutton.h"
 #include "avatarbutton.h"
 #include "messageitemwidget.h"
 #include <QApplication>

@@ -1,4 +1,4 @@
-#include "customButton.h"
+#include "custombutton.h"
 #include <QPainter>
 
 CustomButton::CustomButton(QWidget *parent)
