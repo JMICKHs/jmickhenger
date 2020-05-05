@@ -121,9 +121,13 @@ int main() {
 //    reply2.decode(json);
 //    cout << reply2.encode() << endl;
 
-//    auto net = AppNetwork::shared();
-//    while(true) {
-//
-//    }
+    auto net = AppNetwork::shared();
+    string text;
+    while(cin >> text) {
+        Message msg(56, 3, text, 56, time(NULL), false);
+        net->sendMessage(msg, [](const bool &, optional<string> &){
+
+        });
+    }
     return 0;
 }

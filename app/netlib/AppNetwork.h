@@ -48,7 +48,7 @@ public:
     void getChatRoom(const int & idChat, const function<void(const ChatRoom &)> & callback) {}
     void setObserverChat(const int & idChat, const function<void(const ChatChange &)>& callback) {}
     void setObserverAnonChat(const function<void(const ChatChange &)>& callback) {}
-    void sendMessage(const Message & msg, const function<void(const bool &, optional<string> &)> & callback) {} // отправилось или нет bool
+    void sendMessage(const Message & msg, const function<void(const bool &, optional<string> &)> & callback) override; // отправилось или нет bool
     void getUser(const int & id, const function<void(const UserInfo &)> & callback) {}
     void saveMyAvatar(const string &path, const function<void(const string &, optional<string> &)> & callback) {}
     void getMessages(const int & start, const int & begin, const int & idChat, const function<void(vector<Message> &)> & callback) {}

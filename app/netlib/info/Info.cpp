@@ -18,7 +18,7 @@ inf::MyAccount::MyAccount(const int &id,
                           const vector<int> &friends)
         : id(id), login(login), pathToAvatar(image), password(pass), chats(chats), friends(friends) {}
 
-string inf::MyAccount::encode() {
+string inf::MyAccount::encode() const {
     parser->clear();
     parser->addInt(id, nameId);
     parser->addStr(login, nameLogin);
@@ -51,7 +51,7 @@ inf::UserInfo::UserInfo() : id(-1), login(), pathToAvatar(){}
 inf::UserInfo::UserInfo(const int &id, const string &login, const string &image)
     : id(id), login(login), pathToAvatar(image) {}
 
-string inf::UserInfo::encode() {
+string inf::UserInfo::encode() const {
     parser->clear();
     parser->addInt(id, nameId);
     parser->addStr(login, nameLogin);
@@ -77,7 +77,7 @@ inf::Message::Message()
 inf::Message::Message(const int &id, const int &n, const string &text, const int &owner, const time_t & send, const bool &check)
     : chatId(id), number(n), text(text), idOwner(owner), timesend(send), checked(check){}
 
-string inf::Message::encode() {
+string inf::Message::encode() const {
     parser->clear();
     parser->addInt(chatId, nameId);
     parser->addInt(number, nameNumber);
@@ -112,7 +112,7 @@ inf::ChatInfo::ChatInfo()
 inf::ChatInfo::ChatInfo(const int &id, const string &name)
     : idChat(id), name(name) {}
 
-string inf::ChatInfo::encode() {
+string inf::ChatInfo::encode() const {
     parser->clear();
     parser->addInt(idChat, nameId);
     parser->addStr(name, nameChat);
@@ -134,7 +134,7 @@ inf::ChatRoom::ChatRoom() : idChat(-1) {}
 inf::ChatRoom::ChatRoom(const int &id, const string &name, const vector<int> & users, const vector<int> & admins)
     : idChat(id), name(name), idUsers(users), idAdmins(admins){}
 
-string inf::ChatRoom::encode() {
+string inf::ChatRoom::encode() const {
     parser->clear();
     parser->addInt(idChat, nameId);
     parser->addStr(name, nameChat);
@@ -162,12 +162,12 @@ inf::ChatChange::ChatChange()
 inf::ChatChange::ChatChange(const int &id, const string &cmd, const vector<inf::Message> msgs)
     : idChat(id), action(cmd), messages(msgs) {}
 
-string inf::ChatChange::encode() {
+string inf::ChatChange::encode() const {
     parser->clear();
     parser->addInt(idChat, nameId);
     parser->addStr(action, nameCmd);
     vector<string> tmp;
-    for(Message & item: messages) {
+    for(const Message & item: messages) {
         tmp.push_back(item.encode());
     }
     parser->addArrChild(tmp, nameMsg);
@@ -194,7 +194,7 @@ inf::Reply::Reply() : err(), status(-1), cmd(-1), body() {}
 inf::Reply::Reply(const string &ec, const int &stat, const int &cmd, const string &body)
     : err(ec), status(stat), cmd(cmd), body(body) {}
 
-string inf::Reply::encode() {
+string inf::Reply::encode() const {
     parser->clear();
     parser->addStr(err, nameErr);
     parser->addInt(status, nameStatus);

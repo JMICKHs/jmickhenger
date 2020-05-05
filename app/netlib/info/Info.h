@@ -17,7 +17,7 @@ using namespace std;
 class Codeble {
 public:
     Codeble();
-    virtual string encode() = 0;
+    virtual string encode() const = 0;
     virtual void decode(const string & json) = 0;
 protected:
     shared_ptr<AbstractParser> parser;
@@ -39,7 +39,7 @@ namespace inf {
         string password;
         vector<int> chats;
         vector<int> friends;
-        string encode() override;
+        string encode() const override;
         void decode(const string & json) override;
     private:
         static const string nameId;
@@ -57,7 +57,7 @@ namespace inf {
         int id;
         string login;
         string pathToAvatar;
-        string encode() override;
+        string encode() const override;
         void decode(const string & json) override;
     private:
         static const string nameId;
@@ -75,7 +75,7 @@ namespace inf {
         int idOwner;
         time_t timesend;
         bool checked;
-        string encode() override;
+        string encode() const override;
         void decode(const string & json) override;
     private:
         static const string nameId;
@@ -92,7 +92,7 @@ namespace inf {
         ChatInfo(const int & id, const string & name);
         int idChat;
         string name;
-        string encode() override;
+        string encode() const override;
         void decode(const string & json) override;
     private:
         static const string nameId;
@@ -107,7 +107,7 @@ namespace inf {
         string name;
         vector<int> idUsers;
         vector<int> idAdmins;
-        string encode() override;
+        string encode() const override;
         void decode(const string & json) override;
     private:
         static const string nameId;
@@ -123,7 +123,7 @@ namespace inf {
         int idChat;
         string action;
         vector<Message> messages;
-        string encode() override;
+        string encode() const override;
         void decode(const string & json) override;
     private:
         static const string nameId;
@@ -139,7 +139,7 @@ namespace inf {
         int status;
         int cmd;
         string body;
-        string encode() override;
+        string encode() const override;
         void decode(const string & json) override;
     private:
         static const string nameErr;

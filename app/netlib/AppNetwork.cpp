@@ -11,6 +11,9 @@ AppNetwork::AppNetwork() {
     cache = unique_ptr<AbstractCache>(new Cache);
     client = Client::shared();
     client->run();
+    client->setMsgHandler([](string msg) {
+        cout << "server - " << msg;
+    });
 }
 
 shared_ptr<AppNetwork> AppNetwork::shared() {
@@ -18,4 +21,8 @@ shared_ptr<AppNetwork> AppNetwork::shared() {
         single = shared_ptr<AppNetwork>(new AppNetwork);
     }
     return single.value();
+}
+
+void AppNetwork::sendMessage(const Message &msg, const function<void(const bool &, optional<string> &)> &callback) {
+    client->write(msg.encode());
 }
