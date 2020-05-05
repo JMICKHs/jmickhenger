@@ -11,6 +11,10 @@ MenuWidget::MenuWidget(QWidget *parent)
     this->setFrameShape(QFrame::StyledPanel);
     this->setFrameShadow(QFrame::Raised);
     this->setMinimumWidth(260);
+    QPalette Pal(palette());
+    Pal.setColor(QPalette::Background, Qt::white);
+    this->setAutoFillBackground(true);
+    this->setPalette(Pal);
 }
 
 MenuWidget::~MenuWidget()

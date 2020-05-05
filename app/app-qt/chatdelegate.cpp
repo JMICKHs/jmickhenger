@@ -59,7 +59,6 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
     rect.setHeight(sizeHint(option,index).height());
     const QPalette &palette(myOpt.palette);
     QFont f(myOpt.font);
-    // painter->drawImage(myOpt.widget->rect(),*background);
 
     painter->fillRect(rect, myOpt.state & QStyle::State_Selected ?
                              palette.highlight().color() :

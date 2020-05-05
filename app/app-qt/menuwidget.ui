@@ -18,7 +18,7 @@
     <rect>
      <x>0</x>
      <y>1</y>
-     <width>231</width>
+     <width>258</width>
      <height>381</height>
     </rect>
    </property>
@@ -44,6 +44,22 @@
           <property name="spacing">
            <number>0</number>
           </property>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
           <item>
            <widget class="CustomButton" name="pushButton">
             <property name="maximumSize">
@@ -104,6 +120,30 @@
        </layout>
       </item>
       <item>
+       <widget class="Line" name="line_2">
+        <property name="styleSheet">
+         <string notr="true">QFrame[frameShape=&quot;5&quot;]
+{
+    border: 0.5px;
+	max-width: 0.5px;
+    background: rgb(220,220,220);
+}
+QFrame[frameShape=&quot;4&quot;]
+{
+    border: 0.5px;
+	max-height: 0.5px;
+    background: rgb(220,220,220);
+}</string>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="CustomButton" name="createGroupButton">
         <property name="minimumSize">
          <size>
@@ -143,6 +183,13 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item>
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
     </item>
     <item>
      <spacer name="verticalSpacer">

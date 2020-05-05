@@ -35,19 +35,18 @@ MainWidget::MainWidget(QWidget *parent) :
 
     GroupItem item1;
     item1.id = 3;
-    item1.name = "kekdsfgfgdfgdfghfhtyurcvbcbbcvbcvbcvhjhjhjhjhjhjhjhjhjhjk";
+    item1.name = "Textopark algosi";
     item1.userIds = {3,2,1};
-    item1.lastMessage = "netghghghghghghghghghghghghghghgh";
+    item1.lastMessage = "skinyte semenar";
     item1.time = "23:44";
-    for(int i = 0 ; i < 30; ++i){
-        item1.time = QString::number(i);     
+    for(int i = 0 ; i < 30; ++i){   
         groupModel->addItem(item1);
     }
 
     chatModel = new ChatModel();
     ui->chatList->setModel(chatModel);
     ui->chatList->setItemDelegate(new ChatDelegate);
-    //ui->chatList->setSelectionMode(QAbstractItemView::NoSelection);
+    ui->chatList->setSelectionMode(QAbstractItemView::NoSelection);
     ui->chatList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     connect(ui->menuButton,&CustomButton::clicked,menuWidget,&MenuWidget::show);
     connect(ui->menuButton,&CustomButton::clicked,this,&MainWidget::menuClicked);
