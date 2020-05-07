@@ -123,7 +123,7 @@ int main() {
 
     auto net = AppNetwork::shared();
     string text;
-    while(cin >> text) {
+    while(getline(cin, text)) {
         Message msg(56, 3, text, 56, time(NULL), false);
         net->sendMessage(msg, [](const bool &, optional<string> &){
 
