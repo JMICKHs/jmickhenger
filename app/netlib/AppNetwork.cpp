@@ -6,15 +6,20 @@
 
 #include "AppNetwork.h"
 
+#include <memory>
+
 optional<shared_ptr<AppNetwork>> AppNetwork::single = nullopt;
 
 AppNetwork::AppNetwork() {
-    announcer = unique_ptr<Announcer>(new Announcer);
+    announcer = std::make_unique<Announcer>();
     cache = unique_ptr<AbstractCache>(new Cache);
     client = Client::shared();
     client->run();
-    client->setMsgHandler([](string msg) {
-        cout << "server - " << msg;
+    client->setMsgHandler([](const string & msg) {
+        cout << "server call me -  " << msg;
+    });
+    client->setErrHandler([](int errcode){
+        cout << "O no! New err in connection! code - " << errcode << endl;
     });
 }
 

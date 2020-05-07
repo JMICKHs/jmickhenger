@@ -12,15 +12,15 @@ Announcer::~Announcer() {
     callbacks.clear();
 }
 
-void Announcer::addCallback(const int &idChat, const function<void(const inf::ChatChange)> &callback) {
+void Announcer::addCallback(const int &idChat, const function<void(const inf::ChatChange &)> &callback) {
     callbacks[idChat] = callback;
 }
 
-void Announcer::setGeneralCallback(const function<void(const inf::ChatChange)> &callback) {
+void Announcer::setGeneralCallback(const function<void(const inf::ChatChange &)> &callback) {
     generalCallback = callback;
 }
 
-void Announcer::notify(inf::ChatChange &change) {
+void Announcer::notify(const inf::ChatChange &change) {
     if(callbacks.count(change.idChat)) {
         callbacks[change.idChat](change);
     } else if(generalCallback) {

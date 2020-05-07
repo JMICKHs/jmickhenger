@@ -27,7 +27,7 @@ namespace inf {
     class MyAccount : public Codeble {
     public:
         MyAccount();
-        MyAccount(const int & id,
+        MyAccount(int id,
                 const string & login,
                 const string & image,
                 const string & pass,
@@ -53,7 +53,7 @@ namespace inf {
     class UserInfo : public Codeble {
     public:
         UserInfo();
-        UserInfo(const int & id, const string & login, const string & image);
+        UserInfo(int id, const string & login, const string & image);
         int id;
         string login;
         string pathToAvatar;
@@ -68,7 +68,8 @@ namespace inf {
     class Message : public Codeble {
     public:
         Message();
-        Message(const int &id, const int &n, const string &text, const int &owner, const time_t & send, const bool &check);
+        //ТУТ
+        Message(int id, int n, const string & text, int owner, time_t send, bool check);
         int chatId;
         int number;
         string text;
@@ -89,7 +90,7 @@ namespace inf {
     class ChatInfo : public Codeble {
     public:
         ChatInfo();
-        ChatInfo(const int & id, const string & name);
+        ChatInfo(int id, const string & name);
         int idChat;
         string name;
         string encode() const override;
@@ -102,7 +103,7 @@ namespace inf {
     class ChatRoom : public Codeble {
     public:
         ChatRoom();
-        ChatRoom(const int & id, const string & name, const vector<int> & users, const vector<int> & admins);
+        ChatRoom(int id, const string & name, const vector<int> & users, const vector<int> & admins);
         int idChat;
         string name;
         vector<int> idUsers;
@@ -119,7 +120,7 @@ namespace inf {
     class ChatChange : public Codeble {
     public:
         ChatChange();
-        ChatChange(const int & id, const string & cmd, const vector<inf::Message> msgs);
+        ChatChange(int id, const string & cmd, const vector<inf::Message> & msgs);
         int idChat;
         string action;
         vector<Message> messages;
@@ -134,7 +135,7 @@ namespace inf {
     class Reply : public Codeble {
     public:
         Reply();
-        Reply(const string & ec, const int & stat, const int & cmd, const string & body);
+        Reply(const string & ec, int stat, int cmd, const string & body);
         string err;
         int status;
         int cmd;

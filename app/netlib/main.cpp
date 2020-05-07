@@ -63,7 +63,7 @@ int main() {
 //        cout << item << " ";
 //    }
 //    cout << "\n";
-//    cout << "names = " << p.getChild("names");
+//    cout << "names = " << p.getCustom("names");
 //    cout << "-----------\n";
 
 //    //test codeble

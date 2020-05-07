@@ -18,8 +18,8 @@ namespace bptree = boost::property_tree;
 
 class AbstractParser {
 public:
-    virtual void addBool(const bool & value, const string & name) = 0;
-    virtual void addInt(const int & value, const string & name) = 0;
+    virtual void addBool(bool value, const string & name) = 0;
+    virtual void addInt(int value, const string & name) = 0;
     virtual void addStr(const string & value, const string & name) = 0;
     virtual void addArrInt(const vector<int> & vec, const string & name) = 0;
     virtual void addArrStr(const vector<string> & vec, const string & name) = 0;
@@ -31,10 +31,10 @@ public:
     virtual string getStr(const string & name) = 0;
     virtual vector<int> getArrInt(const string & name) = 0;
     virtual vector<string> getArrStr(const string & name) = 0;
-    virtual void addChild(const string & json, const string & name) = 0;
-    virtual void addArrChild(const vector<string> & jsons, const string & name) = 0;
-    virtual string getChild(const string & name) = 0;
-    virtual vector<string> getArrChild(const string & name) = 0;
+    virtual void addCustom(const string & json, const string & name) = 0;
+    virtual void addArrCustom(const vector<string> & jsons, const string & name) = 0;
+    virtual string getCustom(const string & name) = 0;
+    virtual vector<string> getArrCustom(const string & name) = 0;
 };
 
 class Parser: public AbstractParser {
@@ -42,8 +42,8 @@ private:
     bptree::ptree root;
 public:
     Parser(): root() {}
-    void addBool(const bool & value, const string & name) override;
-    void addInt(const int & value, const string & name) override;
+    void addBool(bool value, const string & name) override;
+    void addInt(int value, const string & name) override;
     void addStr(const string & value, const string & name) override;
     void addArrInt(const vector<int> & vec, const string & name) override;
     void addArrStr(const vector<string> & vec, const string & name) override;
@@ -55,10 +55,10 @@ public:
     string getStr(const string & name) override;
     vector<int> getArrInt(const string & name) override;
     vector<string> getArrStr(const string & name) override;
-    void addChild(const string & json, const string & name) override;
-    void addArrChild(const vector<string> & jsons, const string & name) override;
-    string getChild(const string & name) override;
-    vector<string> getArrChild(const string & name) override;
+    void addCustom(const string & json, const string & name) override;
+    void addArrCustom(const vector<string> & jsons, const string & name) override;
+    string getCustom(const string & name) override;
+    vector<string> getArrCustom(const string & name) override;
 };
 
 

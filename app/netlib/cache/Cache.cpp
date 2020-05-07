@@ -10,15 +10,15 @@ Cache::Cache() {
 
 }
 
-bool Cache::save(inf::MyAccount &acc) {
+bool Cache::save(const inf::MyAccount &acc) {
     return false;
 }
 
-bool Cache::save(inf::UserInfo &user) {
+bool Cache::save(const inf::UserInfo &user) {
     return false;
 }
 
-bool Cache::save(vector<inf::ChatInfo> &chatList) {
+bool Cache::save(const vector<inf::ChatInfo> & chatList) {
     return false;
 }
 

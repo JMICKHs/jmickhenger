@@ -26,6 +26,7 @@ public:
     virtual void write(const string & msg) = 0;
     virtual void close() = 0;
     virtual void setMsgHandler(const function<void(const string &)> & f) = 0;
+    virtual void setErrHandler(const function<void(int)> & f) = 0;
 };
 
 class Client: public enable_shared_from_this<Client>, public AbstractClient {
@@ -70,6 +71,9 @@ public:
     void setMsgHandler(const function<void(const string &)> & f) {
         msgHandler = f;
     }
+    void setErrHandler(const function<void(int)> & f) {
+        errHandler = f;
+    }
 private:
     Client(tcp::resolver::iterator & endpointIterator): sock(service) {
 //        ba::socket_base::keep_alive option(true);
@@ -82,7 +86,12 @@ private:
                 //отправка init сообщения
                 self->loopRead();
             } else {
-                cout << "err in connect " << err.value() << endl;
+                if (self->errHandler) {
+                    self->errHandler.value()(err.value());
+                } else {
+                    cout << "err in connect " << err.value() << endl;
+                    self->close();
+                }
             }
         };
         ba::async_connect(sock, std::move(it), handler);
@@ -92,11 +101,7 @@ private:
         auto condition = boost::bind(&Client::readСondition, shared_from_this(), _1, _2);
         auto handler = [self = shared_from_this()](boost::system::error_code err, size_t length) {
             if (!err) {
-                string msg;
-//                msg.resize(length);
-                //msg.reserve(length - 3);
-//                copy((self->readMsg).begin(), (self->readMsg).end() - 4, msg.begin());
-                //copy(self->readMsg.begin(), self->readMsg.end() - 3, msg.begin());
+                string msg; msg.reserve(length - 3);
                 for(size_t i = 0; i < length - 3; ++i) {
                     msg.push_back(self->readMsg[i]);
                 }
@@ -107,7 +112,12 @@ private:
                 }
                 self->loopRead();
             } else {
-                cout << err.value() << endl;
+                if (self->errHandler) {
+                    self->errHandler.value()(err.value());
+                } else {
+                    cout << "err in connect " << err.value() << endl;
+                    self->close();
+                }
             }
         };
         ba::async_read(sock, buf, condition, handler);
@@ -128,8 +138,12 @@ private:
                 }
             }
             else {
-                cout << err.value() << endl;
-                self->sock.close();
+                if (self->errHandler) {
+                    self->errHandler.value()(err.value());
+                } else {
+                    cout << "err in connect " << err.value() << endl;
+                    self->close();
+                }
             }
         };
         ba::async_write(sock, buf, handler);
@@ -143,6 +157,7 @@ private:
     array<char, maxMsg> readMsg;
     queue<string> writeMsgQue;
     optional<function<void(const string &)>> msgHandler;
+    optional<function<void(int)>> errHandler;
     static optional<shared_ptr<Client>> single;
 };
 

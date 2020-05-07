@@ -12,9 +12,9 @@
 
 class AbstractCache {
 public:
-    virtual bool save(inf::MyAccount & acc) = 0;
-    virtual bool save(inf::UserInfo & user) = 0;
-    virtual bool save(vector<inf::ChatInfo> & chatList) = 0;
+    virtual bool save(const inf::MyAccount & acc) = 0;
+    virtual bool save(const inf::UserInfo & user) = 0;
+    virtual bool save(const vector<inf::ChatInfo> & chatList) = 0;
     virtual std::optional<inf::MyAccount> getMyAccount() = 0;
     virtual std::optional<inf::UserInfo> getUser(int idUser) = 0;
     virtual vector<inf::ChatInfo> getChatList() = 0;
@@ -23,9 +23,9 @@ public:
 class Cache: public AbstractCache {
 public:
     Cache();
-    bool save(inf::MyAccount & acc) override;
-    bool save(inf::UserInfo & user) override;
-    bool save(vector<inf::ChatInfo> & chatList) override;
+    bool save(const inf::MyAccount & acc) override;
+    bool save(const inf::UserInfo & user) override;
+    bool save(const vector<inf::ChatInfo> & chatList) override;
     std::optional<inf::MyAccount> getMyAccount() override;
     std::optional<inf::UserInfo> getUser(int idUser) override;
     vector<inf::ChatInfo> getChatList() override;
