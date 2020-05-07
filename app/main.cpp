@@ -1,8 +1,8 @@
 #include <iostream>
-#include "announcer/Announcer.h"
-#include "client/Client.h"
+#include "netlib/announcer/Announcer.h"
+#include "netlib/client/Client.h"
 #include <ctime>
-#include "AppNetwork.h"
+#include "netlib/AppNetwork.h"
 // мэин тут только для проверки, эта часть проекта должна быть либой
 using namespace std;
 using namespace inf;

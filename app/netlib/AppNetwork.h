@@ -44,6 +44,28 @@ using errstr = optional<string>;
 
 class AppNet: enable_shared_from_this<AppNet> {
 public:
+    void runClient(/* errHandler */);
+    void stopClient();
+    bool check();
+    void auth();
+    void registration();
+    void getListChat();
+    void getChatRoom();
+    void sendMsg();
+    void setObserverChat();
+    void setObserverUnknownChat();
+    void getMsgs();
+    void getLastMsg();
+    void addFrnd();
+    void getListFrnd();
+    void getInfoMe();
+    void getUser();
+    void createChat();
+    void addAdminChat();
+    void dellChat();
+    void dellMsg();
+    void saveAvatar();
+    void changeMe();
 private:
     AppNet();
     static optional<shared_ptr<AppNet>> single;

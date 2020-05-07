@@ -6,5 +6,17 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(Boost)
 include_directories(${Boost_INCLUDE_DIRS})
 
-add_executable(netlib main.cpp announcer/Announcer.cpp announcer/Announcer.h info/Info.cpp info/Info.h parser/Parser.cpp parser/Parser.h client/Client.cpp client/Client.h AppNetwork.cpp AppNetwork.h cache/Cache.cpp cache/Cache.h)
+file(GLOB SOURCES
+        "${PROJECT_SOURCE_DIR}/*.cpp"
+        "${PROJECT_SOURCE_DIR}/*/*.cpp"
+        "${PROJECT_SOURCE_DIR}/*.h"
+        "${PROJECT_SOURCE_DIR}/*/*.h")
+
+add_library(netlib SHARED ${SOURCES})
+
+if(UNIX AND NOT APPLE)
+    find_package(Threads REQUIRED)
+    target_link_libraries(${PROJECT_NAME} Threads::Threads)
+endif()
+
 target_link_libraries(netlib ${Boost_LIBRARIES})
