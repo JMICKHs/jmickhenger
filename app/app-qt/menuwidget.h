@@ -8,12 +8,14 @@
 #include <QPoint>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include "custommbutton/CustomButton.h"
+#include "custommbutton/custombutton.h"
 #include <QLabel>
 #include <QFrame>
-#include "grouplist/grouplist.h"
+#include <QFocusEvent>
 
+#include <../netlib/info/Info.h>
 
+using namespace inf;
 namespace Ui {
 class MenuWidget;
 }
@@ -25,6 +27,7 @@ class MenuWidget : public QFrame
 public:
     explicit MenuWidget(QWidget *parent = nullptr);
      CustomButton* getCreateButton();
+
     ~MenuWidget();
 
 private:
@@ -33,8 +36,6 @@ private:
 public slots:
     void setPosition();
 
-signals:
-    void createGroupSignal(Chat &chat);
 };
 
 #endif // MENUWIDGET_H

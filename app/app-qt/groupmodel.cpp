@@ -20,17 +20,17 @@ QVariant GroupModel::data(const QModelIndex &index, int role) const
            return QVariant();
 
        if (role == Qt::DisplayRole){
-           GroupItem item = items.at(index.row());
+           Chat item = items.at(index.row());
            return QVariant::fromValue(item);
        }
        else
            return QVariant();
 }
 
-void GroupModel::addItem(const GroupItem &item)
+void GroupModel::addItem(const Chat &item)
 {
-    items.push_back(item);
     int row = this->rowCount();
-
-    this->insertRows(row,1);
+    beginInsertRows(QModelIndex(),row,row);
+    items.push_back(item);
+    endInsertRows();
 }

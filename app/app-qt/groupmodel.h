@@ -2,17 +2,12 @@
 #define GROUPMODEL_H
 
 #include <QAbstractListModel>
-#include <custommbutton/CustomButton.h>
+#include <custommbutton/custombutton.h>
+#include <../netlib/info/Info.h>
 
-struct GroupItem{
-    int id;
-    std::vector<int> userIds;
-    QString name;
-    QString lastMessage;
-    QString time;
+using Chat = inf::ChatRoom;
 
-};
-Q_DECLARE_METATYPE(GroupItem)
+Q_DECLARE_METATYPE(Chat)
 
 class GroupModel : public QAbstractListModel
 {
@@ -21,9 +16,9 @@ public:
     GroupModel(QObject *parent = nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    void addItem(const GroupItem &item);
+    void addItem(const Chat &item);
 private:
-    std::vector<GroupItem> items;
+    std::vector<Chat> items;
 signals:
 
 public slots:

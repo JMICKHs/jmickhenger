@@ -7,7 +7,7 @@ MenuWidget::MenuWidget(QWidget *parent)
 {
     ui->setupUi(this);
     this->setLayout(ui->mainLayout);
-    this->setWindowFlags(Qt::SplashScreen);
+    this->setWindowFlags(Qt::Popup);
     this->setFrameShape(QFrame::StyledPanel);
     this->setFrameShadow(QFrame::Raised);
     this->setMinimumWidth(260);
@@ -29,5 +29,6 @@ CustomButton* MenuWidget::getCreateButton()
 
 void MenuWidget::setPosition()
 {
+    this->setFocus();
     this->raise();
 }

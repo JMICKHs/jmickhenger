@@ -2,7 +2,7 @@
 #define CHATMODEL_H
 
 #include <QAbstractListModel>
-#include <custommbutton/CustomButton.h>
+#include <custommbutton/custombutton.h>
 #include "chatlist/chatlist.h"
 
 class ChatModel : public QAbstractListModel
@@ -15,11 +15,9 @@ public:
     void createMessage(const Message &_message);
 private:
     std::vector<Message> items;
+    bool newMessageOnBottom;
 
 signals:
-
-public slots:
-    void messageCreated(const Message &_message);
 };
 
 #endif // CHATMODEL_H

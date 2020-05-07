@@ -36,11 +36,5 @@ void ChatModel::createMessage(const Message &_message)
         int row = this->rowCount();
         this->insertRows(row,1);
     }
-}
-
-void ChatModel::messageCreated(const Message &_message)
-{
-    items.push_back(std::move(_message));
-    int row = this->rowCount();
-    this->insertRows(row,1);
+    emit this->dataChanged(QModelIndex(),QModelIndex());
 }

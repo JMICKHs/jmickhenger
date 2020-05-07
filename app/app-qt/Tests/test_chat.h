@@ -4,7 +4,6 @@
 #include <QtTest>
 #include "../mainwidget.h"
 
-
 class test_chat : public MainWidget
 {
     Q_OBJECT

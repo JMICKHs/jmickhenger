@@ -2,16 +2,9 @@
 #define CHATLIST_H
 
 #include <QListWidget>
+#include <../netlib/info/Info.h>
 
-struct Message{
-    int chatId;
-    int number;
-    std::string text;
-    std::string name;
-    int idOwner;
-    time_t timesend;
-    bool checked;
-};
+using namespace inf;
 Q_DECLARE_METATYPE(Message)
 class MessageWidget : public QWidget
 {

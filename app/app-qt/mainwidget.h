@@ -10,7 +10,7 @@
 #include <QResizeEvent>
 #include <QMoveEvent>
 #include <QLabel>
-#include "custommbutton/CustomButton.h"
+#include "custommbutton/custombutton.h"
 #include "menuwidget.h"
 #include "profiledata/profiledata.h"
 #include "datashowwidget/datashowwidget.h"
@@ -23,6 +23,9 @@
 #include <chatmodel.h>
 #include <chatview.h>
 #include <chatdelegate.h>
+#include "proxymodel.h"
+#include <../netlib/AppNetwork.h>
+#include <QFocusEvent>
 
 class AppNetwork;
 
@@ -46,7 +49,6 @@ public:
     void resizeEvent(QResizeEvent *event) override;
     void moveEvent(QMoveEvent *event) override;
 
-
 public slots:
     void menuClicked();
     void sendMessageFromInput();
@@ -61,6 +63,10 @@ protected:
     ChatModel *chatModel;
     MenuWidget *menuWidget;
     AppNetwork *network;
+    ProxyModel *proxyModel;
+private slots:
+    void on_groupList_clicked(const QModelIndex &index);
+    void on_searchInput_textChanged(const QString &arg1);
 };
 
 #endif // MAINWIDGET_H

@@ -2,11 +2,6 @@
 
 
 
-void GroupList::addNewGroup(Chat &chat)
-{
-
-}
-
 GroupList::GroupList(QWidget *parent)
     :QListWidget(parent)
 {

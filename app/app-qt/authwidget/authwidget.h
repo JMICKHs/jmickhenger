@@ -3,9 +3,9 @@
 
 #include <QWidget>
 #include <QLineEdit>
-struct UserInfo
-{
-};
+#include <../netlib/info/Info.h>
+
+using namespace inf;
 
 class AuthWidget : public QWidget
 {

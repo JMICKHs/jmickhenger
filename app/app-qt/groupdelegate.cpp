@@ -1,16 +1,16 @@
 #include "groupdelegate.h"
 #include <QDebug>
-
+#include <../netlib/info/Info.h>
 
 GroupDelegate::GroupDelegate(QObject *parent)
     : QStyledItemDelegate(parent)
 {
-    groupIcon = new QPixmap("G://download//unnamed.jpg");
+    groupIcon = new QPixmap("/home/kostikan/Загрузки/nvkmEKOEV9Y.jpg");
 }
 
 void GroupDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    GroupItem item = index.model()->data(index).value<GroupItem>();
+    Chat item = index.model()->data(index).value<Chat>();
     QStyleOptionViewItem myOpt = option;
     myOpt.displayAlignment = Qt::AlignLeft;
 
@@ -50,23 +50,23 @@ void GroupDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     painter->setFont(f);
     painter->setPen(palette.text().color());
     painter->drawText(GroupNameRect, Qt::TextSingleLine,
-                      font.elidedText(item.name,Qt::ElideRight,width - 150));
+                      font.elidedText(QString::fromStdString(item.name),Qt::ElideRight,width - 150));
 
 
     QRect LastMessageRect = QRect(groupIconSize.x() + 15,GroupNameRect.y() + 35,width - 130,30);
     painter->setFont(f);
     painter->setPen(palette.text().color());
-    painter->drawText(LastMessageRect, Qt::TextSingleLine,
-                      font.elidedText(item.lastMessage,Qt::ElideRight,width - 150));
+   // painter->drawText(LastMessageRect, Qt::TextSingleLine,
+     //                 font.elidedText(item.lastMessage,Qt::ElideRight,width - 150));
 
 
-    if(sizeHint(option,index).width() > 140){
-        QRect TimeMessageRect = QRect(width - groupIconSize.x() - 20 ,GroupNameRect.y() + 5,40,30);
-        painter->setFont(f);
-        painter->setPen(palette.text().color());
-        painter->drawText(TimeMessageRect, Qt::TextSingleLine,
-                      item.time);
-    }
+    //if(sizeHint(option,index).width() > 140){
+    //    QRect TimeMessageRect = QRect(width - groupIconSize.x() - 20 ,GroupNameRect.y() + 5,40,30);
+    //    painter->setFont(f);
+    //    painter->setPen(palette.text().color());
+    //    painter->drawText(TimeMessageRect, Qt::TextSingleLine,
+    //                  item.time);
+    //}
     painter->setPen(palette.mid().color());
     if(rect.y() != 0)
         painter->drawLine(GroupNameRect.x(),rect.y(),rect.width(),rect.y());

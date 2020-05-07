@@ -5,29 +5,15 @@
 #include <QListWidgetItem>
 #include <QFocusEvent>
 #include <QString>
+#include <../netlib/info/Info.h>
 
+using namespace inf;
 
-struct Chat{
-   int id;
-   std::vector<int> userIds;
-   QString name;
-   QString lastMessage;
-};
-
-struct ChatChange{};
-struct ChatInfo{};
-struct ChatRoom{
-    QString name;
-    int id;
-    std::vector<int> userIds;
-};
 
 class GroupList : public QListWidget
 {
     Q_OBJECT
 
-public slots:
-    void addNewGroup(Chat & chat);
 
 private:
     std::function<void(const ChatRoom chatroom)> ChatRoomCallback;

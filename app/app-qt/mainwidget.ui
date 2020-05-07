@@ -471,36 +471,6 @@ QFrame[frameShape=&quot;4&quot;]
        </widget>
       </item>
       <item>
-       <widget class="Line" name="line_4">
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QFrame[frameShape=&quot;5&quot;]
-{
-    border: 0.5px;
-	max-width: 0.5px;
-    background: rgb(220,220,220);
-}
-QFrame[frameShape=&quot;4&quot;]
-{
-    border: 0.5px;
-	max-height: 0.5px;
-    background: rgb(220,220,220);
-}</string>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Plain</enum>
-        </property>
-        <property name="lineWidth">
-         <number>1</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <property name="spacing">
          <number>0</number>
@@ -551,18 +521,24 @@ QFrame[frameShape=&quot;4&quot;]
          </spacer>
         </item>
         <item>
-         <widget class="QLineEdit" name="messageInput">
+         <widget class="ChatInput" name="messageInput">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="minimumSize">
            <size>
-            <width>150</width>
-            <height>43</height>
+            <width>0</width>
+            <height>40</height>
            </size>
           </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="frame">
-           <bool>false</bool>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>100</height>
+           </size>
           </property>
           <property name="placeholderText">
            <string>Написать сообщение...</string>
@@ -622,6 +598,36 @@ QFrame[frameShape=&quot;4&quot;]
         </item>
        </layout>
       </item>
+      <item>
+       <widget class="Line" name="line_4">
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QFrame[frameShape=&quot;5&quot;]
+{
+    border: 0.5px;
+	max-width: 0.5px;
+    background: rgb(220,220,220);
+}
+QFrame[frameShape=&quot;4&quot;]
+{
+    border: 0.5px;
+	max-height: 0.5px;
+    background: rgb(220,220,220);
+}</string>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth">
+         <number>1</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
@@ -642,6 +648,11 @@ QFrame[frameShape=&quot;4&quot;]
    <class>GroupListView</class>
    <extends>QListView</extends>
    <header>grouplistview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ChatInput</class>
+   <extends>QTextEdit</extends>
+   <header>chatinput.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

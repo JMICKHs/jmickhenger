@@ -1,5 +1,6 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
+#include "chatinput.h"
 #include <QDebug>
 
 MainWidget::MainWidget(QWidget *parent) :
@@ -7,11 +8,13 @@ MainWidget::MainWidget(QWidget *parent) :
     ui(new Ui::MainWidget)
 {
     ui->setupUi(this);
-    menuWidget = new MenuWidget();
-    chatModel = new ChatModel();
-    groupModel = new GroupModel();
+    menuWidget = new MenuWidget(this);
+    chatModel = new ChatModel(this);
+    groupModel = new GroupModel(this);
 
-    ui->groupList->setModel(groupModel);
+    proxyModel = new ProxyModel(this);
+    proxyModel->setSourceModel(groupModel);
+    ui->groupList->setModel(proxyModel);
     ui->groupList->setItemDelegate(new GroupDelegate);
     ui->groupList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->searchInput->setWindowFlag(Qt::FramelessWindowHint);
@@ -29,20 +32,22 @@ MainWidget::MainWidget(QWidget *parent) :
     this->setAutoFillBackground(true);
     this->setPalette(Pal);
 
-//    QPalette palette = ui->searchInput->palette();
-//    palette.setColor(QPalette::Base,QColor(230,230,230));
-//    ui->searchInput->setPalette(palette);
+    auto font =  ui->label->font();
+    font.setBold(true);
+    ui->label->setFont(font);
 
-    GroupItem item1;
-    item1.id = 3;
+    Chat item1;
+    item1.idChat = 3;
     item1.name = "Textopark algosi";
-    item1.userIds = {3,2,1};
-    item1.lastMessage = "skinyte semenar";
-    item1.time = "23:44";
-    for(int i = 0 ; i < 30; ++i){   
+    item1.idUsers = {3,2,1};
+    //item1.lastMessage = "skinyte semenar";
+    //Chat
+    //item1. = "23:44";
+    for(int i = 0 ; i < 23; ++i){
         groupModel->addItem(item1);
-    }
 
+        item1.name = std::to_string(i);
+    }
     chatModel = new ChatModel();
     ui->chatList->setModel(chatModel);
     ui->chatList->setItemDelegate(new ChatDelegate);
@@ -51,7 +56,8 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(ui->menuButton,&CustomButton::clicked,menuWidget,&MenuWidget::show);
     connect(ui->menuButton,&CustomButton::clicked,this,&MainWidget::menuClicked);
     connect(ui->sendButton,&CustomButton::clicked,this,&MainWidget::sendMessageFromInput);
-
+    connect(ui->searchInput,&QLineEdit::textChanged,proxyModel,&ProxyModel::search_String_Changed);
+    connect(ui->messageInput,&ChatInput::sendMessageOnEnter,this,&MainWidget::sendMessageFromInput);
     this->setLayout(ui->MainLayout);
 }
 
@@ -81,12 +87,38 @@ void MainWidget::menuClicked()
 
 void MainWidget::sendMessageFromInput()
 {
+
     Message message;
-    message.text = ui->messageInput->text().toStdString();
+    if(ui->messageInput->toPlainText().contains("\n") && ui->messageInput->toPlainText().size() == 1)
+        return;
+    message.text = ui->messageInput->toPlainText().toStdString();
+
     qDebug() << QString::fromStdString(message.text);
-    message.name = "kostya";
+    //message.name = "kostya";
     message.timesend  = 0;
     chatModel->createMessage(message);
     ui->messageInput->clear();
+    auto net = AppNetwork::shared();
+
+    net->sendMessage(message,[](const bool&,std::optional<string>&){});
     emit ui->chatList->doItemsLayout();
 }
+
+void MainWidget::on_groupList_clicked(const QModelIndex &index)
+{
+    ui->label->setText(QString::fromStdString(index.model()->data(index).value<Chat>().name));
+    QString info = QString::number(index.model()->data(index).value<Chat>().idUsers.size());
+    if(info <= 2)
+        info += "  участника";
+    else
+        info += "  участников";
+
+    ui->label_2->setText(info);
+}
+
+void MainWidget::on_searchInput_textChanged(const QString &arg1)
+{
+    //proxyModel->setDynamicSortFilter(true);
+    //proxyModel->setDynamicSortFilter(false);
+}
+
