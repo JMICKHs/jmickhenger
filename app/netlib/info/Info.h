@@ -132,10 +132,10 @@ namespace inf {
         static const string nameMsg;
     };
 
-    class Reply : public Codeble {
+    class Package : public Codeble {
     public:
-        Reply();
-        Reply(const string & ec, int stat, int cmd, const string & body);
+        Package();
+        Package(const string & ec, int stat, int cmd, const string & body);
         string err;
         int status;
         int cmd;

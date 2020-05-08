@@ -44,14 +44,17 @@ using errstr = optional<string>;
 
 class AppNet: enable_shared_from_this<AppNet> {
 public:
-    void runClient(/* errHandler */);
+    AppNet(const AppNet &other) = delete;
+    AppNet(AppNet &&other) = delete;
+    static shared_ptr<AppNet> shared();
+    void runClient(const function<void(int)> & errHandler);
     void stopClient();
     bool check();
     void auth();
     void registration();
     void getListChat();
     void getChatRoom();
-    void sendMsg();
+    void sendMsg(const Message & msg, const function<void(const bool &, optional<string> &)> & callback);
     void setObserverChat();
     void setObserverUnknownChat();
     void getMsgs();
@@ -61,17 +64,21 @@ public:
     void getInfoMe();
     void getUser();
     void createChat();
-    void addAdminChat();
-    void dellChat();
-    void dellMsg();
-    void saveAvatar();
-    void changeMe();
+    void addAdminChat(int idChat, int idUser);
+    void dellChat(int idChat);
+    void dellMsg(int idChat, int number);
+    void saveAvatar(); //??
+    void changeMe(const inf::MyAccount & acc);
 private:
     AppNet();
     static optional<shared_ptr<AppNet>> single;
     unique_ptr<Announcer> announcer;
     unique_ptr<AbstractCache> cache;
     shared_ptr<AbstractClient> client;
+    multimap<int, shared_ptr<void>> buffer;
+    // храним callback, что ожидают опрдленных сообщений от сервера
+    // multi, так как на один cmd могут ожидать несколько callback
+    // скорей всего вынесу логику с multimap в announcer
 };
 
 class AbstractNetwork {
@@ -90,33 +97,6 @@ public:
     virtual void addChat(ChatRoom & room, const function<void(const ChatRoom &, optional<string> &)> & callback) = 0;
     virtual bool check() = 0;
 };
-
-class AppNetwork : AbstractNetwork {
-public:
-    AppNetwork(const AppNetwork &other) = delete;
-    AppNetwork(AppNetwork &&other) = delete;
-    static shared_ptr<AppNetwork> shared();
-    optional<MyAccount> getMe() {}
-    void login(const string & name, const string & password, const function<void(const MyAccount &, optional<string> &)> & callback) {}
-    void registration(const MyAccount & acc, const function<void(const int &, optional<string> &)>& callback) {} //если id == 0, то неудачно
-    void getListChat(const int & idUser, const function<void(const vector<ChatInfo> &)> & callback) {}
-    void getChatRoom(const int & idChat, const function<void(const ChatRoom &)> & callback) {}
-    void setObserverChat(const int & idChat, const function<void(const ChatChange &)>& callback) {}
-    void setObserverAnonChat(const function<void(const ChatChange &)>& callback) {}
-    void sendMessage(const Message & msg, const function<void(const bool &, optional<string> &)> & callback) override; // отправилось или нет bool
-    void getUser(const int & id, const function<void(const UserInfo &)> & callback) {}
-    void saveMyAvatar(const string &path, const function<void(const string &, optional<string> &)> & callback) {}
-    void getMessages(const int & start, const int & begin, const int & idChat, const function<void(vector<Message> &)> & callback) {}
-    void addChat(ChatRoom & room, const function<void(const ChatRoom &, optional<string> &)> & callback) {}
-    bool check() {}
-private:
-    AppNetwork();
-    static optional<shared_ptr<AppNetwork>> single;
-    unique_ptr<Announcer> announcer;
-    unique_ptr<AbstractCache> cache;
-    shared_ptr<AbstractClient> client;
-};
-
 
 
 #endif //NETLIB_APPNETWORK_H
