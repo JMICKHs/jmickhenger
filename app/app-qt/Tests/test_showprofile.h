@@ -1,8 +1,8 @@
 #ifndef TEST_SHOWPROFILE_H
 #define TEST_SHOWPROFILE_H
 
-#include <QtTest>
-#include "../mainwidget.h"
+#include <QtTest/QtTest>
+#include "app-qt/mainwidget/mainwidget.h"
 
 class test_showprofile : public MainWidget
 {

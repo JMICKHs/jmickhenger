@@ -1,8 +1,8 @@
 #ifndef TEST_CHAT_H
 #define TEST_CHAT_H
 
-#include <QtTest>
-#include "../mainwidget.h"
+#include <QtTest/QtTest>
+#include "../mainwindow/mainwindow.h"
 
 class test_chat : public MainWidget
 {

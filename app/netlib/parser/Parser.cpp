@@ -4,11 +4,11 @@
 
 #include "Parser.h"
 
-void Parser::addBool(const bool &value, const string &name) {
+void Parser::addBool(bool value, const string &name) {
     root.put(name, value);
 }
 
-void Parser::addInt(const int &value, const string &name) {
+void Parser::addInt(int value, const string &name) {
     root.put(name, value);
 }
 
@@ -80,14 +80,14 @@ vector<string> Parser::getArrStr(const string &name) {
     return res;
 }
 
-void Parser::addChild(const string &json, const string &name) {
+void Parser::addCustom(const string &json, const string &name) {
     bptree::ptree tmp;
     stringstream ss(json);
     bptree::read_json(ss, tmp);
     root.add_child(name, tmp);
 }
 
-void Parser::addArrChild(const vector<string> &jsons, const string &name) {
+void Parser::addArrCustom(const vector<string> &jsons, const string &name) {
     bptree::ptree tmp;
     for(const auto & item: jsons) {
         bptree::ptree elem;
@@ -98,13 +98,13 @@ void Parser::addArrChild(const vector<string> &jsons, const string &name) {
     root.add_child(name, tmp);
 }
 
-string Parser::getChild(const string &name) {
+string Parser::getCustom(const string &name) {
     stringstream ss;
     bptree::write_json(ss, root.get_child(name));
     return ss.str();
 }
 
-vector<string> Parser::getArrChild(const string &name) {
+vector<string> Parser::getArrCustom(const string &name) {
     vector<string> res;
     for(const auto & item : root.get_child(name)) {
         stringstream ss;

@@ -1,8 +1,8 @@
 #ifndef TEST_GROUP_H
 #define TEST_GROUP_H
 
-#include <QtTest>
-#include "../mainwidget.h"
+#include <QtTest/QtTest>
+#include "app-qt/mainwidget/mainwidget.h"
 
 class test_group : public MainWidget
 {

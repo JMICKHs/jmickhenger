@@ -1,5 +1,5 @@
 // ТЕСТЫ НЕ РАБОЧИЕ, ТАК КАК МНОГО ЧЕГО ПОМЕНЯЛОСЬ В ИНТЕРФЕЙСАХ И АРХИТЕКТУРЕ
-
+// При настройке CI тесты будут исправлены =)
 
 //#include "gtest/gtest.h"
 //#include "gmock/gmock.h"
@@ -145,12 +145,12 @@
 //                  "\"status\": 0"
 //                  "\"err\": \"{}\""
 //                  "}";
-//    inf::Reply info1;
+//    inf::Package info1;
 //    info1.err = "";
 //    info1.cmd = 2;
 //    info1.status = 0;
 //    info1.body = "{}";
-//    inf::Reply info2;
+//    inf::Package info2;
 //    info2.decode(json);
 //
 //    ASSERT_EQ(info1.err, info2.err);
