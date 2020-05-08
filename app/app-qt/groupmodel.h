@@ -5,7 +5,7 @@
 #include <custommbutton/custombutton.h>
 #include <../netlib/info/Info.h>
 
-using Chat = inf::ChatRoom;
+using Chat = inf::ChatInfo;
 
 Q_DECLARE_METATYPE(Chat)
 

@@ -57,6 +57,7 @@ signals:
     void sendMessageFromInput_s(const Message &message);
 private:
     Ui::MainWidget *ui;
+    void removeDoubleEnter(QString &str);
 
 protected:
     GroupModel *groupModel;

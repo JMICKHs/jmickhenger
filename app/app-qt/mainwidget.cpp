@@ -2,7 +2,6 @@
 #include "ui_mainwidget.h"
 #include "chatinput.h"
 #include <QDebug>
-
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MainWidget)
@@ -39,7 +38,7 @@ MainWidget::MainWidget(QWidget *parent) :
     Chat item1;
     item1.idChat = 3;
     item1.name = "Textopark algosi";
-    item1.idUsers = {3,2,1};
+    //item1.idUsers = {3,2,1};
     //item1.lastMessage = "skinyte semenar";
     //Chat
     //item1. = "23:44";
@@ -89,9 +88,9 @@ void MainWidget::sendMessageFromInput()
 {
 
     Message message;
-    if(ui->messageInput->toPlainText().contains("\n") && ui->messageInput->toPlainText().size() == 1)
-        return;
-    message.text = ui->messageInput->toPlainText().toStdString();
+    QString text = ui->messageInput->toPlainText().trimmed();
+    removeDoubleEnter(text);
+    message.text = text.toStdString();
 
     qDebug() << QString::fromStdString(message.text);
     //message.name = "kostya";
@@ -107,18 +106,39 @@ void MainWidget::sendMessageFromInput()
 void MainWidget::on_groupList_clicked(const QModelIndex &index)
 {
     ui->label->setText(QString::fromStdString(index.model()->data(index).value<Chat>().name));
-    QString info = QString::number(index.model()->data(index).value<Chat>().idUsers.size());
-    if(info <= 2)
-        info += "  участника";
-    else
-        info += "  участников";
-
-    ui->label_2->setText(info);
+  //  QString info = QString::number(index.model()->data(index).value<Chat>().idUsers.size());
+    //if(info <= 2)
+    //    info += "  участника";
+    //else
+    //    info += "  участников";
+    //
+    //ui->label_2->setText(info);
 }
 
 void MainWidget::on_searchInput_textChanged(const QString &arg1)
 {
     //proxyModel->setDynamicSortFilter(true);
     //proxyModel->setDynamicSortFilter(false);
+}
+
+void MainWidget::removeDoubleEnter(QString &str){
+    int counter = 0;
+    int pos = 0;
+    for(int i = 0; i < str.size(); ++i){
+        if(str[i] == '\n'){
+            pos = i;
+            counter++;
+            ++i;
+            while(str[i] == '\n'){
+                counter++;
+                ++i;
+            }
+        }
+        else
+            counter = 0;
+        if(counter > 1){
+            str.remove(pos + 1,counter - 1);
+        }
+    }
 }
 
