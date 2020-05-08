@@ -5,9 +5,8 @@
 
 
 #include "AppNetwork.h"
-#include <mutex>
-#include <memory>
 
+std::mutex AppNet::mtx = std::mutex();
 
 optional<shared_ptr<AppNet>> AppNet::single = nullopt;
 
@@ -44,7 +43,15 @@ void AppNet::stopClient() {
 void AppNet::sendMsg(const Message & msg, const function<void(const bool &, optional<string> &)> & callback) {
     Package p("", 0, 5, msg.encode()); // временный хардкоддинг
     client->write(p.encode());
-    // ожидаем ответа от сервера
+    // кладем callback в multimap и при необходимом ответе сервера вызываем его
+}
+
+void AppNet::setObserverChat(int idChat, const function<void(const ChatChange &)>& callback) {
+    announcer->addCallback(idChat, callback);
+}
+
+void AppNet::setObserverUnknownChat(const function<void(const ChatChange &)>& callback) {
+    announcer->setGeneralCallback(callback);
 }
 
 

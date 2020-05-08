@@ -15,6 +15,7 @@
 #include <vector>
 #include <optional>
 #include <memory>
+#include <mutex>
 
 using namespace std;
 using namespace inf;
@@ -50,53 +51,37 @@ public:
     void runClient(const function<void(int)> & errHandler);
     void stopClient();
     bool check();
-    void auth();
-    void registration();
-    void getListChat();
-    void getChatRoom();
-    void sendMsg(const Message & msg, const function<void(const bool &, optional<string> &)> & callback);
-    void setObserverChat();
-    void setObserverUnknownChat();
-    void getMsgs();
-    void getLastMsg();
-    void addFrnd();
-    void getListFrnd();
-    void getInfoMe();
-    void getUser();
-    void createChat();
-    void addAdminChat(int idChat, int idUser);
-    void dellChat(int idChat);
-    void dellMsg(int idChat, int number);
-    void saveAvatar(); //??
-    void changeMe(const inf::MyAccount & acc);
+    void auth(const string & login, const string & pass, const function<void(const MyAccount &, errstr &)> & callback);
+    void registration(const MyAccount & acc, const function<void(int, errstr &)>& callback);
+    void getListChat(int idUser, const function<void(const vector<ChatInfo> &, errstr &)> & callback);
+    void getChatRoom(int idChat, const function<void(const ChatRoom &, errstr &)> & callback);
+    void sendMsg(const Message & msg, const function<void(const bool &, errstr &)> & callback);
+    void setObserverChat(int idChat, const function<void(const ChatChange &)>& callback);
+    void setObserverUnknownChat(const function<void(const ChatChange &)>& callback);
+    void getMsgs(const Message & msg, const function<void(bool, int, errstr &)> & callback);
+    void getLastMsg(int idChat, const function<void(Message &, errstr &)> & callback);
+    void addFrnd(int idFrnd, const function<void(bool, errstr &)> & callback);
+    void getListFrnd(int id, const function<void(vector<int> &, errstr &)> & callback);
+    void getInfoMe(int id, const function<void(MyAccount &, errstr &)> & callback);
+    void getUser(int id, const function<void(UserInfo &, errstr &)> & callback);
+    void createChat(ChatRoom & room, const function<void(int, errstr &)> & callback);
+    void addAdminChat(int idChat, int idUser, const function<void(bool, errstr &)> & callback);
+    void dellChat(int idChat, const function<void(bool, errstr &)> & callback);
+    void dellMsg(int idChat, int numberMsg, const function<void(bool, errstr &)> & callback);
+    void changeMsg(const Message & msg, const function<void(bool, errstr &)> & callback);
+    void saveAvatar(const string & path, const function<void(bool, errstr &)> & callback);
+    void changeMe(const inf::MyAccount & acc, const function<void(bool, errstr &)> & callback);
 private:
     AppNet();
     static optional<shared_ptr<AppNet>> single;
     unique_ptr<Announcer> announcer;
     unique_ptr<AbstractCache> cache;
     shared_ptr<AbstractClient> client;
-    multimap<int, shared_ptr<void>> buffer;
+    multimap<int, shared_ptr<void *>> buffer;
+    static std::mutex mtx;
     // храним callback, что ожидают опрдленных сообщений от сервера
     // multi, так как на один cmd могут ожидать несколько callback
     // скорей всего вынесу логику с multimap в announcer
 };
-
-class AbstractNetwork {
-public:
-    virtual optional<MyAccount> getMe() = 0;
-    virtual void login(const string & name, const string & password, const function<void(const MyAccount &, optional<string> &)> & callback) = 0;
-    virtual void registration(const MyAccount & acc, const function<void(const int &, optional<string> &)>& callback) = 0; //если id == 0, то неудачно
-    virtual void getListChat(const int & idUser, const function<void(const vector<ChatInfo> &)> & callback) = 0;
-    virtual void getChatRoom(const int & idChat, const function<void(const ChatRoom &)> & callback) = 0;
-    virtual void setObserverChat(const int & idChat, const function<void(const ChatChange &)>& callback) = 0;
-    virtual void setObserverAnonChat(const function<void(const ChatChange &)>& callback) = 0;
-    virtual void sendMessage(const Message & msg, const function<void(const bool &, optional<string> &)> & callback) = 0; // отправилось или нет bool
-    virtual void getUser(const int & id, const function<void(const UserInfo &)> & callback) = 0;
-    virtual void saveMyAvatar(const string &path, const function<void(const string &, optional<string> &)> & callback) = 0;
-    virtual void getMessages(const int & start, const int & begin, const int & idChat, const function<void(vector<Message> &)> & callback) = 0;
-    virtual void addChat(ChatRoom & room, const function<void(const ChatRoom &, optional<string> &)> & callback) = 0;
-    virtual bool check() = 0;
-};
-
 
 #endif //NETLIB_APPNETWORK_H
