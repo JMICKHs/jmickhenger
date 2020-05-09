@@ -42,7 +42,7 @@ void AppNet::stopClient() {
 
 void AppNet::sendMsg(const Message & msg, const function<void(const bool &, optional<string> &)> & callback) {
     Package p("", 0, 5, msg.encode()); // временный хардкоддинг
-    client->write(p.encode());
+    client->write(p.encode() + "\r\n");
     // кладем callback в multimap и при необходимом ответе сервера вызываем его
 }
 

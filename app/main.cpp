@@ -18,9 +18,7 @@ int main() {
 
     while(getline(cin, text)) {
         Message msg(idUser, c++, text, 56, time(NULL), false);
-        net->sendMsg(msg, [](const bool &, optional<string> &){
-
-        });
+        net->sendMsg(msg, [](const bool &, optional<string> &){});
     }
     net->stopClient();
     return 0;
