@@ -34,19 +34,3 @@ std::function<void (std::vector<Message>items)> ChatList::getChatCallback() cons
 void ChatList::newMessage(const Message &message)
 {
 }
-
-
-MessageWidget::MessageWidget()
-{
-
-}
-
-int MessageWidget::getId() const
-{
-    return id;
-}
-
-void MessageWidget::setId(int _id)
-{
-    id = _id;
-}

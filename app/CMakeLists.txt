@@ -73,6 +73,9 @@ add_executable(jmichkenger
      app-qt/src/creategroup/creategroupwidget.ui
      app-qt/src/mainwidget/mainwidget.ui
      app-qt/src/menuwidget/menuwidget.ui
+     app-qt/src/loginwidget/loginwidget.cpp
+     app-qt/src/loginwidget/loginwidget.h
+     app-qt/src/loginwidget/loginwidget.ui
      main.cpp
  )
 target_link_libraries(jmichkenger PRIVATE Qt5::Widgets ${USED_LIBS} netlib)

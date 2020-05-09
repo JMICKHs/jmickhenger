@@ -12,7 +12,7 @@ bool ProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_pare
 {
     QModelIndex index0 = sourceModel()->index(source_row,0,source_parent);
     auto value = sourceModel()->data(index0).value<Chat>();
-    if(QString::fromStdString(value.name).contains(searchString)){
+    if(QString::fromStdString(value.chat.name).contains(searchString)){
         return  true;
     }
     else {

@@ -2,8 +2,26 @@
 
 
 GroupModel::GroupModel(QObject *parent)
+    :QAbstractListModel(parent)
 {
+    chatCallback = [this](vector<Chat> &chats, std::optional<string> &err){
+        if(err == nullopt)
+            this->setData(chats);
+        else{
+            errString = err;
+        }
+    };
+    std::function<void(Msg &, std::optional<string> &)>  lastMsgCallback;
+    createChatCallback = [this](int,std::optional<string> &err){
+        if(err != nullopt)
+              errString = err;
+    };
 
+    delChatCallback = [this](bool state, std::optional<string> &err){
+        if(err != nullopt)
+              errString = err;
+    };
+    std::function<void(Change&)> chatChangeCallback;
 }
 
 int GroupModel::rowCount(const QModelIndex &parent) const
@@ -27,10 +45,40 @@ QVariant GroupModel::data(const QModelIndex &index, int role) const
            return QVariant();
 }
 
-void GroupModel::addItem(const Chat &item)
+void GroupModel::addItem(Chat &item)
 {
     int row = this->rowCount();
     beginInsertRows(QModelIndex(),row,row);
-    items.push_back(item);
+    items.push_back(std::move(item));
     endInsertRows();
+}
+
+void GroupModel::setData(std::vector<Chat> &chats)
+{
+    items = std::move(chats);
+}
+
+std::function<void (vector<Chat> &, std::optional<string> &)> GroupModel::getChatCallBack() const
+{
+    return chatCallback;
+}
+
+std::function<void (Msg &, std::optional<string> &)> GroupModel::getLastMsgCallback() const
+{
+    return lastMsgCallback;
+}
+
+std::function<void (int, std::optional<string> &)> GroupModel::getCreateChatCallback() const
+{
+    return createChatCallback;
+}
+
+std::function<void (bool, std::optional<string> &)> GroupModel::getDelChatCallback() const
+{
+    return delChatCallback;
+}
+
+std::function<void (Change &)> GroupModel::getChatChangeCallback() const
+{
+    return chatChangeCallback;
 }

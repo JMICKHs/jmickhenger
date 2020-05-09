@@ -6,16 +6,6 @@
 
 using namespace inf;
 Q_DECLARE_METATYPE(Message)
-class MessageWidget : public QWidget
-{
-    Q_OBJECT
-    int id;
-public:
-    MessageWidget();
-    int getId() const;
-    void setId(int _id);
-};
-
 class ChatList : public QListWidget
 {
     Q_OBJECT

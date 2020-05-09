@@ -50,7 +50,7 @@ void GroupDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     painter->setFont(f);
     painter->setPen(palette.text().color());
     painter->drawText(GroupNameRect, Qt::TextSingleLine,
-                      font.elidedText(QString::fromStdString(item.name),Qt::ElideRight,width - 150));
+                      font.elidedText(QString::fromStdString(item.chat.name),Qt::ElideRight,width - 150));
 
 
     QRect LastMessageRect = QRect(groupIconSize.x() + 15,GroupNameRect.y() + 35,width - 130,30);

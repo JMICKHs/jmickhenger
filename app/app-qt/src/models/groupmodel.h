@@ -4,8 +4,15 @@
 #include <QAbstractListModel>
 #include "app-qt/src/custommbutton/custombutton.h"
 #include <netlib/info/Info.h>
+#include <functional>
+using ChatItem = inf::ChatRoom;
+using Msg = inf::Message;
+using Change = inf::ChatChange;
 
-using Chat = inf::ChatInfo;
+struct Chat{
+    ChatItem chat;
+    QString lastMessage;
+};
 
 Q_DECLARE_METATYPE(Chat)
 
@@ -16,9 +23,24 @@ public:
     GroupModel(QObject *parent = nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    void addItem(const Chat &item);
+    void addItem(Chat &item);
+    void setData(std::vector<Chat> &);
+
+    std::function<void(vector<Chat> &, std::optional<string> &)> getChatCallBack() const;
+    std::function<void(Msg &, std::optional<string> &)> getLastMsgCallback() const;
+    std::function<void(int,std::optional<string>&)> getCreateChatCallback() const;
+    std::function<void(bool,std::optional<string>&)> getDelChatCallback() const;
+    std::function<void(Change&)> getChatChangeCallback() const;
+
 private:
+    std::optional<string> errString;
     std::vector<Chat> items;
+
+    std::function<void(vector<Chat> &, std::optional<string> &)> chatCallback;
+    std::function<void(Msg &, std::optional<string> &)>  lastMsgCallback;
+    std::function<void(int,std::optional<string>&)> createChatCallback;
+    std::function<void(bool,std::optional<string>&)> delChatCallback;
+    std::function<void(Change&)> chatChangeCallback;
 signals:
 
 public slots:

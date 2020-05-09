@@ -45,8 +45,8 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->label->setFont(font);
 
     Chat item1;
-    item1.idChat = 3;
-    item1.name = "Textopark algosi";
+    item1.chat.idChat = 3;
+    item1.chat.name = "Textopark algosi";
     //item1.idUsers = {3,2,1};
     //item1.lastMessage = "skinyte semenar";
     //Chat
@@ -54,7 +54,7 @@ MainWidget::MainWidget(QWidget *parent) :
     for(int i = 0 ; i < 23; ++i){
         groupModel->addItem(item1);
 
-        item1.name = std::to_string(i);
+        item1.chat.name = std::to_string(i);
     }
     chatModel = new ChatModel();
     ui->chatList->setModel(chatModel);
@@ -113,7 +113,7 @@ void MainWidget::sendMessageFromInput()
 
 void MainWidget::on_groupList_clicked(const QModelIndex &index)
 {
-    ui->label->setText(QString::fromStdString(index.model()->data(index).value<Chat>().name));
+    ui->label->setText(QString::fromStdString(index.model()->data(index).value<Chat>().chat.name));
   //  QString info = QString::number(index.model()->data(index).value<Chat>().idUsers.size());
     //if(info <= 2)
     //    info += "  участника";

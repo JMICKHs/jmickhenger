@@ -1,9 +1,33 @@
 #include "chatmodel.h"
+#include <memory>
 #include <QDebug>
 
 ChatModel::ChatModel(QObject *parent)
+    :QAbstractListModel(parent)
 {
-
+    chatCallback = [this](std::vector<Message>& msgs,std::optional<string>& err){
+        if(err == nullopt){
+            this->setData(msgs);
+        }
+        else{
+            errString = err;
+        }
+    };
+    sendMsgCallback = [this](bool state,std::optional<string>& err){
+        if(err == nullopt){
+            errString = err;
+        }
+    };
+    changeMsgCallback = [this](bool state,std::optional<string>& err){
+        if(err == nullopt){
+            errString = err;
+        }
+    };
+    delMsgCallback = [this](bool state,std::optional<string>& err){
+        if(err == nullopt){
+            errString = err;
+        }
+    };
 }
 
 int ChatModel::rowCount(const QModelIndex &parent) const
@@ -28,7 +52,7 @@ QVariant ChatModel::data(const QModelIndex &index, int role) const
         return QVariant();
 }
 
-void ChatModel::createMessage(const Message &_message)
+void ChatModel::createMessage(Message &_message)
 {
     if(_message.text != "")
     {
@@ -37,4 +61,29 @@ void ChatModel::createMessage(const Message &_message)
         this->insertRows(row,1);
     }
     emit this->dataChanged(QModelIndex(),QModelIndex());
+}
+
+void ChatModel::setData(std::vector<Message> &msgs)
+{
+    items = std::move(msgs);
+}
+
+std::function<void(std::vector<Message>&,std::optional<string>&)> ChatModel::getChatCallback() const
+{
+    return chatCallback;
+}
+
+std::function<void (bool, std::optional<string> &)> ChatModel::getSendMsgCallback() const
+{
+    return sendMsgCallback;
+}
+
+std::function<void (bool, std::optional<string> &)> ChatModel::getChangeMsgCallback() const
+{
+    return changeMsgCallback;
+}
+
+std::function<void (bool, std::optional<string> &)> ChatModel::getDelMsgCallback() const
+{
+    return delMsgCallback;
 }

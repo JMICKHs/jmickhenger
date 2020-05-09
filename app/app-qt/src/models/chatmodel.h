@@ -12,11 +12,20 @@ public:
     ChatModel(QObject *parent = nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    void createMessage(const Message &_message);
+    void createMessage(Message &_message);
+    void setData(std::vector<Message>& msgs);
+    std::function<void(std::vector<Message>&,std::optional<string>&)> getChatCallback() const;
+    std::function<void(bool,std::optional<string>&)> getSendMsgCallback() const;
+    std::function<void(bool,std::optional<string>&)> getChangeMsgCallback() const;
+    std::function<void(bool,std::optional<string>&)> getDelMsgCallback() const;
 private:
     std::vector<Message> items;
     bool newMessageOnBottom;
-
+    std::optional<string> errString;
+    std::function<void(std::vector<Message>&,std::optional<string>&)> chatCallback;
+    std::function<void(bool,std::optional<string>&)> sendMsgCallback;
+    std::function<void(bool,std::optional<string>&)> changeMsgCallback;
+    std::function<void(bool,std::optional<string>&)> delMsgCallback;
 signals:
 };
 
