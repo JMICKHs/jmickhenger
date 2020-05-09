@@ -134,6 +134,13 @@ void inf::ChatInfo::decode(const string & json) {
 const string inf::ChatInfo::nameId = "id";
 const string inf::ChatInfo::nameChat = "name";
 
+bool inf::ChatInfo::operator==(const inf::ChatInfo &other) const {
+    if(idChat == other.idChat && name == other.name) {
+        return true;
+    }
+    return false;
+}
+
 inf::ChatRoom::ChatRoom() : idChat(-1) {}
 
 inf::ChatRoom::ChatRoom(int id, const string &name, const vector<int> & users, const vector<int> & admins)

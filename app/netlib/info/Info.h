@@ -93,6 +93,7 @@ namespace inf {
         ChatInfo(int id, const string & name);
         int idChat;
         string name;
+        bool operator ==(const ChatInfo &other) const;
         string encode() const override;
         void decode(const string & json) override;
     private:

@@ -77,11 +77,7 @@ private:
     unique_ptr<Announcer> announcer;
     unique_ptr<AbstractCache> cache;
     shared_ptr<AbstractClient> client;
-    multimap<int, shared_ptr<void *>> buffer;
     static std::mutex mtx;
-    // храним callback, что ожидают опрдленных сообщений от сервера
-    // multi, так как на один cmd могут ожидать несколько callback
-    // скорей всего вынесу логику с multimap в announcer
 };
 
 #endif //NETLIB_APPNETWORK_H

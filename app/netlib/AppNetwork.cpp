@@ -47,11 +47,11 @@ void AppNet::sendMsg(const Message & msg, const function<void(bool, optional<str
 }
 
 void AppNet::setObserverChat(int idChat, const function<void(ChatChange &)>& callback) {
-    announcer->addCallback(idChat, callback);
+    announcer->addChatCallback(idChat, callback);
 }
 
 void AppNet::setObserverUnknownChat(const function<void(ChatChange &)>& callback) {
-    announcer->setGeneralCallback(callback);
+    announcer->setChatAnonCallback(callback);
 }
 
 
