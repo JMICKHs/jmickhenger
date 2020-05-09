@@ -14,12 +14,12 @@ class Announcer {
 public:
     Announcer();
     ~Announcer();
-    void addCallback(const int & idChat, const function<void(const inf::ChatChange &)>& callback);
-    void setGeneralCallback(const function<void(const inf::ChatChange &)>& callback);
-    void notify(const inf::ChatChange & change);
+    void addCallback(int idChat, const function<void(inf::ChatChange &)>& callback);
+    void setGeneralCallback(const function<void(inf::ChatChange &)>& callback);
+    void notify(inf::ChatChange & change);
 private:
-    std::map<int, std::function<void(const inf::ChatChange &)>> callbacks;
-    std::optional<function<void(const inf::ChatChange &)>> generalCallback; // для обработки чатов, о которых юзер пока не знает
+    std::map<int, std::function<void(inf::ChatChange &)>> callbacks;
+    std::optional<function<void(inf::ChatChange &)>> generalCallback; // для обработки чатов, о которых юзер пока не знает
 };
 
 

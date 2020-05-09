@@ -40,17 +40,17 @@ void AppNet::stopClient() {
     client->close();
 }
 
-void AppNet::sendMsg(const Message & msg, const function<void(const bool &, optional<string> &)> & callback) {
+void AppNet::sendMsg(const Message & msg, const function<void(bool, optional<string> &)> & callback) {
     Package p("", 0, 5, msg.encode()); // временный хардкоддинг
     client->write(p.encode() + "\r\n");
     // кладем callback в multimap и при необходимом ответе сервера вызываем его
 }
 
-void AppNet::setObserverChat(int idChat, const function<void(const ChatChange &)>& callback) {
+void AppNet::setObserverChat(int idChat, const function<void(ChatChange &)>& callback) {
     announcer->addCallback(idChat, callback);
 }
 
-void AppNet::setObserverUnknownChat(const function<void(const ChatChange &)>& callback) {
+void AppNet::setObserverUnknownChat(const function<void(ChatChange &)>& callback) {
     announcer->setGeneralCallback(callback);
 }
 
