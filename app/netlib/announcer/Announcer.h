@@ -32,6 +32,7 @@ public:
             if(context == *itemContext) {
                 auto tmpF = tmpIter->second.second;
                 auto f = reinterpret_cast<function<void(Args...)> *>(tmpF);
+                callbacks.erase(tmpIter);
                 return *f;
             }
         }
@@ -41,6 +42,7 @@ private:
     std::map<int, std::function<void(inf::ChatChange &)>> chatCallbacks;
     std::optional<function<void(inf::ChatChange &)>> generalCallback; // для обработки чатов, о которых юзер пока не знает
     std::multimap<int, pair<void *, void *>> callbacks; // для хранения различных callback
+    // int - cmd различных callback
     // первый void * - контекст
     // второй void * - callback
 };
