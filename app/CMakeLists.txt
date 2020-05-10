@@ -76,6 +76,8 @@ add_executable(jmichkenger
      app-qt/src/loginwidget/loginwidget.cpp
      app-qt/src/loginwidget/loginwidget.h
      app-qt/src/loginwidget/loginwidget.ui
+    app-qt/src/models/usermodel.h
+    app-qt/src/models/usermodel.cpp
      main.cpp
  )
 target_link_libraries(jmichkenger PRIVATE Qt5::Widgets ${USED_LIBS} netlib)

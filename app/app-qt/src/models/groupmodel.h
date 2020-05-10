@@ -26,11 +26,11 @@ public:
     void addItem(Chat &item);
     void setData(std::vector<Chat> &);
 
-    std::function<void(vector<Chat> &, std::optional<string> &)> getChatCallBack() const;
-    std::function<void(Msg &, std::optional<string> &)> getLastMsgCallback() const;
-    std::function<void(int,std::optional<string>&)> getCreateChatCallback() const;
-    std::function<void(bool,std::optional<string>&)> getDelChatCallback() const;
-    std::function<void(Change&)> getChatChangeCallback() const;
+    std::function<void(vector<Chat> &, std::optional<string> &)> getChatCallBack() ;
+    std::function<void(Msg &, std::optional<string> &)> getLastMsgCallback() ;
+    std::function<void(int,std::optional<string>&)> getCreateChatCallback() ;
+    std::function<void(bool,std::optional<string>&)> getDelChatCallback() ;
+    std::function<void(Change&)> getChatChangeCallback() ;
 
 private:
     std::optional<string> errString;

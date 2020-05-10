@@ -58,27 +58,27 @@ void GroupModel::setData(std::vector<Chat> &chats)
     items = std::move(chats);
 }
 
-std::function<void (vector<Chat> &, std::optional<string> &)> GroupModel::getChatCallBack() const
+std::function<void (vector<Chat> &, std::optional<string> &)> GroupModel::getChatCallBack()
 {
     return chatCallback;
 }
 
-std::function<void (Msg &, std::optional<string> &)> GroupModel::getLastMsgCallback() const
+std::function<void (Msg &, std::optional<string> &)> GroupModel::getLastMsgCallback()
 {
     return lastMsgCallback;
 }
 
-std::function<void (int, std::optional<string> &)> GroupModel::getCreateChatCallback() const
+std::function<void (int, std::optional<string> &)> GroupModel::getCreateChatCallback()
 {
     return createChatCallback;
 }
 
-std::function<void (bool, std::optional<string> &)> GroupModel::getDelChatCallback() const
+std::function<void (bool, std::optional<string> &)> GroupModel::getDelChatCallback()
 {
     return delChatCallback;
 }
 
-std::function<void (Change &)> GroupModel::getChatChangeCallback() const
+std::function<void (Change &)> GroupModel::getChatChangeCallback()
 {
     return chatChangeCallback;
 }

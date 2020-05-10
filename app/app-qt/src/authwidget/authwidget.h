@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QLineEdit>
 #include <netlib/info/Info.h>
-
+#include <app-qt/src/models/usermodel.h>
 using namespace inf;
 
 class AuthWidget : public QWidget
@@ -12,23 +12,17 @@ class AuthWidget : public QWidget
     Q_OBJECT
 
 private:
+    UserModel *user;
     bool state;
     QLineEdit *number;
     QLineEdit *password;
     int id;
 
-    std::function<void(const UserInfo user)> userCallback;
-    std::function<void(const int id)> registrationCallback;
-
 public:
     AuthWidget(QWidget *parent = nullptr);
 
     void registration();
-    void login(QString number,QString password);
-    int getId() const;
-
-    std::function<void(const UserInfo user)> getUserCallback();
-    std::function<void(const int id)> getRegistationCallback();
+    void login(const QString &number,const QString &password);
 };
 
 #endif // AUTHWIDGET_H

@@ -68,22 +68,22 @@ void ChatModel::setData(std::vector<Message> &msgs)
     items = std::move(msgs);
 }
 
-std::function<void(std::vector<Message>&,std::optional<string>&)> ChatModel::getChatCallback() const
+std::function<void(std::vector<Message>&,std::optional<string>&)> ChatModel::getChatCallback()
 {
     return chatCallback;
 }
 
-std::function<void (bool, std::optional<string> &)> ChatModel::getSendMsgCallback() const
+std::function<void (bool, std::optional<string> &)> ChatModel::getSendMsgCallback()
 {
     return sendMsgCallback;
 }
 
-std::function<void (bool, std::optional<string> &)> ChatModel::getChangeMsgCallback() const
+std::function<void (bool, std::optional<string> &)> ChatModel::getChangeMsgCallback()
 {
     return changeMsgCallback;
 }
 
-std::function<void (bool, std::optional<string> &)> ChatModel::getDelMsgCallback() const
+std::function<void (bool, std::optional<string> &)> ChatModel::getDelMsgCallback()
 {
     return delMsgCallback;
 }
