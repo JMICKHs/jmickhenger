@@ -59,7 +59,30 @@ void AppNet::readHandler(const string &str) {
     } else {
         err = p.err;
     }
+    // надо разделить на фун
     switch (p.cmd) {
+        case ((int)Cmds::registration): {
+            MyAccount acc;
+            acc.decode(body);
+            auto f = announcer->getCallback<string, int, errstr &>(p.cmd, acc.login);
+            if (f) {
+                f.value()(acc.id, err);
+            } else {
+                cout << "cmd " << p.cmd << " " << str <<" не найден callback\n";
+            }
+            break;
+        }
+        case ((int)Cmds::auth): {
+            MyAccount acc;
+            acc.decode(body);
+            auto f = announcer->getCallback<string, inf::MyAccount &, errstr &>(p.cmd, acc.login);
+            if (f) {
+                f.value()(acc, err);
+            } else {
+                cout << "cmd " << p.cmd << " " << str <<" не найден callback\n";
+            }
+            break;
+        }
         case ((int)Cmds::sendMessage): {
             Message tmpMsg;
             tmpMsg.decode(body);
@@ -68,12 +91,12 @@ void AppNet::readHandler(const string &str) {
             if (f) {
                 f.value()(err);
             } else {
-                cout << "cmd " << p.cmd << " не найден callback\n";
+                cout << "cmd " << p.cmd << " " << str <<" не найден callback\n";
             }
             break;
         }
         default: {
-            cout << "неверный cmd - " << p.cmd << endl;
+            cout << "неверный cmd - " << p.cmd << " " << str << endl;
             break;
         }
     }
@@ -86,14 +109,21 @@ void AppNet::auth(const string &login, const string &pass, const function<void(M
     Package p("", 0, (int)Cmds::auth, parser.getRes());
     client->write(p.encode());
 
+    announcer->addCallback<string, inf::MyAccount &, errstr &>((int)Cmds::sendMessage, login, callback);
 
 }
 
-void AppNet::sendMsg(const Message & msg, const function<void(optional<string> &)> & callback) {
-    Package p("", 0, (int)Cmds::sendMessage, msg.encode()); // временный хардкоддинг
+void AppNet::registration(const MyAccount &acc, const function<void(int, errstr &)> &callback) {
+    Package p("", 0, (int)Cmds::registration, acc.encode());
     client->write(p.encode());
-    announcer->addCallback<int, optional<string> &>((int)Cmds::sendMessage, msg.timesend, callback);
-    // кладем callback в multimap и при необходимом ответе сервера вызываем его
+
+    announcer->addCallback<string, int, errstr &>((int)Cmds::registration, acc.login, callback);
+}
+
+void AppNet::sendMsg(const Message & msg, const function<void(optional<string> &)> & callback) {
+    Package p("", 0, (int)Cmds::sendMessage, msg.encode());
+    client->write(p.encode());
+    announcer->addCallback<int, errstr &>((int)Cmds::sendMessage, msg.timesend, callback);
 }
 
 void AppNet::setObserverChat(int idChat, const function<void(ChatChange &)>& callback) {
@@ -103,6 +133,8 @@ void AppNet::setObserverChat(int idChat, const function<void(ChatChange &)>& cal
 void AppNet::setObserverUnknownChat(const function<void(ChatChange &)>& callback) {
     announcer->setChatAnonCallback(callback);
 }
+
+
 
 
 
