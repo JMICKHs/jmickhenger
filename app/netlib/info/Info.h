@@ -28,7 +28,7 @@ namespace inf {
     public:
         MyAccount();
         MyAccount(int id,
-                const string & login,
+                const string & nickname,
                 const string & image,
                 const string & pass,
                 const vector<int> & chats,

@@ -15,12 +15,12 @@ inf::MyAccount::MyAccount()
         : id(-1), login("NIL"), pathToAvatar("NIL"), password("NIL"), chats(), friends() {}
 
 inf::MyAccount::MyAccount(int id,
-                          const string &login,
+                          const string &nickname,
                           const string &image,
                           const string &pass,
                           const vector<int> & chats,
                           const vector<int> & friends)
-        : id(id), login(login), pathToAvatar(image), password(pass), chats(chats), friends(friends) {}
+        : id(id), login(nickname), pathToAvatar(image), password(pass), chats(chats), friends(friends) {}
 
 string inf::MyAccount::encode() const {
     parser->clear();

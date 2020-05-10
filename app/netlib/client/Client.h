@@ -46,7 +46,7 @@ private:
     explicit Client(tcp::resolver::iterator & endpointIterator);
     void connect(tcp::resolver::iterator & it);
     void loopRead();
-    bool readСondition(const boost::system::error_code & err, size_t length);
+    bool readCondition(const boost::system::error_code & err, size_t length);
     void writeFromQue();
 private:
     std::thread t;

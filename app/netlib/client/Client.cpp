@@ -27,7 +27,7 @@ void Client::run() {
 void Client::write(const string &msg) {
     auto handler = [self = shared_from_this(), msg]() {
         bool key = !self->writeMsgQue.empty();
-        self->writeMsgQue.push(msg);
+        self->writeMsgQue.push(msg + "\r\n");
         if (!key) {
             self->writeFromQue();
         }
@@ -76,7 +76,7 @@ void Client::connect(tcp::resolver::iterator &it) {
 
 void Client::loopRead() {
     auto buf = ba::buffer(readMsg);
-    auto condition = boost::bind(&Client::readСondition, shared_from_this(), _1, _2);
+    auto condition = boost::bind(&Client::readCondition, shared_from_this(), _1, _2);
     auto handler = [self = shared_from_this()](boost::system::error_code err, size_t length) {
         if (!err) {
             string msg; msg.reserve(length - 3);
@@ -101,7 +101,7 @@ void Client::loopRead() {
     ba::async_read(sock, buf, condition, handler);
 }
 
-bool Client::readСondition(const boost::system::error_code &err, size_t length) {
+bool Client::readCondition(const boost::system::error_code &err, size_t length) {
     if (err) return false;
     bool key = readMsg[length - 2] == '\r' && readMsg[length - 1] == '\n'; // в конце \r\n
     return key;
