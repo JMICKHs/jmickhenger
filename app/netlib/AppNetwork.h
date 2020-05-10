@@ -30,41 +30,27 @@ public:
     static shared_ptr<AppNet> shared();
     void runClient(const function<void(int)> & errHandler);
     void stopClient();
-    bool check();
+    bool check(); //TODO
     void auth(const string & login, const string & pass, const function<void(MyAccount &, errstr &)> & callback);
-    //
     void registration(const MyAccount & acc, const function<void(int, errstr &)>& callback);
-    //
     void getListChat(int idUser, const function<void(vector<ChatInfo> &, errstr &)> & callback);
-    //
     void getChatRoom(int idChat, const function<void(ChatRoom &, errstr &)> & callback);
-    //
     void sendMsg(const Message & msg, const function<void(errstr &)> & callback);
     void setObserverChat(int idChat, const function<void(ChatChange &)>& callback);
     void setObserverUnknownChat(const function<void(ChatChange &)>& callback);
-    void getMsgs(int idChat, int start, int end, const function<void(vector<Message> &, errstr &)> & callback);
-    //
-    void getLastMsg(int idChat, const function<void(Message &, errstr &)> & callback);
-    //
-    void addFrnd(int idFrnd, const function<void(errstr &)> & callback);
-    void getListFrnd(int id, const function<void(vector<int> &, errstr &)> & callback);
-    void getInfoMe(int id, const function<void(MyAccount &, errstr &)> & callback);
-    //
-    void getUser(int id, const function<void(UserInfo &, errstr &)> & callback);
-    //
-    void createChat(const ChatRoom & room, const function<void(int, errstr &)> & callback);
-    //
-    void addAdminChat(int idChat, int idUser, const function<void(errstr &)> & callback);
-    //
-    void dellChat(int idChat, const function<void(errstr &)> & callback);
-    //
-    void dellMsg(int idChat, int numberMsg, const function<void(errstr &)> & callback);
-    //
-    void changeMsg(const Message & msg, const function<void(errstr &)> & callback);
-    //
-    void saveAvatar(const string & path, const function<void(errstr &)> & callback);
-    void changeMe(const inf::MyAccount & acc, const function<void(errstr &)> & callback);
-    //
+    void getMsgs(int idChat, int start, int end, const function<void(vector<Message> &, errstr &)> & callback);//TODO
+    void getLastMsg(int idChat, const function<void(Message &, errstr &)> & callback);//TODO
+    void addFrnd(int idFrnd, const function<void(errstr &)> & callback);//TODO
+    void getListFrnd(int id, const function<void(vector<int> &, errstr &)> & callback);//TODO
+    void getInfoMe(int id, const function<void(MyAccount &, errstr &)> & callback);//TODO
+    void getUser(int id, const function<void(UserInfo &, errstr &)> & callback);//TODO
+    void createChat(const ChatRoom & room, const function<void(int, errstr &)> & callback);//TODO
+    void addAdminChat(int idChat, int idUser, const function<void(errstr &)> & callback);//TODO
+    void dellChat(int idChat, const function<void(errstr &)> & callback);//TODO
+    void dellMsg(int idChat, int numberMsg, const function<void(errstr &)> & callback);//TODO
+    void changeMsg(const Message & msg, const function<void(errstr &)> & callback);//TODO
+    void saveAvatar(const string & path, const function<void(errstr &)> & callback);//TODO
+    void changeMe(const inf::MyAccount & acc, const function<void(errstr &)> & callback);//TODO
 private:
     AppNet();
     void readHandler(const string & str);

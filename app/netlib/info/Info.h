@@ -95,6 +95,7 @@ namespace inf {
         void decode(const string & json) override;
         static const string nameId;
         static const string nameChat;
+        static const string nameChatList;
     };
 
     class ChatRoom : public Codeble {

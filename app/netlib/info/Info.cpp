@@ -133,6 +133,7 @@ void inf::ChatInfo::decode(const string & json) {
 
 const string inf::ChatInfo::nameId = "id";
 const string inf::ChatInfo::nameChat = "name";
+const string inf::ChatInfo::nameChatList = "chatList";
 
 bool inf::ChatInfo::operator==(const inf::ChatInfo &other) const {
     if(idChat == other.idChat && name == other.name) {
