@@ -13,17 +13,17 @@ ChatModel::ChatModel(QObject *parent)
             errString = err;
         }
     };
-    sendMsgCallback = [this](bool state,std::optional<string>& err){
+    sendMsgCallback = [this](std::optional<string>& err){
         if(err == nullopt){
             errString = err;
         }
     };
-    changeMsgCallback = [this](bool state,std::optional<string>& err){
+    changeMsgCallback = [this](std::optional<string>& err){
         if(err == nullopt){
             errString = err;
         }
     };
-    delMsgCallback = [this](bool state,std::optional<string>& err){
+    delMsgCallback = [this](std::optional<string>& err){
         if(err == nullopt){
             errString = err;
         }
@@ -56,7 +56,7 @@ void ChatModel::createMessage(Message &_message)
 {
     if(_message.text != "")
     {
-        items.push_back(std::move(_message));
+        items.push_back(_message);
         int row = this->rowCount();
         this->insertRows(row,1);
     }
@@ -73,17 +73,17 @@ std::function<void(std::vector<Message>&,std::optional<string>&)> ChatModel::get
     return chatCallback;
 }
 
-std::function<void (bool, std::optional<string> &)> ChatModel::getSendMsgCallback()
+std::function<void (std::optional<string> &)> ChatModel::getSendMsgCallback()
 {
     return sendMsgCallback;
 }
 
-std::function<void (bool, std::optional<string> &)> ChatModel::getChangeMsgCallback()
+std::function<void (std::optional<string> &)> ChatModel::getChangeMsgCallback()
 {
     return changeMsgCallback;
 }
 
-std::function<void (bool, std::optional<string> &)> ChatModel::getDelMsgCallback()
+std::function<void (std::optional<string> &)> ChatModel::getDelMsgCallback()
 {
     return delMsgCallback;
 }

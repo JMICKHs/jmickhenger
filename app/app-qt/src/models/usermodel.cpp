@@ -12,7 +12,7 @@ UserModel::UserModel()
             errString = err;
         }
     };
-    registrationCallback = [this](bool state,std::optional<string>& err){
+    registrationCallback = [this](int id,std::optional<string>& err){
         if(err == nullopt){
             errString = err;
         }
@@ -23,10 +23,7 @@ UserModel::UserModel()
         }
         else
             errString = err;
-
     };
-
-
 }
 
 void UserModel::setData(Account &acc)
@@ -49,7 +46,7 @@ std::function<void (Account&,std::optional<string>&)> UserModel::getAuthCallback
     return authCallback;
 }
 
-std::function<void (bool, std::optional<string> &)> UserModel::getRegistrationCallback()
+std::function<void (int, std::optional<string> &)> UserModel::getRegistrationCallback()
 {
     return registrationCallback;
 }

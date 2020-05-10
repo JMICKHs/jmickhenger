@@ -101,20 +101,12 @@
          </spacer>
         </item>
         <item>
-         <widget class="QLineEdit" name="searchInput">
+         <widget class="CustomInputForms" name="searchInput">
           <property name="minimumSize">
            <size>
             <width>0</width>
             <height>30</height>
            </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QLineEdit{
-                border-style: solid;
-                border-width: 1px;
-                border-radius: 2px;
-                border-color: rgb(220,220,220);
-                }</string>
           </property>
           <property name="placeholderText">
            <string>   Поиск</string>
@@ -540,6 +532,12 @@ QFrame[frameShape=&quot;4&quot;]
             <height>40</height>
            </size>
           </property>
+          <property name="styleSheet">
+           <string notr="true">QPlainTextEdit{border-style: solid;
+                         border-width: 1px;
+                         border-radius: 9px;
+                         border-color: rgb(220,220,220);}</string>
+          </property>
           <property name="placeholderText">
            <string>Написать сообщение...</string>
           </property>
@@ -653,6 +651,11 @@ QFrame[frameShape=&quot;4&quot;]
    <class>ChatInput</class>
    <extends>QTextEdit</extends>
    <header>app-qt/src/chatinput/chatinput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>CustomInputForms</class>
+   <extends>QLineEdit</extends>
+   <header>app-qt/src/custominputforms/custominputforms.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

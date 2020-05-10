@@ -49,7 +49,7 @@ void GroupModel::addItem(Chat &item)
 {
     int row = this->rowCount();
     beginInsertRows(QModelIndex(),row,row);
-    items.push_back(std::move(item));
+    items.push_back(item);
     endInsertRows();
 }
 

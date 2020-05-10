@@ -107,7 +107,7 @@ void MainWidget::sendMessageFromInput()
     chatModel->createMessage(message);
     ui->messageInput->clear();
     auto net = AppNet::shared();
-    net->sendMsg(message,[](const bool&,std::optional<string>&){});
+    net->sendMsg(message,[](std::optional<string>&){});
     emit ui->chatList->doItemsLayout();
 }
 

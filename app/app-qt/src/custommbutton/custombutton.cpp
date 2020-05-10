@@ -6,7 +6,10 @@ CustomButton::CustomButton(QWidget *parent)
 {
     this->setWindowFlag(Qt::FramelessWindowHint);
     this->setCursor(Qt::PointingHandCursor);
-    this->setStyleSheet(
+    this->setStyleSheet( "QPushButton{border-style: solid;}"
+                         "QPushButton{border-width: 1px;}"
+                         "QPushButton{border-radius: 9px;}"
+                         "QPushButton{border-color: rgb(220,220,220);}"
                         "QPushButton:hover{ background: rgb(227, 227, 229); border:none;}"
                         "QPushButton:pressed{  background-color: rgb(218, 218, 220); background-position: bottom center;  background-repeat: repeat-xy;  widget-animation-duration: 100;}");
 

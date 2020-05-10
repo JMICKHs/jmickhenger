@@ -78,6 +78,8 @@ add_executable(jmichkenger
      app-qt/src/loginwidget/loginwidget.ui
     app-qt/src/models/usermodel.h
     app-qt/src/models/usermodel.cpp
+    app-qt/src/custominputforms/custominputforms.h
+    app-qt/src/custominputforms/custominputforms.cpp
      main.cpp
  )
 target_link_libraries(jmichkenger PRIVATE Qt5::Widgets ${USED_LIBS} netlib)
