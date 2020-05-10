@@ -41,7 +41,6 @@ namespace inf {
         vector<int> friends;
         string encode() const override;
         void decode(const string & json) override;
-    private:
         static const string nameId;
         static const string nameLogin;
         static const string namePathImage;
@@ -59,7 +58,6 @@ namespace inf {
         string pathToAvatar;
         string encode() const override;
         void decode(const string & json) override;
-    private:
         static const string nameId;
         static const string nameLogin;
         static const string namePathImage;
@@ -78,7 +76,6 @@ namespace inf {
         bool checked;
         string encode() const override;
         void decode(const string & json) override;
-    private:
         static const string nameId;
         static const string nameNumber;
         static const string nameText;
@@ -96,7 +93,6 @@ namespace inf {
         bool operator ==(const ChatInfo &other) const;
         string encode() const override;
         void decode(const string & json) override;
-    private:
         static const string nameId;
         static const string nameChat;
     };
@@ -111,7 +107,6 @@ namespace inf {
         vector<int> idAdmins;
         string encode() const override;
         void decode(const string & json) override;
-    private:
         static const string nameId;
         static const string nameChat;
         static const string nameUsers;
@@ -127,7 +122,6 @@ namespace inf {
         vector<Message> messages;
         string encode() const override;
         void decode(const string & json) override;
-    private:
         static const string nameId;
         static const string nameCmd;
         static const string nameMsg;
@@ -143,7 +137,6 @@ namespace inf {
         string body;
         string encode() const override;
         void decode(const string & json) override;
-    private:
         static const string nameErr;
         static const string nameStatus;
         static const string nameCmd;

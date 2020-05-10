@@ -33,16 +33,51 @@ shared_ptr<AppNet> AppNet::shared() {
 
 void AppNet::runClient(const function<void(int)> & errHandler) {
     client->setErrHandler(errHandler);
-    client->run();
+    if (!clientStarted) {
+        clientStarted = true;
+        client->run();
+    }
 }
 
 void AppNet::stopClient() {
-    client->close();
+    if (clientStarted) {
+        clientStarted = false;
+        client->close();
+    }
 }
 
-void AppNet::sendMsg(const Message & msg, const function<void(bool, optional<string> &)> & callback) {
-    Package p("", 0, 5, msg.encode()); // временный хардкоддинг
+
+void AppNet::readHandler(const string &str) {
+    Package p;
+    p.decode(str);
+    optional<string> err;
+    string body(p.body);
+    if (p.err.empty()) {
+        err = nullopt;
+    } else {
+        err = p.err;
+    }
+    switch (p.cmd) {
+        case ((int)Cmds::sendMessage): {
+            Parser parser;
+            parser.setJson(body);
+            int time = parser.getInt(Message::nameTime);
+            auto f = announcer->getCallback<int, optional<string> &>(p.cmd, time);
+            if (f) {
+                f.value()(err);
+            }
+        }
+        default: {
+            cout << "неверный cmd - " << p.cmd << endl;
+            break;
+        }
+    }
+}
+
+void AppNet::sendMsg(const Message & msg, const function<void(optional<string> &)> & callback) {
+    Package p("", 0, (int)Cmds::sendMessage, msg.encode()); // временный хардкоддинг
     client->write(p.encode() + "\r\n");
+    announcer->addCallback<int, optional<string> &>((int)Cmds::sendMessage, msg.timesend, callback);
     // кладем callback в multimap и при необходимом ответе сервера вызываем его
 }
 
@@ -53,5 +88,7 @@ void AppNet::setObserverChat(int idChat, const function<void(ChatChange &)>& cal
 void AppNet::setObserverUnknownChat(const function<void(ChatChange &)>& callback) {
     announcer->setChatAnonCallback(callback);
 }
+
+
 
 

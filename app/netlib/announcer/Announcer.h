@@ -19,12 +19,12 @@ public:
     void setChatAnonCallback(const function<void(inf::ChatChange &)>& callback);
     void notifyChat(inf::ChatChange & change);
     template<typename Context, typename... Args>
-    void addCallback(int cmd, Context & context, const function<void(Args...)>& callback) {
+    void addCallback(int cmd, Context context, const function<void(Args...)>& callback) {
         auto item = pair<void *, void *>((void *)&context, (void *)&callback);
         callbacks.insert(pair<int, pair<void *, void *>>(cmd, item));
     }
     template<typename Context, typename... Args>
-    optional<function<void(Args...)>> getCallback(int cmd, Context & context) {
+    optional<function<void(Args...)>> getCallback(int cmd, Context context) {
         auto iterPair = callbacks.equal_range(cmd);
         for (; iterPair.first != iterPair.second; iterPair.first++) {
             auto tmpIter = iterPair.first;
