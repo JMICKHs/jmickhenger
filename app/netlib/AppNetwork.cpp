@@ -45,7 +45,7 @@ void AppNet::stopClient() {
 
 
 void AppNet::readHandler(const string &str) {
-    Package p;
+    Reply p;
     try {
         p.decode(str);
     } catch(...) {
@@ -136,19 +136,19 @@ void AppNet::auth(const string &login, const string &pass, const function<void(M
     Parser parser;
     parser.addStr(login, MyAccount::nameLogin);
     parser.addStr(pass, MyAccount::namePassword);
-    Package p("", 0, (int)Cmds::auth, parser.getRes());
+    Reply p("", 0, (int)Cmds::auth, parser.getRes());
     announcer->addCallback<string, inf::MyAccount &, errstr &>((int)Cmds::sendMessage, login, callback);
     client->write(p.encode());
 }
 
 void AppNet::registration(const MyAccount &acc, const function<void(int, errstr &)> &callback) {
-    Package p("", 0, (int)Cmds::registration, acc.encode());
+    Reply p("", 0, (int)Cmds::registration, acc.encode());
     announcer->addCallback<string, int, errstr &>((int)Cmds::registration, acc.login, callback);
     client->write(p.encode());
 }
 
 void AppNet::sendMsg(const Message & msg, const function<void(optional<string> &)> & callback) {
-    Package p("", 0, (int)Cmds::sendMessage, msg.encode());
+    Reply p("", 0, (int)Cmds::sendMessage, msg.encode());
     announcer->addCallback<int, errstr &>((int)Cmds::sendMessage, msg.timesend, callback);
     client->write(p.encode());
 }
@@ -156,7 +156,7 @@ void AppNet::sendMsg(const Message & msg, const function<void(optional<string> &
 void AppNet::getListChat(int idUser, const function<void(vector<ChatInfo> &, errstr &)> &callback) {
     Parser parser;
     parser.addInt(idUser, MyAccount::nameId);
-    Package p("", 0, (int)Cmds::getListChat, parser.getRes());
+    Reply p("", 0, (int)Cmds::getListChat, parser.getRes());
     announcer->addCallback<int, vector<ChatInfo> &, errstr &>((int)Cmds::getListChat, idUser, callback);
     client->write(p.encode());
 }
@@ -164,7 +164,7 @@ void AppNet::getListChat(int idUser, const function<void(vector<ChatInfo> &, err
 void AppNet::getChatRoom(int idChat, const function<void(ChatRoom &, errstr &)> &callback) {
     Parser parser;
     parser.addInt(idChat, ChatInfo::nameId);
-    Package p("", 0, (int)Cmds::getChatRoom, parser.getRes());
+    Reply p("", 0, (int)Cmds::getChatRoom, parser.getRes());
     announcer->addCallback<int, ChatRoom &, errstr &>((int)Cmds::getChatRoom, idChat, callback);
     client->write(p.encode());
 }

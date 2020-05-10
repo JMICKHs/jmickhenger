@@ -56,7 +56,7 @@ private:
     void readHandler(const string & str);
     static optional<shared_ptr<AppNet>> single;
     unique_ptr<Announcer> announcer;
-    unique_ptr<AbstractCache> cache;
+    unique_ptr<AbstractCache> cache; //TODO
     shared_ptr<AbstractClient> client;
     static std::mutex mtx;
     bool clientStarted = false;

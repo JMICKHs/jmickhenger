@@ -204,12 +204,12 @@ const string inf::ChatChange::nameId = "id";
 const string inf::ChatChange::nameCmd = "cmd";
 const string inf::ChatChange::nameMsg = "messages";
 
-inf::Package::Package() : err(), status(-1), cmd(-1), body() {}
+inf::Reply::Reply() : err(), status(-1), cmd(-1), body() {}
 
-inf::Package::Package(const string &ec, int stat, int cmd, const string &body)
+inf::Reply::Reply(const string &ec, int stat, int cmd, const string &body)
     : err(ec), status(stat), cmd(cmd), body(body) {}
 
-string inf::Package::encode() const {
+string inf::Reply::encode() const {
     parser->clear();
     parser->addStr(err, nameErr);
     parser->addInt(status, nameStatus);
@@ -219,7 +219,7 @@ string inf::Package::encode() const {
     return parser->getRes();
 }
 
-void inf::Package::decode(const string &json) {
+void inf::Reply::decode(const string &json) {
     parser->setJson(json);
     err = parser->getStr(nameErr);
     status = parser->getInt(nameStatus);
@@ -227,9 +227,9 @@ void inf::Package::decode(const string &json) {
     body = parser->getCustom(nameBody);
 }
 
-const string inf::Package::nameErr = "error";
-const string inf::Package::nameStatus = "status";
-const string inf::Package::nameCmd = "cmd";
-const string inf::Package::nameBody = "body";
+const string inf::Reply::nameErr = "error";
+const string inf::Reply::nameStatus = "status";
+const string inf::Reply::nameCmd = "cmd";
+const string inf::Reply::nameBody = "body";
 
 

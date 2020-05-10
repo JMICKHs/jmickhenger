@@ -145,12 +145,12 @@
 //                  "\"status\": 0"
 //                  "\"err\": \"{}\""
 //                  "}";
-//    inf::Package info1;
+//    inf::Reply info1;
 //    info1.err = "";
 //    info1.cmd = 2;
 //    info1.status = 0;
 //    info1.body = "{}";
-//    inf::Package info2;
+//    inf::Reply info2;
 //    info2.decode(json);
 //
 //    ASSERT_EQ(info1.err, info2.err);

@@ -7,9 +7,9 @@
 
 using namespace std;
 using namespace inf;
-int main() {
 
-    //client work test
+int main() {
+//    //client work test
     auto net = AppNet::shared();
     net->runClient([](int ec) {
         cout << "connection err code - " << ec << endl;
@@ -19,12 +19,14 @@ int main() {
     string text;
 
     while(getline(cin, text)) {
-        Message msg(idUser, c++, text, 56, time(NULL), false);
-        net->sendMsg(msg, [](optional<string> &){});
+        Message msg(idUser, c++, text, 56, time(nullptr), false);
+        net->sendMsg(msg, [c](optional<string> &){
+            cout << "вызвался в " << c << "раз\n";
+        });
     }
     net->stopClient();
 
-//    //announser work test
+//    announser work test
 //    Announcer an;
 //    ChatInfo info(3, "name");
 //    ChatInfo info2(5, "name");
@@ -32,13 +34,15 @@ int main() {
 //    function<void(int)> f = [](int n){
 //        cout << "n - " << n << endl;
 //    };
-//    an.addCallback<ChatInfo, int>(cmd, info, f);
+//    int context = 7;
+//    an.addCallback<int, int>(cmd, context, f);
 //
-//    auto ftest = an.getCallback<ChatInfo, int>(cmd, info);
+//
+//    auto ftest = an.getCallback<int, int>(cmd, context);
 //    if (ftest) {
 //        ftest.value()(5);
 //    }
-//    auto ftest2 = an.getCallback<ChatInfo, int>(cmd, info2);
+//    auto ftest2 = an.getCallback<int, int>(cmd, context);
 //    if (!ftest2) {
 //        cout << "Всё верно, тут ничего быть не должно" << endl;
 //    }

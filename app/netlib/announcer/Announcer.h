@@ -20,19 +20,23 @@ public:
     void notifyChat(inf::ChatChange & change);
     template<typename Context, typename... Args>
     void addCallback(int cmd, Context context, const function<void(Args...)>& callback) {
-        auto item = pair<void *, void *>((void *)&context, (void *)&callback);
+        Context * tmpContext = new Context; //выделяем память, что бы не потерялось =) при удалении очистим
+        *tmpContext = context;
+        auto item = pair<void *, void *>((void *)tmpContext, (void *)&callback); //value - контекст и функция
         callbacks.insert(pair<int, pair<void *, void *>>(cmd, item));
     }
     template<typename Context, typename... Args>
     optional<function<void(Args...)>> getCallback(int cmd, Context context) {
         auto iterPair = callbacks.equal_range(cmd);
-        for (; iterPair.first != iterPair.second; iterPair.first++) {
+        for (; iterPair.first != iterPair.second; ++iterPair.first) {
             auto tmpIter = iterPair.first;
             Context * itemContext = (Context *)tmpIter->second.first;
             if(context == *itemContext) {
-                auto tmpF = tmpIter->second.second;
-                auto f = reinterpret_cast<function<void(Args...)> *>(tmpF);
-                callbacks.erase(tmpIter);
+                auto tmpF = tmpIter->second.second; // берем указатель void на функцию
+                auto f = reinterpret_cast<function<void(Args...)> *>(tmpF); // возвращаем тип на нужный
+                callbacks.erase(tmpIter); // удаляем пару ключ значение
+                delete itemContext; // освобождаем память, что выделели на контекст
+                //(возможно подумать и переделать на умный указатель), но решение с двумя void * кажется красивым
                 return *f;
             }
         }

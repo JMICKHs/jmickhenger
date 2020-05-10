@@ -10,8 +10,6 @@ shared_ptr<Client> Client::shared()  {
         tcp::resolver resolver(service);
         auto eit = resolver.resolve({"127.0.0.1", "8000"});
         single = shared_ptr<Client>(new Client(eit));
-//            boost::asio::socket_base::keep_alive option(true);
-//            single.value()->sock.set_option(option);
         mtx.unlock();
     }
     return single.value();

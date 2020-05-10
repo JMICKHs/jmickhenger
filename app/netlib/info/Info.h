@@ -128,10 +128,10 @@ namespace inf {
         static const string nameMsg;
     };
 
-    class Package : public Codeble {
+    class Reply : public Codeble {
     public:
-        Package();
-        Package(const string & ec, int stat, int cmd, const string & body);
+        Reply();
+        Reply(const string & ec, int stat, int cmd, const string & body);
         string err;
         int status;
         int cmd;
