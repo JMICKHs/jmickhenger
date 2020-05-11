@@ -9,9 +9,12 @@ using ChatItem = inf::ChatRoom;
 using Msg = inf::Message;
 using Change = inf::ChatChange;
 
-struct Chat{
-    ChatItem chat;
+class Chat : public ChatItem{
+public:
     QString lastMessage;
+    Chat(ChatItem &item)
+        :ChatItem(std::move(item)){
+    }
 };
 
 Q_DECLARE_METATYPE(Chat)
@@ -24,9 +27,9 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     void addItem(Chat &item);
-    void setData(std::vector<Chat> &);
+    void setData(std::vector<ChatItem> &);
 
-    std::function<void(vector<Chat> &, std::optional<string> &)> getChatCallBack() ;
+    std::function<void(vector<ChatItem> &, std::optional<string> &)> getChatCallBack() ;
     std::function<void(Msg &, std::optional<string> &)> getLastMsgCallback() ;
     std::function<void(int,std::optional<string>&)> getCreateChatCallback() ;
     std::function<void(bool,std::optional<string>&)> getDelChatCallback() ;
@@ -36,7 +39,7 @@ private:
     std::optional<string> errString;
     std::vector<Chat> items;
 
-    std::function<void(vector<Chat> &, std::optional<string> &)> chatCallback;
+    std::function<void(vector<ChatItem> &, std::optional<string> &)> chatCallback;
     std::function<void(Msg &, std::optional<string> &)>  lastMsgCallback;
     std::function<void(int,std::optional<string>&)> createChatCallback;
     std::function<void(bool,std::optional<string>&)> delChatCallback;

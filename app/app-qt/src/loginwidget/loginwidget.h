@@ -27,6 +27,14 @@ private slots:
 
     void on_RegistrationButton_clicked();
 
+    void on_returnButton_clicked();
+
+    void on_registrateButton_clicked();
+public slots:
+    void showMainWidgetSlot();
+signals:
+   void openMainWidget();
+
 private:
     Ui::LoginWidget *ui;
     QWidget *log;

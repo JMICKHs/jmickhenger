@@ -67,6 +67,7 @@ protected:
 private slots:
     void on_groupList_clicked(const QModelIndex &index);
     void on_searchInput_textChanged(const QString &arg1);
+    void after_Login_slot();
 };
 
 #endif // MAINWIDGET_H

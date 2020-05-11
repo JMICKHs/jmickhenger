@@ -13,8 +13,6 @@ MainWidget::MainWidget(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    auto app = AppNet::shared();
-    app->runClient([](int){});
 
     menuWidget = new MenuWidget(this);
     chatModel = new ChatModel(this);
@@ -44,18 +42,18 @@ MainWidget::MainWidget(QWidget *parent) :
     font.setBold(true);
     ui->label->setFont(font);
 
-    Chat item1;
-    item1.chat.idChat = 3;
-    item1.chat.name = "Textopark algosi";
-    //item1.idUsers = {3,2,1};
-    //item1.lastMessage = "skinyte semenar";
-    //Chat
-    //item1. = "23:44";
-    for(int i = 0 ; i < 23; ++i){
-        groupModel->addItem(item1);
+//    Chat item1;
+//    item1.chat.idChat = 3;
+//    item1.chat.name = "Textopark algosi";
+//    //item1.idUsers = {3,2,1};
+//    //item1.lastMessage = "skinyte semenar";
+//    //Chat
+//    //item1. = "23:44";
+//    for(int i = 0 ; i < 23; ++i){
+//        groupModel->addItem(item1);
 
-        item1.chat.name = std::to_string(i);
-    }
+//        item1.chat.name = std::to_string(i);
+//    }
     chatModel = new ChatModel();
     ui->chatList->setModel(chatModel);
     ui->chatList->setItemDelegate(new ChatDelegate);
@@ -113,7 +111,7 @@ void MainWidget::sendMessageFromInput()
 
 void MainWidget::on_groupList_clicked(const QModelIndex &index)
 {
-    ui->label->setText(QString::fromStdString(index.model()->data(index).value<Chat>().chat.name));
+    ui->label->setText(QString::fromStdString(index.model()->data(index).value<Chat>().name));
   //  QString info = QString::number(index.model()->data(index).value<Chat>().idUsers.size());
     //if(info <= 2)
     //    info += "  участника";
@@ -127,6 +125,12 @@ void MainWidget::on_searchInput_textChanged(const QString &arg1)
 {
     //proxyModel->setDynamicSortFilter(true);
     //proxyModel->setDynamicSortFilter(false);
+}
+
+void MainWidget::after_Login_slot()
+{
+    auto net = AppNet::shared();
+    net->getListChat(4,groupModel->getChatCallBack());
 }
 
 void MainWidget::removeDoubleEnter(QString &str){

@@ -9,6 +9,8 @@ ChatDelegate::ChatDelegate(QObject *parent)
     : QStyledItemDelegate(parent)
 {
     avatar = new QPixmap("/home/kostikan/jmickhenger/app/img/standartAvatar.jpg");
+    check = new QPixmap("/home/kostikan/jmickhenger/app/img/check.png");
+    uncheck = new QPixmap("/home/kostikan/jmickhenger/app/img/unchecked.png");
 }
 
 QSize ChatDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -123,6 +125,19 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
         painter->drawLine(16,13,25,25);
         painter->translate(QPointF(25,25));
         painter->drawLine(0,0, 10,-13);
+        painter->restore();
+
+        painter->save();
+
+        QPixmap checkScaled = check->scaled(20, 20, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+
+        QBrush check(checkScaled);
+        painter->setRenderHint(QPainter::Antialiasing);
+        painter->setBrush(check);
+        painter->translate(QPointF(rect.width()-20,rect.y() + 10));
+        painter->fillRect(checkScaled.rect(),Qt::transparent);
+
+        painter->drawPixmap(checkScaled.rect(),checkScaled);
         painter->restore();
 
 }

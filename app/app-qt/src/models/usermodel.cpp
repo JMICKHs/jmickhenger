@@ -16,10 +16,13 @@ UserModel::UserModel()
         if(err == nullopt){
             errString = err;
         }
+        else
+            emit showMainWidget();
     };
     authCallback = [this](Account& newAcc,std::optional<string>& err){
         if(err != nullopt){
             this->setData(newAcc);
+            emit showMainWidget();
         }
         else
             errString = err;

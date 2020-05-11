@@ -4,7 +4,7 @@
 GroupModel::GroupModel(QObject *parent)
     :QAbstractListModel(parent)
 {
-    chatCallback = [this](vector<Chat> &chats, std::optional<string> &err){
+    chatCallback = [this](vector<ChatItem> &chats, std::optional<string> &err){
         if(err == nullopt)
             this->setData(chats);
         else{
@@ -53,12 +53,15 @@ void GroupModel::addItem(Chat &item)
     endInsertRows();
 }
 
-void GroupModel::setData(std::vector<Chat> &chats)
+void GroupModel::setData(std::vector<ChatItem> &chats)
 {
-    items = std::move(chats);
+    items.clear();
+    for(auto &obj : chats){
+        items.emplace_back(Chat(obj));
+    }
 }
 
-std::function<void (vector<Chat> &, std::optional<string> &)> GroupModel::getChatCallBack()
+std::function<void (vector<ChatItem> &, std::optional<string> &)> GroupModel::getChatCallBack()
 {
     return chatCallback;
 }

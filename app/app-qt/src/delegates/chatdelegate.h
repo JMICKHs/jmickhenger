@@ -20,6 +20,8 @@ public:
 
 private:
     QPixmap *avatar;
+    QPixmap *check;
+    QPixmap *uncheck;
 };
 
 
