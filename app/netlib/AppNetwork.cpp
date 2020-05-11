@@ -1,9 +1,3 @@
-//
-// Created by Sergei Alexeev on 05.05.2020.
-//
-
-
-
 #include "AppNetwork.h"
 
 std::mutex AppNet::mtx = std::mutex();
@@ -45,41 +39,42 @@ void AppNet::stopClient() {
 
 
 void AppNet::readHandler(const string &str) {
-    Reply p;
+    Reply reply;
     try {
-        p.decode(str);
+        reply.decode(str);
     } catch(...) {
         cout << "server uncodeble - " << str << endl;
+        return;
     }
 
     optional<string> err;
-    string body(p.body);
-    if (p.err.empty()) {
+    string body(reply.body);
+    if (reply.err.empty()) {
         err = nullopt;
     } else {
-        err = p.err;
+        err = reply.err;
     }
     // надо разделить на функции и положить в map
-    switch (p.cmd) {
+    switch (reply.cmd) {
         case ((int)Cmds::registration): {
             MyAccount acc;
             acc.decode(body);
-            auto f = announcer->getCallback<string, int, errstr &>(p.cmd, acc.login);
+            auto f = announcer->getCallback<string, int, errstr &>(reply.cmd, acc.login);
             if (f) {
                 f.value()(acc.id, err);
             } else {
-                cout << "cmd " << p.cmd << " " << str <<" не найден callback\n";
+                cout << "cmd " << reply.cmd << " " << str << " не найден callback\n";
             }
             break;
         }
         case ((int)Cmds::auth): {
             MyAccount acc;
             acc.decode(body);
-            auto f = announcer->getCallback<string, inf::MyAccount &, errstr &>(p.cmd, acc.login);
+            auto f = announcer->getCallback<string, inf::MyAccount &, errstr &>(reply.cmd, acc.login);
             if (f) {
                 f.value()(acc, err);
             } else {
-                cout << "cmd " << p.cmd << " " << str <<" не найден callback\n";
+                cout << "cmd " << reply.cmd << " " << str << " не найден callback\n";
             }
             break;
         }
@@ -87,11 +82,11 @@ void AppNet::readHandler(const string &str) {
             Message tmpMsg;
             tmpMsg.decode(body);
             int time = tmpMsg.timesend;
-            auto f = announcer->getCallback<int, optional<string> &>(p.cmd, time);
+            auto f = announcer->getCallback<int, optional<string> &>(reply.cmd, time);
             if (f) {
                 f.value()(err);
             } else {
-                cout << "cmd " << p.cmd << " " << str <<" не найден callback\n";
+                cout << "cmd " << reply.cmd << " " << str << " не найден callback\n";
             }
             break;
         }
@@ -106,27 +101,27 @@ void AppNet::readHandler(const string &str) {
                 info.decode(item);
                 res.push_back(info);
             }
-            auto f = announcer->getCallback<int, vector<ChatInfo> &, errstr &>(p.cmd, id);
+            auto f = announcer->getCallback<int, vector<ChatInfo> &, errstr &>(reply.cmd, id);
             if (f) {
                 f.value()(res, err);
             } else {
-                cout << "cmd " << p.cmd << " " << str <<" не найден callback\n";
+                cout << "cmd " << reply.cmd << " " << str << " не найден callback\n";
             }
             break;
         }
         case ((int)Cmds::getChatRoom): {
             ChatRoom room;
             room.decode(body);
-            auto f = announcer->getCallback<int, ChatRoom&, errstr&>(p.cmd, room.idChat);
+            auto f = announcer->getCallback<int, ChatRoom&, errstr&>(reply.cmd, room.idChat);
             if (f) {
                 f.value()(room, err);
             } else {
-                cout << "cmd " << p.cmd << " " << str <<" не найден callback\n";
+                cout << "cmd " << reply.cmd << " " << str << " не найден callback\n";
             }
             break;
         }
         default: {
-            cout << "неверный cmd - " << p.cmd << " " << str << endl;
+            cout << "неверный cmd - " << reply.cmd << " " << str << endl;
             break;
         }
     }
@@ -136,37 +131,37 @@ void AppNet::auth(const string &login, const string &pass, const function<void(M
     Parser parser;
     parser.addStr(login, MyAccount::nameLogin);
     parser.addStr(pass, MyAccount::namePassword);
-    Reply p("", 0, (int)Cmds::auth, parser.getRes());
+    Query query((int)Cmds::auth, parser.getRes());
     announcer->addCallback<string, inf::MyAccount &, errstr &>((int)Cmds::sendMessage, login, callback);
-    client->write(p.encode());
+    client->write(query.encode());
 }
 
 void AppNet::registration(const MyAccount &acc, const function<void(int, errstr &)> &callback) {
-    Reply p("", 0, (int)Cmds::registration, acc.encode());
+    Query query((int)Cmds::registration, acc.encode());
     announcer->addCallback<string, int, errstr &>((int)Cmds::registration, acc.login, callback);
-    client->write(p.encode());
+    client->write(query.encode());
 }
 
 void AppNet::sendMsg(const Message & msg, const function<void(optional<string> &)> & callback) {
-    Reply p("", 0, (int)Cmds::sendMessage, msg.encode());
+    Query query((int)Cmds::sendMessage, msg.encode());
     announcer->addCallback<int, errstr &>((int)Cmds::sendMessage, msg.timesend, callback);
-    client->write(p.encode());
+    client->write(query.encode());
 }
 
 void AppNet::getListChat(int idUser, const function<void(vector<ChatInfo> &, errstr &)> &callback) {
     Parser parser;
     parser.addInt(idUser, MyAccount::nameId);
-    Reply p("", 0, (int)Cmds::getListChat, parser.getRes());
+    Query query((int)Cmds::getListChat, parser.getRes());
     announcer->addCallback<int, vector<ChatInfo> &, errstr &>((int)Cmds::getListChat, idUser, callback);
-    client->write(p.encode());
+    client->write(query.encode());
 }
 
 void AppNet::getChatRoom(int idChat, const function<void(ChatRoom &, errstr &)> &callback) {
     Parser parser;
     parser.addInt(idChat, ChatInfo::nameId);
-    Reply p("", 0, (int)Cmds::getChatRoom, parser.getRes());
+    Query query((int)Cmds::getChatRoom, parser.getRes());
     announcer->addCallback<int, ChatRoom &, errstr &>((int)Cmds::getChatRoom, idChat, callback);
-    client->write(p.encode());
+    client->write(query.encode());
 }
 
 void AppNet::setObserverChat(int idChat, const function<void(ChatChange &)>& callback) {

@@ -143,6 +143,18 @@ namespace inf {
         static const string nameCmd;
         static const string nameBody;
     };
+
+    class Query : public Codeble {
+    public:
+        Query();
+        Query(int command, const string & essence);
+        int cmd;
+        string body;
+        string encode() const override;
+        void decode(const string & json) override;
+        static const string nameCmd;
+        static const string nameBody;
+    };
 }
 
 

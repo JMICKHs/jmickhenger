@@ -232,4 +232,22 @@ const string inf::Reply::nameStatus = "status";
 const string inf::Reply::nameCmd = "cmd";
 const string inf::Reply::nameBody = "body";
 
+inf::Query::Query() : cmd(-1), body() {}
+inf::Query::Query(int command, const string & essence): cmd(command), body(essence) {}
+
+const string inf::Query::nameCmd = "cmd";
+const string inf::Query::nameBody = "body";
+
+string inf::Query::encode() const {
+    parser->clear();
+    parser->addInt(cmd, nameCmd);
+    parser->addCustom(body, nameBody);
+    return parser->getRes();
+}
+
+void inf::Query::decode(const string &json) {
+    parser->setJson(json);
+    cmd = parser->getInt(nameCmd);
+    body = parser->getCustom(nameBody);
+}
 
