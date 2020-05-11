@@ -6,9 +6,6 @@
 
 Codeble::Codeble() {
     parser = shared_ptr<AbstractParser>(new Parser);
-//    unique_ptr<Parser> tmp(new Parser);
-//    parser = move(tmp);
-//    parser = move(unique_ptr<Parser>(new Parser));
 }
 
 inf::MyAccount::MyAccount()

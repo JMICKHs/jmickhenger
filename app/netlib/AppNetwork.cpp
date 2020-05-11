@@ -27,6 +27,7 @@ void AppNet::runClient(const function<void(int)> & errHandler) {
         clientStarted = true;
         client->run();
         client->setMsgHandler(boost::bind(&AppNet::readHandler, shared_from_this(), _1));
+        setHandlers();
     }
 }
 
@@ -54,76 +55,12 @@ void AppNet::readHandler(const string &str) {
     } else {
         err = reply.err;
     }
-    // надо разделить на функции и положить в map
-    switch (reply.cmd) {
-        case ((int)Cmds::registration): {
-            MyAccount acc;
-            acc.decode(body);
-            auto f = announcer->getCallback<string, int, errstr &>(reply.cmd, acc.login);
-            if (f) {
-                f.value()(acc.id, err);
-            } else {
-                cout << "cmd " << reply.cmd << " " << str << " не найден callback\n";
-            }
-            break;
-        }
-        case ((int)Cmds::auth): {
-            MyAccount acc;
-            acc.decode(body);
-            auto f = announcer->getCallback<string, inf::MyAccount &, errstr &>(reply.cmd, acc.login);
-            if (f) {
-                f.value()(acc, err);
-            } else {
-                cout << "cmd " << reply.cmd << " " << str << " не найден callback\n";
-            }
-            break;
-        }
-        case ((int)Cmds::sendMessage): {
-            Message tmpMsg;
-            tmpMsg.decode(body);
-            int time = tmpMsg.timesend;
-            auto f = announcer->getCallback<int, optional<string> &>(reply.cmd, time);
-            if (f) {
-                f.value()(err);
-            } else {
-                cout << "cmd " << reply.cmd << " " << str << " не найден callback\n";
-            }
-            break;
-        }
-        case ((int)Cmds::getListChat): {
-            Parser parser;
-            parser.setJson(body);
-            int id = parser.getInt(MyAccount::nameId);
-            vector<string> tmp = parser.getArrCustom(ChatInfo::nameChatList);
-            vector<ChatInfo> res; res.reserve(tmp.size());
-            for(const auto & item: tmp) {
-                ChatInfo info;
-                info.decode(item);
-                res.push_back(info);
-            }
-            auto f = announcer->getCallback<int, vector<ChatInfo> &, errstr &>(reply.cmd, id);
-            if (f) {
-                f.value()(res, err);
-            } else {
-                cout << "cmd " << reply.cmd << " " << str << " не найден callback\n";
-            }
-            break;
-        }
-        case ((int)Cmds::getChatRoom): {
-            ChatRoom room;
-            room.decode(body);
-            auto f = announcer->getCallback<int, ChatRoom&, errstr&>(reply.cmd, room.idChat);
-            if (f) {
-                f.value()(room, err);
-            } else {
-                cout << "cmd " << reply.cmd << " " << str << " не найден callback\n";
-            }
-            break;
-        }
-        default: {
-            cout << "неверный cmd - " << reply.cmd << " " << str << endl;
-            break;
-        }
+
+
+    if(handlers.count(reply.cmd)) {
+        handlers[reply.cmd](reply.cmd, err, body);
+    } else {
+        cout << "err cmd - " << reply.cmd << endl;
     }
 }
 
@@ -170,4 +107,72 @@ void AppNet::setObserverChat(int idChat, const function<void(ChatChange &)>& cal
 
 void AppNet::setObserverUnknownChat(const function<void(ChatChange &)>& callback) {
     announcer->setChatAnonCallback(callback);
+}
+
+void AppNet::setHandlers() {
+    auto self = shared_from_this();
+    auto f1 = [self](int cmd, errstr & err, const string & body) {
+        MyAccount acc;
+        acc.decode(body);
+        auto f = self->announcer->getCallback<string, int, errstr &>(cmd, acc.login);
+        if (f) {
+            f.value()(acc.id, err);
+        } else {
+            cout << "cmd " << cmd << " " << body << " не найден callback\n";
+        }
+    };
+    handlers[(int)Cmds::registration] = f1;
+    auto f2 = [self](int cmd, errstr & err, const string & body) {
+        MyAccount acc;
+        acc.decode(body);
+        auto f = self->announcer->getCallback<string, inf::MyAccount &, errstr &>(cmd, acc.login);
+        if (f) {
+            f.value()(acc, err);
+        } else {
+            cout << "cmd " << cmd << " " << body << " не найден callback\n";
+        }
+    };
+    handlers[(int)Cmds::auth] = f2;
+    auto f3 = [self](int cmd, errstr & err, const string & body) {
+        Parser parser;
+        parser.setJson(body);
+        int id = parser.getInt(MyAccount::nameId);
+        vector<string> tmp = parser.getArrCustom(ChatInfo::nameChatList);
+        vector<ChatInfo> res; res.reserve(tmp.size());
+        for(const auto & item: tmp) {
+            ChatInfo info;
+            info.decode(item);
+            res.push_back(info);
+        }
+        auto f = self->announcer->getCallback<int, vector<ChatInfo> &, errstr &>(cmd, id);
+        if (f) {
+            f.value()(res, err);
+        } else {
+            cout << "cmd " << cmd << " " << body << " не найден callback\n";
+        }
+    };
+    handlers[(int)Cmds::getListChat] = f3;
+    auto f4 = [self](int cmd, errstr & err, const string & body) {
+        ChatRoom room;
+        room.decode(body);
+        auto f = self->announcer->getCallback<int, ChatRoom&, errstr&>(cmd, room.idChat);
+        if (f) {
+            f.value()(room, err);
+        } else {
+            cout << "cmd " << cmd << " " << body << " не найден callback\n";
+        }
+    };
+    handlers[(int)Cmds::getChatRoom] = f4;
+    auto f5 = [self](int cmd, errstr & err, const string & body) {
+        Message tmpMsg;
+        tmpMsg.decode(body);
+        int time = tmpMsg.timesend;
+        auto f = self->announcer->getCallback<int, optional<string> &>(cmd, time);
+        if (f) {
+            f.value()(err);
+        } else {
+            cout << "cmd " << cmd << " " << body << " не найден callback\n";
+        }
+    };
+    handlers[(int)Cmds::sendMessage] = f5;
 }
