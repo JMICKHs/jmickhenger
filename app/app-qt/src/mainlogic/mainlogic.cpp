@@ -6,4 +6,5 @@ MainLogic::MainLogic()
     mainWidget = new MainWidget;
     lgWidget->show();
     connect(lgWidget,&LoginWidget::openMainWidget,mainWidget,&MainWidget::show);
+    connect(lgWidget,&LoginWidget::openMainWidget,mainWidget,&MainWidget::after_Login_slot);
 }

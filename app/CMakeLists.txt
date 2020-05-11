@@ -26,7 +26,7 @@ find_package(Boost)
 include_directories(${Boost_INCLUDE_DIRS})
 SET(Boost_USE_STATIC_LIBS OFF)
 SET(Boost_USE_MULTITHREAD ON)
-FIND_PACKAGE(Boost 1.42.0 REQUIRED COMPONENTS thread system  regex)
+FIND_PACKAGE(Boost 1.67.0 REQUIRED COMPONENTS thread system  regex)
 IF(Boost_FOUND)
     INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
     LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
@@ -34,7 +34,7 @@ ENDIF(Boost_FOUND)
 
 SET(USED_LIBS ${Boost_THREAD_LIBRARY}  ${Boost_SYSTEM_LIBRARY} ${Boost_REGEX_LIBRARY})
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -pthread")
 
 add_executable(jmichkenger
      app-qt/src/authwidget/authwidget.cpp

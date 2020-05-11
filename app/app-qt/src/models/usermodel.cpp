@@ -1,32 +1,8 @@
 #include "usermodel.h"
-
+#include <memory>
+#include <QDebug>
 UserModel::UserModel()
 {
-    saveAvatarCallback = [this](bool state,std::optional<string>& err){
-        if(err == nullopt){
-            errString = err;
-        }
-    };
-    changeMeCallback = [this](bool state,std::optional<string>& err){
-        if(err == nullopt){
-            errString = err;
-        }
-    };
-    registrationCallback = [this](int id,std::optional<string>& err){
-        if(err == nullopt){
-            errString = err;
-        }
-        else
-            emit showMainWidget();
-    };
-    authCallback = [this](Account& newAcc,std::optional<string>& err){
-        if(err != nullopt){
-            this->setData(newAcc);
-            emit showMainWidget();
-        }
-        else
-            errString = err;
-    };
 }
 
 void UserModel::setData(Account &acc)
@@ -34,22 +10,52 @@ void UserModel::setData(Account &acc)
     myAcc = std::move(acc);
 }
 
-std::function<void (bool, std::optional<string> &)> UserModel::getSaveAvatarCallback()
+std::function<void (bool, std::optional<string> &)> &UserModel::getSaveAvatarCallback()
 {
     return saveAvatarCallback;
 }
 
-std::function<void (bool, std::optional<string> &)> UserModel::getChangeMeCallback()
+std::function<void (bool, std::optional<string> &)> &UserModel::getChangeMeCallback()
 {
     return changeMeCallback;
 }
 
-std::function<void (Account&,std::optional<string>&)> UserModel::getAuthCallback()
+std::function<void (Account&,std::optional<string>&)>& UserModel::getAuthCallback()
 {
     return authCallback;
 }
 
-std::function<void (int, std::optional<string> &)> UserModel::getRegistrationCallback()
+std::function<void (int, std::optional<string> &)> &UserModel::getRegistrationCallback()
 {
     return registrationCallback;
+}
+
+void UserModel::setCallBacks()
+{
+    errString = nullopt;
+    saveAvatarCallback = [self = shared_from_this()](bool state,std::optional<string>& err){
+        if(err == nullopt){
+            self->errString = err;
+        }
+    };
+    changeMeCallback = [self = shared_from_this()](bool state,std::optional<string>& err){
+        if(err == nullopt){
+            self->errString = err;
+        }
+    };
+    registrationCallback = [self = shared_from_this()](int id,std::optional<string>& err){
+        if(err == nullopt){
+            emit self->showMainWidget();
+        }
+        else
+            self->errString = err;
+    };
+    authCallback = [self = shared_from_this()](Account& newAcc,std::optional<string>& err){
+        if(err == nullopt){
+            self->setData(newAcc);
+            emit self->showMainWidget();
+        }
+        else
+            self->errString = err;
+    };
 }

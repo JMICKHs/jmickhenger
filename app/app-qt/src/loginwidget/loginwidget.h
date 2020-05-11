@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <netlib/info/Info.h>
 #include <app-qt/src/models/usermodel.h>
+#include <memory>
 using namespace inf;
 
 namespace Ui {
@@ -39,7 +40,7 @@ private:
     Ui::LoginWidget *ui;
     QWidget *log;
     QWidget *reg;
-    UserModel *user;
+    std::shared_ptr<UserModel> userPtr;
 };
 
 #endif // LOGINWIDGET_H

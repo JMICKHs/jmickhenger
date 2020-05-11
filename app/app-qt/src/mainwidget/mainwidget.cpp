@@ -15,11 +15,13 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->setupUi(this);
 
     menuWidget = new MenuWidget(this);
-    chatModel = new ChatModel(this);
-    groupModel = new GroupModel(this);
+    chatModel = std::shared_ptr<ChatModel>(new ChatModel(this));
+    groupModel = std::shared_ptr<GroupModel>(new GroupModel(this));
+    groupModel->addCallbacks();
+    chatModel->addCallbacks();
 
     proxyModel = new ProxyModel(this);
-    proxyModel->setSourceModel(groupModel);
+    proxyModel->setSourceModel(groupModel.get());
     ui->groupList->setModel(proxyModel);
     ui->groupList->setItemDelegate(new GroupDelegate);
     ui->groupList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -54,8 +56,7 @@ MainWidget::MainWidget(QWidget *parent) :
 
 //        item1.chat.name = std::to_string(i);
 //    }
-    chatModel = new ChatModel();
-    ui->chatList->setModel(chatModel);
+    ui->chatList->setModel(chatModel.get());
     ui->chatList->setItemDelegate(new ChatDelegate);
     ui->chatList->setSelectionMode(QAbstractItemView::NoSelection);
     ui->chatList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -71,8 +72,7 @@ MainWidget::~MainWidget()
 {
     delete ui;
     delete menuWidget;
-    delete chatModel;
-    delete groupModel;
+
 }
 
 void MainWidget::resizeEvent(QResizeEvent *event)

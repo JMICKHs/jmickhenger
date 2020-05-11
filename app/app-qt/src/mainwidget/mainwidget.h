@@ -25,6 +25,7 @@
 #include <app-qt/src/delegates/chatdelegate.h>
 #include <app-qt/src/proxy/proxymodel.h>
 #include <QFocusEvent>
+#include <memory>
 
 class AppNetwork;
 
@@ -51,6 +52,7 @@ public:
 public slots:
     void menuClicked();
     void sendMessageFromInput();
+    void after_Login_slot();
 
 signals:
     void sendMessageFromInput_s(const Message &message);
@@ -59,15 +61,14 @@ private:
     void removeDoubleEnter(QString &str);
 
 protected:
-    GroupModel *groupModel;
-    ChatModel *chatModel;
+    std::shared_ptr<GroupModel> groupModel;
+    std::shared_ptr<ChatModel> chatModel;
     MenuWidget *menuWidget;
     AppNetwork *network;
     ProxyModel *proxyModel;
 private slots:
     void on_groupList_clicked(const QModelIndex &index);
     void on_searchInput_textChanged(const QString &arg1);
-    void after_Login_slot();
 };
 
 #endif // MAINWIDGET_H

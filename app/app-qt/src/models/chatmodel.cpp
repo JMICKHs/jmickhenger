@@ -5,29 +5,6 @@
 ChatModel::ChatModel(QObject *parent)
     :QAbstractListModel(parent)
 {
-    chatCallback = [this](std::vector<Message>& msgs,std::optional<string>& err){
-        if(err == nullopt){
-            this->setData(msgs);
-        }
-        else{
-            errString = err;
-        }
-    };
-    sendMsgCallback = [this](std::optional<string>& err){
-        if(err == nullopt){
-            errString = err;
-        }
-    };
-    changeMsgCallback = [this](std::optional<string>& err){
-        if(err == nullopt){
-            errString = err;
-        }
-    };
-    delMsgCallback = [this](std::optional<string>& err){
-        if(err == nullopt){
-            errString = err;
-        }
-    };
 }
 
 int ChatModel::rowCount(const QModelIndex &parent) const
@@ -63,27 +40,54 @@ void ChatModel::createMessage(Message &_message)
     emit this->dataChanged(QModelIndex(),QModelIndex());
 }
 
+void ChatModel::addCallbacks()
+{
+    chatCallback = [self = shared_from_this()](std::vector<Message>& msgs,std::optional<string>& err){
+        if(err == nullopt){
+            self->setData(msgs);
+        }
+        else{
+            self->errString = err;
+        }
+    };
+    sendMsgCallback = [self = shared_from_this()](std::optional<string>& err){
+        if(err == nullopt){
+            self->errString = err;
+        }
+    };
+    changeMsgCallback = [self = shared_from_this()](std::optional<string>& err){
+        if(err == nullopt){
+            self->errString = err;
+        }
+    };
+    delMsgCallback = [self = shared_from_this()](std::optional<string>& err){
+        if(err == nullopt){
+            self->errString = err;
+        }
+    };
+}
+
 void ChatModel::setData(std::vector<Message> &msgs)
 {
     items = std::move(msgs);
 }
 
-std::function<void(std::vector<Message>&,std::optional<string>&)> ChatModel::getChatCallback()
+std::function<void(std::vector<Message>&,std::optional<string>&)>& ChatModel::getChatCallback()
 {
     return chatCallback;
 }
 
-std::function<void (std::optional<string> &)> ChatModel::getSendMsgCallback()
+std::function<void (std::optional<string> &)>& ChatModel::getSendMsgCallback()
 {
     return sendMsgCallback;
 }
 
-std::function<void (std::optional<string> &)> ChatModel::getChangeMsgCallback()
+std::function<void (std::optional<string> &)>& ChatModel::getChangeMsgCallback()
 {
     return changeMsgCallback;
 }
 
-std::function<void (std::optional<string> &)> ChatModel::getDelMsgCallback()
+std::function<void (std::optional<string> &)>& ChatModel::getDelMsgCallback()
 {
     return delMsgCallback;
 }
