@@ -17,6 +17,7 @@
 #include <optional>
 #include <memory>
 #include <mutex>
+#include <unordered_map>
 
 using namespace std;
 using namespace inf;
@@ -38,7 +39,7 @@ public:
     void sendMsg(const Message & msg, const function<void(errstr &)> & callback);
     void setObserverChat(int idChat, const function<void(ChatChange &)>& callback);
     void setObserverUnknownChat(const function<void(ChatChange &)>& callback);
-    void getMsgs(int idChat, int start, int end, const function<void(vector<Message> &, errstr &)> & callback){}//TODO
+    void getMsgs(int idChat, int start, int end, const function<void(vector<Message> &, errstr &)> & callback);
     void getLastMsg(int idChat, const function<void(Message &, errstr &)> & callback){}//TODO
     void addFrnd(int idFrnd, const function<void(errstr &)> & callback){}//TODO
     void getListFrnd(int id, const function<void(vector<int> &, errstr &)> & callback){}//TODO
@@ -59,7 +60,8 @@ private:
     unique_ptr<Announcer> announcer;
     unique_ptr<AbstractCache> cache; //TODO
     shared_ptr<AbstractClient> client;
-    map<int, function<void(int, errstr &, const string &)>> handlers;
+    unordered_map<int, function<void(int, errstr &, const string &)>> handlers;
+    // почему unoredered? в среднем работает за O(1) и мы не меняем в нём данные, поэтому худшего случая не будет
     static std::mutex mtx;
     bool clientStarted = false;
     enum class Cmds {

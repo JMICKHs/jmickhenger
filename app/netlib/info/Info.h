@@ -82,6 +82,7 @@ namespace inf {
         static const string nameOwner;
         static const string nameTime;
         static const string nameCheck;
+        static const string nameArr;
     };
 
     class ChatInfo : public Codeble {
@@ -112,6 +113,8 @@ namespace inf {
         static const string nameChat;
         static const string nameUsers;
         static const string nameAdmins;
+        static const string nameStart;
+        static const string nameEnd;
     };
 
     class ChatChange : public Codeble {

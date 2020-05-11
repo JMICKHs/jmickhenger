@@ -109,8 +109,19 @@ void AppNet::setObserverUnknownChat(const function<void(ChatChange &)>& callback
     announcer->setChatAnonCallback(callback);
 }
 
+void AppNet::getMsgs(int idChat, int start, int end, const function<void(vector<Message> &, errstr &)> &callback) {
+    Parser parser;
+    parser.addInt(idChat, ChatRoom::nameId);
+    parser.addInt(start, ChatRoom::nameStart);
+    parser.addInt(end, ChatRoom::nameEnd);
+    Query query((int)Cmds::getMessages, parser.getRes());
+    announcer->addCallback<int, vector<Message> &, errstr &>((int)Cmds::getMessages, idChat, callback);
+    client->write(query.encode());
+}
+
 void AppNet::setHandlers() {
     auto self = shared_from_this();
+    handlers.reserve((int)Cmds::test); // test - последняя по номеру команда
     auto f1 = [self](int cmd, errstr & err, const string & body) {
         MyAccount acc;
         acc.decode(body);
@@ -175,4 +186,24 @@ void AppNet::setHandlers() {
         }
     };
     handlers[(int)Cmds::sendMessage] = f5;
+    auto f6 = [self](int cmd, errstr & err, const string & body) {
+        Parser parser;
+        parser.setJson(body);
+        int id = parser.getInt(ChatRoom::nameId);
+        vector<string> tmp = parser.getArrCustom(Message::nameArr);
+        vector<Message> res;
+        res.reserve(tmp.size());
+        for(const auto & item: tmp) {
+            Message msg;
+            msg.decode(item);
+            res.push_back(msg);
+        }
+        auto f = self->announcer->getCallback<int, vector<Message> &, optional<string> &>(cmd, id);
+        if (f) {
+            f.value()(res, err);
+        } else {
+            cout << "cmd " << cmd << " " << body << " не найден callback\n";
+        }
+    };
 }
+

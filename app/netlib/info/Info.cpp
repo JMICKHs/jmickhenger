@@ -107,6 +107,7 @@ const string inf::Message::nameText = "text";
 const string inf::Message::nameOwner = "owner";
 const string inf::Message::nameTime = "time";
 const string inf::Message::nameCheck = "checked";
+const string inf::Message::nameArr = "msgs";
 
 inf::ChatInfo::ChatInfo()
     : idChat(-1), name() {}
@@ -166,6 +167,8 @@ const string inf::ChatRoom::nameId = "id";
 const string inf::ChatRoom::nameChat = "name";
 const string inf::ChatRoom::nameUsers = "users";
 const string inf::ChatRoom::nameAdmins = "admins";
+const string inf::ChatRoom::nameStart = "start";
+const string inf::ChatRoom::nameEnd = "end";
 
 inf::ChatChange::ChatChange()
     : idChat(-1) {}
