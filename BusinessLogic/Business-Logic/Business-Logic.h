@@ -12,12 +12,12 @@ class BusinessLogic
     std::map<std::string, AbstractService<DBWorker, JsonParser>*> workers;
     std::queue<ResponseStruct>* QueueOut;
 
-    int getCMD(std::string filepath, std::string& CMD){};
+    int getCMD(const std::string& filepath, std::string& CMD);
 public:
 
     BusinessLogic();
     BusinessLogic(Parser& ps);
-    int SetRequest(std::string JsonStr);
+    int SetRequest(const std::string& JsonStr);
     ResponseStruct GetResponse();
     ~BusinessLogic();
 };

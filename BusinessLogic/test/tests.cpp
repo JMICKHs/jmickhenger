@@ -20,32 +20,32 @@ class DBWorkerMock : public AbstractDBWorker
 {
 public:
 
-    MOCK_METHOD1(SetNeededFile, void(std::string filepath));
-    MOCK_METHOD1(GetInt, int(std::string key));
-    MOCK_METHOD1(GetStr, std::string(std::string key));
-    MOCK_METHOD1(GetStrVec, std::vector<std::string>(std::string key));
-    MOCK_METHOD1(GetMap, std::map<std::string, std::string>(std::string key));
-    MOCK_METHOD1(CreateFile, std::string(std::string col));
-    MOCK_METHOD2(AddInt, void(std::string key, int val));
-    MOCK_METHOD2(AddStr, void(std::string key, std::string val));
-    MOCK_METHOD2(AddStrVec, void(std::string key, std::vector<std::string> val));
-    MOCK_METHOD2(AddMap, void(std::string key, std::map<std::string, std::string> val));
+    MOCK_METHOD1(SetNeededFile, void(const std::string& filepath));
+    MOCK_METHOD1(GetInt, int(const std::string& key));
+    MOCK_METHOD1(GetStr, std::string(const std::string& key));
+    MOCK_METHOD1(GetStrVec, std::vector<std::string>(const std::string& key));
+    MOCK_METHOD1(GetMap, std::map<std::string, std::string>(const std::string& key));
+    MOCK_METHOD1(CreateFile, std::string(const std::string& col));
+    MOCK_METHOD2(AddInt, void(const std::string& key, int val));
+    MOCK_METHOD2(AddStr, void(const std::string& key, const std::string& val));
+    MOCK_METHOD2(AddStrVec, void(const std::string& key, const std::vector<std::string>& val));
+    MOCK_METHOD2(AddMap, void(const std::string& key, const std::map<std::string, std::string>& val));
 };
 
 class JsonParserMock : public AbstractJsonParser
 {
 public:
 
-    MOCK_METHOD1(SetNeededFile, void(std::string str));
-    MOCK_METHOD1(GetInt, int(std::string key));
-    MOCK_METHOD1(GetStr, std::string(std::string key));
-    MOCK_METHOD1(GetStrVec, std::vector<std::string>(std::string key));
-    MOCK_METHOD1(GetMap, std::map<std::string, std::string>(std::string key));
+    MOCK_METHOD1(SetNeededFile, void(const std::string& str));
+    MOCK_METHOD1(GetInt, int(const std::string& key));
+    MOCK_METHOD1(GetStr, std::string(const std::string& key));
+    MOCK_METHOD1(GetStrVec, std::vector<std::string>(const std::string& key));
+    MOCK_METHOD1(GetMap, std::map<std::string, std::string>(const std::string& key));
     MOCK_METHOD0(CreateJson, std::string());
-    MOCK_METHOD2(AddInt, void(std::string key, int val));
-    MOCK_METHOD2(AddStr, void(std::string key, std::string val));
-    MOCK_METHOD2(AddStrVec, void(std::string key, std::vector<std::string> val));
-    MOCK_METHOD2(AddMap, void(std::string key, std::map<std::string, std::string> val));
+    MOCK_METHOD2(AddInt, void(const std::string& key, int val));
+    MOCK_METHOD2(AddStr, void(const std::string& key, const std::string& val));
+    MOCK_METHOD2(AddStrVec, void(const std::string& key, const std::vector<std::string>& val));
+    MOCK_METHOD2(AddMap, void(const std::string& key, const std::map<std::string, std::string>& val));
 };
 
 TEST(service, test1)

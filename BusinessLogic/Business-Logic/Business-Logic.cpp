@@ -17,11 +17,16 @@ BusinessLogic<Parser>::BusinessLogic(Parser &ps) {
 }
 
 template<class Parser>
-int BusinessLogic<Parser>::SetRequest(std::string JsonStr) {
+int BusinessLogic<Parser>::SetRequest(const std::string& JsonStr) {
     return 0;
 }
 
 template<class Parser>
 BusinessLogic<Parser>::~BusinessLogic() {
 
+}
+
+template<class Parser>
+int BusinessLogic<Parser>::getCMD(const std::string &filepath, std::string &CMD) {
+    return 0;
 }
