@@ -18,12 +18,25 @@ int main() {
     int idUser = 78;
     string text;
 
-    while(getline(cin, text)) {
-        Message msg(idUser, c++, text, 56, time(nullptr), false);
-        net->sendMsg(msg, [c](optional<string> &){
-            cout << "вызвался в " << c << "раз\n";
-        });
-    }
+//    while(getline(cin, text)) {
+//        Message msg(idUser, c++, text, 56, time(nullptr), false);
+//        net->sendMsg(msg, [c](optional<string> &){
+//            cout << "вызвался в " << c << "раз\n";
+//        });
+//    }
+
+    net->auth("vasia", "12345", [](MyAccount & acc, optional<string> &) {
+        cout << acc.login << " смог ввойти в чат!\n";
+    });
+    sleep(2);
+    //(int idUser, const function<void(vector<ChatInfo> &, errstr &)> & callback);
+    net->getListChat(4, [](vector<ChatInfo> & a, optional<string> &) {
+        cout << "чаты\n";
+        for(const auto & item : a) {
+            cout << item.name << endl;
+        }
+    });
+    sleep(2);
     net->stopClient();
 
 //    announser work test

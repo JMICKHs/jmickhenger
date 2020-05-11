@@ -41,10 +41,11 @@ void AppNet::stopClient() {
 
 void AppNet::readHandler(const string &str) {
     Reply reply;
+//    cout << str << endl;
     try {
         reply.decode(str);
     } catch(...) {
-        cout << "server uncodeble - " << str << endl;
+        cout << "server uncodeble" << endl;
         return;
     }
 
@@ -69,7 +70,7 @@ void AppNet::auth(const string &login, const string &pass, const function<void(M
     parser.addStr(login, MyAccount::nameLogin);
     parser.addStr(pass, MyAccount::namePassword);
     Query query((int)Cmds::auth, parser.getRes());
-    announcer->addCallback<string, inf::MyAccount &, errstr &>((int)Cmds::sendMessage, login, callback);
+    announcer->addCallback<string, inf::MyAccount &, errstr &>((int)Cmds::auth, login, callback);
     client->write(query.encode());
 }
 
