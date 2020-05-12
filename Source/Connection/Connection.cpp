@@ -2,75 +2,85 @@
 // Created by nick on 02.05.2020.
 //
 
+#include <boost/bind.hpp>
+#include <boost/asio.hpp>
 #include "Connection.h"
-
-using namespace boost::asio;
-io_service service;
-int a = 0;
-
-
-#define MEM_FN1(x,y)    boost::bind(&self_type::x, shared_from_this(),y)
 #define MEM_FN2(x,y,z)  boost::bind(&self_type::x, shared_from_this(),y,z)
+#define MEM_FN1(x,y)  boost::bind(&self_type::x, shared_from_this(),y)
+using boost::asio::ip::tcp;
+
+tcp::socket &Connection::socket() {
+    return socket_;
+}
 
 void Connection::start() {
-    started_ = true;
-    socket.async_read_some(buffer(read_buffer_), MEM_FN2(on_read,_1,_2));
-    std::cout << read_buffer_;
+    boost::asio::async_read(socket_,
+                            boost::asio::buffer(nickname_, nickname_.size()),
+                            boost::bind(&Connection::readCondition, shared_from_this(), _1, _2),
+                            strand_.wrap(boost::bind(&Connection::name_handler, shared_from_this(), _1)));
 }
 
-Connection::ptr Connection::new_(int index) {
-    return ptr(new Connection(std::shared_ptr<Connection>(), index));
-}
-
-ip::tcp::socket &Connection::get_socket() {
-    return socket;
-}
-
-void Connection::on_read(const Connection::error_code &err, size_t bytes) {
-    if ( !err) {
-        std::cout << read_buffer_ << std::endl;
-        std::string response(read_buffer_, bytes);
-        response += "\n";
-        do_write(response + "\n");
+void Connection::on_message(std::array<char, MAX_IP_PACK_SIZE> &msg) {
+    bool write_in_progress = !write_msgs_.empty();
+    write_msgs_.push_back(msg);
+    if (!write_in_progress) {
+        boost::asio::async_write(socket_,
+                                 boost::asio::buffer(write_msgs_.front(), write_msgs_.front().size()),
+                                 strand_.wrap(boost::bind(&Connection::write_handler, shared_from_this(), _1)));
     }
-
 }
 
-void Connection::on_write(const Connection::error_code &err, size_t bytes) {
-    socket.async_read_some(buffer(read_buffer_), MEM_FN2(on_read,_1,_2));
+void Connection::name_handler(const boost::system::error_code &error) {
+    std::cout << nickname_.data();
+//    тут магия с id_number будет
+    room_.enter(shared_from_this(), std::string(nickname_.data()));
+
+    boost::asio::async_read(socket_,
+                            boost::asio::buffer(read_msg_,read_msg_.size()),
+                            boost::bind(&Connection::readCondition, shared_from_this(), _1, _2),
+
+                            strand_.wrap(boost::bind(&Connection::read_handler, shared_from_this(), _1)));
+}
+bool Connection::readCondition(const boost::system::error_code &err, size_t length) {
+    if (err) return false;
+    bool key = read_msg_[length - 2] == '\r' && read_msg_[length - 1] == '\n'; // в конце \r\n
+    return key;
 }
 
-void Connection::do_write(const std::string &msg) {
-    std::copy(msg.begin(), msg.end(), write_buffer_);
-    socket.async_write_some( buffer(write_buffer_, msg.size()),
-                            MEM_FN2(on_write,_1,_2));
+void Connection::read_handler(const boost::system::error_code &error) {
+    if (!error) {
+        room_.mailing(read_msg_, shared_from_this());
+//вот тут он тип перманентно должен делать считывание из блядской очереди сообщений
+//а не тригериться только когда в очереди появляется что-то
+//хотя
+//если челик что-то захуярил в смс
+//мы ставим это в очередь к бд
+//быстро
+        boost::asio::async_read(socket_,
+                                boost::asio::buffer(read_msg_,read_msg_.size()),
+                                boost::bind(&Connection::readCondition, shared_from_this(), _1, _2),
+
+                                strand_.wrap(boost::bind(&Connection::read_handler, shared_from_this(), _1)));
+    }
+    else {
+        room_.leave(shared_from_this());
+    }
 }
 
-Connection::Connection(std::shared_ptr<Connection> sharedPtr, int index)
-        : socket(service), started_(false), connection_id(index) {
-    std::cout << "new Connection #" << index << std::endl;
-}
+void Connection::write_handler(const boost::system::error_code &error) {
+    if (!error)
+    {
+        write_msgs_.pop_front();
 
-void Connection::new_session() {
-
-}
-
-void Connection::start_session() {
-
-}
-
-void Connection::stop_session() {
-
-}
-
-bool Connection::is_active() {
-    return started_;
-}
-
-void Connection::handle_write() {
-
-}
-
-void Connection::handle_read() {
-
+        if (!write_msgs_.empty())
+        {
+            boost::asio::async_write(socket_,
+                                     boost::asio::buffer(write_msgs_.front(), write_msgs_.front().size()),
+                                     strand_.wrap(boost::bind(&Connection::write_handler, shared_from_this(), _1)));
+        }
+    }
+    else
+    {
+        room_.leave(shared_from_this());
+    }
 }
