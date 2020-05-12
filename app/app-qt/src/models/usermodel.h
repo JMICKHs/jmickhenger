@@ -18,6 +18,8 @@ public:
     std::function<void(Account&,std::optional<string>&)> &getAuthCallback() ;
     std::function<void(int,std::optional<string>&)> &getRegistrationCallback();
     void setCallBacks();
+    Account getAcc() const;
+    int getId() const;
 private:
     std::optional<string> errString;
     Account myAcc;

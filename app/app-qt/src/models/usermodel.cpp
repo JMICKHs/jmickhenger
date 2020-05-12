@@ -59,3 +59,13 @@ void UserModel::setCallBacks()
             self->errString = err;
     };
 }
+
+Account UserModel::getAcc() const
+{
+    return myAcc;
+}
+
+int UserModel::getId() const
+{
+    return myAcc.id;
+}

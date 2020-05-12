@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QFrame>
 #include <QFocusEvent>
+#include <QMenuBar>
 
 #include <netlib/info/Info.h>
 

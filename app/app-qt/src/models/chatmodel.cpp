@@ -22,14 +22,14 @@ QVariant ChatModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     if (role == Qt::DisplayRole){
-        Message item = items.at(index.row());
+        Msg item = items.at(index.row());
         return QVariant::fromValue(item);
     }
     else
         return QVariant();
 }
 
-void ChatModel::createMessage(Message &_message)
+void ChatModel::createMessage(Msg &_message)
 {
     if(_message.text != "")
     {
@@ -42,7 +42,7 @@ void ChatModel::createMessage(Message &_message)
 
 void ChatModel::addCallbacks()
 {
-    chatCallback = [self = shared_from_this()](std::vector<Message>& msgs,std::optional<string>& err){
+    chatCallback = [self = shared_from_this()](std::vector<MessageItem>& msgs,std::optional<string>& err){
         if(err == nullopt){
             self->setData(msgs);
         }
@@ -67,12 +67,19 @@ void ChatModel::addCallbacks()
     };
 }
 
-void ChatModel::setData(std::vector<Message> &msgs)
+void ChatModel::setData(std::vector<MessageItem> &msgs)
 {
-    items = std::move(msgs);
+    items.clear();
+    int row = this->rowCount();
+    items.reserve(msgs.size());
+    beginInsertRows(QModelIndex(),row,msgs.size() - 1);
+    for(auto &obj : msgs){
+        items.emplace_back(Msg(obj));
+    }
+    endInsertRows();
 }
 
-std::function<void(std::vector<Message>&,std::optional<string>&)>& ChatModel::getChatCallback()
+std::function<void(std::vector<MessageItem>&,std::optional<string>&)>& ChatModel::getChatCallback()
 {
     return chatCallback;
 }
@@ -91,3 +98,12 @@ std::function<void (std::optional<string> &)>& ChatModel::getDelMsgCallback()
 {
     return delMsgCallback;
 }
+
+void ChatModel::DeleteMessage(int pos)
+{
+    qDebug() <<pos;
+    if(pos >= 0 && pos < items.size())
+        items.erase(items.begin() + pos);
+}
+
+

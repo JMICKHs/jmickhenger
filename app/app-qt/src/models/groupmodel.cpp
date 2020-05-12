@@ -1,4 +1,5 @@
 #include "groupmodel.h"
+#include "netlib/AppNetwork.h"
 
 
 GroupModel::GroupModel(QObject *parent)
@@ -44,6 +45,11 @@ void GroupModel::setData(std::vector<ChatItem> &chats)
     for(auto &obj : chats){
         items.emplace_back(Chat(obj));
     }
+    auto net = AppNet::shared();
+    for(auto &obj : items){
+        net->getLastMsg(obj.idChat,this->lastMsgCallback);
+        obj.lastMessage = Msg(lastMsg);
+    }
     endInsertRows();
 }
 
@@ -56,7 +62,12 @@ void GroupModel::addCallbacks()
             self->errString = err;
         }
     };
-    std::function<void(Msg &, std::optional<string> &)>  lastMsgCallback;
+    lastMsgCallback = [self = shared_from_this()](MessageItem & msg, std::optional<string> & err){
+        if(err == nullopt)
+            self->lastMsg = msg;
+        else
+            self->errString = err;
+    };
     createChatCallback = [self = shared_from_this()](int,std::optional<string> &err){
         if(err != nullopt)
               self->errString = err;
@@ -69,12 +80,12 @@ void GroupModel::addCallbacks()
     std::function<void(Change&)> chatChangeCallback;
 }
 
-const std::function<void (vector<ChatItem> &, std::optional<string> &)> &GroupModel::getChatCallBack() const
+std::function<void (vector<ChatItem> &, std::optional<string> &)> &GroupModel::getChatCallBack()
 {
     return chatCallback;
 }
 
-std::function<void (Msg &, std::optional<string> &)>& GroupModel::getLastMsgCallback()
+std::function<void (MessageItem &, std::optional<string> &)>& GroupModel::getLastMsgCallback()
 {
     return lastMsgCallback;
 }
