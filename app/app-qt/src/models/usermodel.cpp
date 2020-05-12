@@ -30,6 +30,7 @@ std::function<void (int, std::optional<string> &)> &UserModel::getRegistrationCa
     return registrationCallback;
 }
 
+
 void UserModel::setCallBacks()
 {
     errString = nullopt;
@@ -45,6 +46,7 @@ void UserModel::setCallBacks()
     };
     registrationCallback = [self = shared_from_this()](int id,std::optional<string>& err){
         if(err == nullopt){
+            self->myAcc.id = id;
             emit self->showMainWidget();
         }
         else
@@ -68,4 +70,14 @@ Account UserModel::getAcc() const
 int UserModel::getId() const
 {
     return myAcc.id;
+}
+
+void UserModel::setLogin(const std::string &login)
+{
+    myAcc.login = login;
+}
+
+void UserModel::setPassword(const std::string &password)
+{
+    myAcc.password = password;
 }

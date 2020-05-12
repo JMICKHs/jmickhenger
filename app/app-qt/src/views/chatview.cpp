@@ -25,6 +25,7 @@ void ChatView::resizeEvent(QResizeEvent *event)
 void ChatView::rowsInserted(const QModelIndex &parent, int start, int end)
 {
     this->scrollToBottom();
+    QListView::rowsInserted(parent,start,end);
 }
 
 void ChatView::mousePressEvent(QMouseEvent *event)

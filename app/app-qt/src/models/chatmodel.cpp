@@ -51,17 +51,17 @@ void ChatModel::addCallbacks()
         }
     };
     sendMsgCallback = [self = shared_from_this()](std::optional<string>& err){
-        if(err == nullopt){
+        if(err != nullopt){
             self->errString = err;
         }
     };
     changeMsgCallback = [self = shared_from_this()](std::optional<string>& err){
-        if(err == nullopt){
+        if(err != nullopt){
             self->errString = err;
         }
     };
     delMsgCallback = [self = shared_from_this()](std::optional<string>& err){
-        if(err == nullopt){
+        if(err != nullopt){
             self->errString = err;
         }
     };
@@ -74,8 +74,11 @@ void ChatModel::setData(std::vector<MessageItem> &msgs)
     items.reserve(msgs.size());
     beginInsertRows(QModelIndex(),row,msgs.size() - 1);
     for(auto &obj : msgs){
+        qDebug() << QString::fromStdString(obj.text);
         items.emplace_back(Msg(obj));
+
     }
+
     endInsertRows();
 }
 

@@ -127,6 +127,8 @@ void MainWidget::on_groupList_clicked(const QModelIndex &index)
     auto net = AppNet::shared();
     Chat chat = index.model()->data(index).value<Chat>();
     net->getMsgs(chat.idChat,0,50,chatModel->getChatCallback());
+    ui->chatList->doItemsLayout();
+    ui->chatList->update();
 
   //  QString info = QString::number(index.model()->data(index).value<Chat>().idUsers.size());
     //if(info <= 2)
@@ -146,7 +148,7 @@ void MainWidget::after_Login_slot(std::shared_ptr<UserModel> &ptr)
     qDebug() <<QString::fromStdString(ac.login);
     qDebug() <<QString::fromStdString(ac.password);
     auto net = AppNet::shared();
-    net->getListChat(4,groupModel->getChatCallBack());
+    net->getListChat(ac.id,groupModel->getChatCallBack());
 }
 
 void MainWidget::removeMessageFromChat()

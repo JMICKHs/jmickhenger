@@ -37,12 +37,15 @@ void LoginWidget::login(const QString &log, const QString &password)
     auto net = AppNet::shared();
     qDebug() <<"log";
     net->auth(log.toStdString(),password.toStdString(),userPtr->getAuthCallback());
+
 }
 
 void LoginWidget::registration(const Account &acc)
 {
     auto net = AppNet::shared();
-    qDebug() <<"reg";
+    qDebug() <<"reg" << QString::fromStdString(acc.login) << QString::fromStdString(acc.password);
+    userPtr->setLogin(acc.login);
+    userPtr->setPassword(acc.password);
     net->registration(acc,userPtr->getRegistrationCallback());
 }
 

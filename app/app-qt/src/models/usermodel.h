@@ -20,6 +20,9 @@ public:
     void setCallBacks();
     Account getAcc() const;
     int getId() const;
+    void setId(int id);
+    void setLogin(const std::string &login);
+    void setPassword(const std::string &password);
 private:
     std::optional<string> errString;
     Account myAcc;
