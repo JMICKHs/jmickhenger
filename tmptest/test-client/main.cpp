@@ -62,6 +62,14 @@ private:
         q.decode(msg);
         string tmp;
         switch (q.cmd) {
+            case (1): {
+                MyAccount acc;
+                acc.decode(q.body);
+                acc.id = 778;
+                Reply r("", 0, 1, acc.encode());
+                tmp = r.encode() + "\r\n";
+                break;
+            }
             case (2): {
                 Parser parser;
                 parser.setJson(q.body);
@@ -93,6 +101,60 @@ private:
                 tmp = r.encode() + "\r\n";
                 break;
             }
+            case (6): {
+                Parser parser;
+                parser.setJson(q.body);
+                int id = parser.getInt(ChatRoom::nameId);
+                vector<Message> arr;
+                if (id == 3) {
+                    Message m1(id, 0, "first", 76, 1236, false);
+                    Message m2(id, 1, "second", 76, 1236, false);
+                    Message m3(id, 2, "third", 76, 1236, false);
+                    Message m4(id, 3, "последнее сообщение", 88, 1233214, false);
+                    arr = {m1, m2, m3, m4};
+                } else {
+                    Message t;
+                    t.number = 0;
+                    t.chatId = id;
+                    t.timesend = 1233214;
+                    t.idOwner = 88;
+                    t.text = "первое и последнее cообщение .123";
+                    arr.push_back(t);
+                }
+                Parser p;
+                p.addInt(id, ChatRoom::nameId);
+                vector<string> strArr;
+                for(const auto item : arr) {
+                    strArr.push_back(item.encode());
+                }
+                p.addArrCustom(strArr, "msgs");
+                Reply r("", 0, 6, p.getRes());
+                tmp = r.encode() + "\r\n\r\r\n";
+                cout << "temp " << tmp;
+                break;
+            }
+            case (8): {
+                Parser parser;
+                parser.setJson(q.body);
+                int id = parser.getInt(ChatRoom::nameId);
+                Message t;
+                if (id == 3) {
+                    t.number = 3;
+                    t.chatId = 3;
+                    t.timesend = 1233214;
+                    t.idOwner = 88;
+                    t.text = "последнее сообщение";
+                } else {
+                    t.number = 0;
+                    t.chatId = id;
+                    t.timesend = 1233214;
+                    t.idOwner = 88;
+                    t.text = "первое и последнее cообщение .123";
+                }
+                Reply r("", 0, 8, t.encode());
+                tmp = r.encode() + "\r\n\r\r\n";
+                break;
+            }
 
         }
 
@@ -102,7 +164,7 @@ private:
     }
 private:
     ip::tcp::socket sock_;
-    enum { max_msg = 1024 };
+    enum { max_msg = 2048 };
     char read_buffer_[max_msg];
     char write_buffer_[max_msg];
     bool started_;

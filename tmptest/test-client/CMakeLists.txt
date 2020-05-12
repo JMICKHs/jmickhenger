@@ -18,6 +18,3 @@ SET(USED_LIBS ${Boost_THREAD_LIBRARY}  ${Boost_SYSTEM_LIBRARY} ${Boost_REGEX_LIB
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 
 
-
-add_executable(test_client main.cpp parser/Parser.h info/Info.h parser/Parser.cpp info/Info.cpp)
-target_link_libraries(test_client ${USED_LIBS})
