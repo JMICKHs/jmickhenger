@@ -28,6 +28,7 @@ void AppNet::runClient(const function<void(int)> & errHandler) {
         client->run();
         client->setMsgHandler(boost::bind(&AppNet::readHandler, shared_from_this(), _1));
         setHandlers();
+//        client->write("app");
     }
 }
 
@@ -41,13 +42,15 @@ void AppNet::stopClient() {
 
 void AppNet::readHandler(const string &str) {
     Reply reply;
-//    cout << str << endl;
-    try {
-        reply.decode(str);
-    } catch(...) {
-        cout << "server uncodeble" << endl;
-        return;
-    }
+//    cout << str;
+    reply.decode(str);
+
+//    try {
+//        reply.decode(str);
+//    } catch(...) {
+//        cout << "server uncodeble" << endl;
+//        return;
+//    }
 
     optional<string> err;
     string body(reply.body);
@@ -65,6 +68,28 @@ void AppNet::readHandler(const string &str) {
     }
 }
 
+// query
+//{
+//  "cmd": "1",
+//  "body": {
+//      "login": "testLogin",
+//      "password": "hwahjdssfjg"
+//  }
+//}
+// reply
+//{
+//  "error": "",
+//  "status": "0",
+//  "cmd": "1",
+//  "body": {
+//      "id": "-1",
+//      "login": "NIL",
+//      "password": "NIL",
+//      "pathImage": "NIL",
+//      "chats": [],
+//      "friends": []
+//  }
+//}
 void AppNet::auth(const string &login, const string &pass, const function<void(MyAccount &, errstr &)> &callback) {
     Parser parser;
     parser.addStr(login, MyAccount::nameLogin);
@@ -119,6 +144,47 @@ void AppNet::getMsgs(int idChat, int start, int end, const function<void(vector<
     announcer->addCallback<int, vector<Message> &, errstr &>((int)Cmds::getMessages, idChat, callback);
     client->write(query.encode());
 }
+
+
+//query
+//{
+//"cmd": "8",
+//"body": {
+//"id": "6"
+//}
+//}
+//reply
+//{
+//    "error": "",
+//    "status": "0",
+//    "cmd": "8",
+//    "body": {
+//        "idChat": "-1",
+//        "number": "-1",
+//        "text": "",
+//        "owner": "-1",
+//        "time": "0",
+//        "checked": "false"
+//    }
+//}
+
+void AppNet::getLastMsg(int idChat, const function<void(Message &, errstr &)> &callback) {
+    Parser parser;
+    parser.addInt(idChat, ChatRoom::nameId);
+    Query query((int)Cmds::getLastMsg, parser.getRes());
+    announcer->addCallback<int, Message &, errstr &>((int)Cmds::getLastMsg, idChat, callback);
+    client->write(query.encode());
+}
+
+
+void AppNet::addFrnd(int idFrnd, const function<void(errstr &)> &callback) {
+    Parser parser;
+    parser.addInt(idFrnd, UserInfo::nameId);
+    Query query((int)Cmds::getLastMsg, parser.getRes());
+    announcer->addCallback<int, errstr &>((int)Cmds::addFrnd, idFrnd, callback);
+    client->write(query.encode());
+}
+
 
 void AppNet::setHandlers() {
     auto self = shared_from_this();
@@ -206,5 +272,34 @@ void AppNet::setHandlers() {
             cout << "cmd " << cmd << " " << body << " не найден callback\n";
         }
     };
+    handlers[(int)Cmds::getMessages] = f6;
+    auto f7 = [self](int cmd, errstr & err, const string & body) {
+        ChatChange change;
+        change.decode(body);
+        self->announcer->notifyChat(change);
+    };
+    handlers[(int)Cmds::incomingMsgs] = f7;
+    auto f8 = [self](int cmd, errstr & err, const string & body) {
+        Message tmpMsg;
+        tmpMsg.decode(body);
+        auto f = self->announcer->getCallback<int, Message &, optional<string> &>(cmd, tmpMsg.chatId);
+        if (f) {
+            f.value()(tmpMsg, err);
+        } else {
+            cout << "cmd " << cmd << " " << body << " не найден callback\n";
+        }
+    };
+    handlers[(int)Cmds::getLastMsg] = f8;
+    auto f9 = [self](int cmd, errstr & err, const string & body) {
+        Parser parser;
+        parser.setJson(body);
+        auto f = self->announcer->getCallback<int, optional<string> &>(cmd, parser.getInt(UserInfo::nameId));
+        if (f) {
+            f.value()(err);
+        } else {
+            cout << "cmd " << cmd << " " << body << " не найден callback\n";
+        }
+    };
+    handlers[(int)Cmds::addFrnd] = f9;
 }
 

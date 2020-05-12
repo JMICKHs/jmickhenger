@@ -76,12 +76,9 @@ void Client::loopRead() {
     auto buf = ba::buffer(readMsg);
     auto condition = boost::bind(&Client::readCondition, shared_from_this(), _1, _2);
     auto handler = [self = shared_from_this()](boost::system::error_code err, size_t length) {
-        if(!(self->sock.is_open())) {
-            self->close();
-        }
         if (!err) {
-            string msg; msg.reserve(length - 3);
-            for(size_t i = 0; i < length - 3; ++i) {
+            string msg; msg.reserve(length - 2);
+            for(size_t i = 0; i < length - 2; ++i) {
                 msg.push_back(self->readMsg[i]);
             }
             if(self->msgHandler) {
@@ -103,7 +100,7 @@ void Client::loopRead() {
 }
 
 bool Client::readCondition(const boost::system::error_code &err, size_t length) {
-    if (err || !sock.is_open()) return ;
+    if (err) return false;
     bool key = readMsg[length - 2] == '\r' && readMsg[length - 1] == '\n'; // в конце \r\n
     return key;
 }

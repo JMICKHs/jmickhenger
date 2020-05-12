@@ -7,5 +7,5 @@ find_package(Boost)
 include_directories(${Boost_INCLUDE_DIRS})
 
 
-add_executable(test_client main.cpp parser/Parser.h info/Info.h parser/Parser.cpp info/Info.cpp)
+add_executable(test_client main.cpp info/Info.h parser/Parser.h info/Info.cpp parser/Parser.cpp)
 target_link_libraries(test_client ${Boost_LIBRARIES})

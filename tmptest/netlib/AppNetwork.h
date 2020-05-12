@@ -40,8 +40,8 @@ public:
     void setObserverChat(int idChat, const function<void(ChatChange &)>& callback);
     void setObserverUnknownChat(const function<void(ChatChange &)>& callback);
     void getMsgs(int idChat, int start, int end, const function<void(vector<Message> &, errstr &)> & callback);
-    void getLastMsg(int idChat, const function<void(Message &, errstr &)> & callback){}//TODO
-    void addFrnd(int idFrnd, const function<void(errstr &)> & callback){}//TODO
+    void getLastMsg(int idChat, const function<void(Message &, errstr &)> & callback);
+    void addFrnd(int idFrnd, const function<void(errstr &)> & callback);
     void getListFrnd(int id, const function<void(vector<int> &, errstr &)> & callback){}//TODO
     void getInfoMe(int id, const function<void(MyAccount &, errstr &)> & callback){}//TODO
     void getUser(int id, const function<void(UserInfo &, errstr &)> & callback){}//TODO
@@ -64,7 +64,7 @@ private:
     // почему unoredered? в среднем работает за O(1) и мы не меняем в нём данные, поэтому худшего случая не будет
     static std::mutex mtx;
     bool clientStarted = false;
-    enum class Cmds {
+    enum class Cmds: int {
         registration = 1,
         auth = 2,
         getListChat = 3,
