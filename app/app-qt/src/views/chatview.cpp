@@ -18,7 +18,8 @@ ChatView::ChatView(QWidget *parent)
 
 void ChatView::resizeEvent(QResizeEvent *event)
 {
-    emit this->doItemsLayout();
+    this->doItemsLayout();
+    this->update();
 }
 
 void ChatView::rowsInserted(const QModelIndex &parent, int start, int end)
@@ -36,12 +37,14 @@ void ChatView::mousePressEvent(QMouseEvent *event)
              this->scrollToBottom();
          }
     }
+    QListView::mousePressEvent(event);
 }
 
 void ChatView::wheelEvent(QWheelEvent *e)
 {
-    emit this->repaint();
+    this->repaint();
 }
+
 
 void ChatView::scrollWhileDataChandeg(){
     this->scrollToBottom();

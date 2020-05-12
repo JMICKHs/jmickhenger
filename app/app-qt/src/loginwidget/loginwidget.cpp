@@ -78,5 +78,5 @@ void LoginWidget::on_registrateButton_clicked()
 
 void LoginWidget::showMainWidgetSlot()
 {
-    emit openMainWidget();
+    emit openMainWidget(userPtr);
 }

@@ -41,20 +41,14 @@ add_executable(jmichkenger
      app-qt/src/authwidget/authwidget.h
      app-qt/src/chatinput/chatinput.h
      app-qt/src/chatinput/chatinput.cpp
-     app-qt/src/chatlist/chatlist.cpp
-     app-qt/src/chatlist/chatlist.h
      app-qt/src/creategroup/creategroupwidget.cpp
      app-qt/src/creategroup/creategroupwidget.h
      app-qt/src/custommbutton/custombutton.cpp
      app-qt/src/custommbutton/custombutton.h
-     app-qt/src/datashowwidget/datashowwidget.cpp
-     app-qt/src/datashowwidget/datashowwidget.h
      app-qt/src/delegates/chatdelegate.cpp
      app-qt/src/delegates/chatdelegate.h
      app-qt/src/delegates/groupdelegate.cpp
      app-qt/src/delegates/groupdelegate.h
-     app-qt/src/grouplist/grouplist.cpp
-     app-qt/src/grouplist/grouplist.h
      app-qt/src/mainwidget/mainwidget.cpp
      app-qt/src/mainwidget/mainwidget.h
      app-qt/src/menuwidget/menuwidget.cpp
@@ -69,7 +63,6 @@ add_executable(jmichkenger
      app-qt/src/views/chatview.h
      app-qt/src/views/grouplistview.cpp
      app-qt/src/views/grouplistview.h
-     app-qt/src/profiledata/profiledata.h
      app-qt/src/creategroup/creategroupwidget.ui
      app-qt/src/mainwidget/mainwidget.ui
      app-qt/src/menuwidget/menuwidget.ui

@@ -460,6 +460,9 @@ QFrame[frameShape=&quot;4&quot;]
         <property name="lineWidth">
          <number>0</number>
         </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::AdjustToContents</enum>
+        </property>
        </widget>
       </item>
       <item>

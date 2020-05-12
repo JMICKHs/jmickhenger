@@ -34,7 +34,7 @@ private slots:
 public slots:
     void showMainWidgetSlot();
 signals:
-   void openMainWidget();
+   void openMainWidget(std::shared_ptr<UserModel> &);
 
 private:
     Ui::LoginWidget *ui;

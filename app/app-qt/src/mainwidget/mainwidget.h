@@ -12,10 +12,7 @@
 #include <QLabel>
 #include "app-qt/src/custommbutton/custombutton.h"
 #include "app-qt/src/menuwidget/menuwidget.h"
-#include "app-qt/src/profiledata/profiledata.h"
-#include "app-qt/src/datashowwidget/datashowwidget.h"
 #include "app-qt/src/authwidget/authwidget.h"
-#include "app-qt/src/chatlist/chatlist.h"
 #include <QListView>
 #include <app-qt/src/models/groupmodel.h>
 #include <app-qt/src/views/grouplistview.h>
@@ -24,6 +21,7 @@
 #include <app-qt/src/views/chatview.h>
 #include <app-qt/src/delegates/chatdelegate.h>
 #include <app-qt/src/proxy/proxymodel.h>
+#include <app-qt/src/models/usermodel.h>
 #include <QFocusEvent>
 #include <memory>
 
@@ -48,11 +46,15 @@ public:
     ~MainWidget();
     void resizeEvent(QResizeEvent *event) override;
     void moveEvent(QMoveEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
 
 public slots:
     void menuClicked();
     void sendMessageFromInput();
-    void after_Login_slot();
+    void after_Login_slot(std::shared_ptr<UserModel> &ptr);
+    void removeMessageFromChat();
+    void editMessageInChat();
+    void showContextMenu(const QPoint &pos);
 
 signals:
     void sendMessageFromInput_s(const Message &message);
@@ -63,12 +65,12 @@ private:
 protected:
     std::shared_ptr<GroupModel> groupModel;
     std::shared_ptr<ChatModel> chatModel;
+    std::shared_ptr<UserModel> userModel;
     MenuWidget *menuWidget;
-    AppNetwork *network;
+    QMenu *msgMenu;
     ProxyModel *proxyModel;
 private slots:
     void on_groupList_clicked(const QModelIndex &index);
-    void on_searchInput_textChanged(const QString &arg1);
 };
 
 #endif // MAINWIDGET_H

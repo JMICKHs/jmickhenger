@@ -15,6 +15,7 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->setupUi(this);
 
     menuWidget = new MenuWidget(this);
+    msgMenu = new QMenu(this);
     chatModel = std::shared_ptr<ChatModel>(new ChatModel(this));
     groupModel = std::shared_ptr<GroupModel>(new GroupModel(this));
     groupModel->addCallbacks();
@@ -43,23 +44,26 @@ MainWidget::MainWidget(QWidget *parent) :
     auto font =  ui->label->font();
     font.setBold(true);
     ui->label->setFont(font);
-
-//    Chat item1;
-//    item1.chat.idChat = 3;
-//    item1.chat.name = "Textopark algosi";
-//    //item1.idUsers = {3,2,1};
-//    //item1.lastMessage = "skinyte semenar";
-//    //Chat
-//    //item1. = "23:44";
-//    for(int i = 0 ; i < 23; ++i){
-//        groupModel->addItem(item1);
-
-//        item1.chat.name = std::to_string(i);
-//    }
     ui->chatList->setModel(chatModel.get());
     ui->chatList->setItemDelegate(new ChatDelegate);
     ui->chatList->setSelectionMode(QAbstractItemView::NoSelection);
     ui->chatList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+
+    QAction * editDevice = new QAction("Редактировать", this);
+    QAction * deleteDevice = new QAction("Удалить", this);
+
+    connect(editDevice, &QAction::triggered, this, &MainWidget::editMessageInChat);
+    connect(deleteDevice, &QAction::triggered, this, &MainWidget::removeMessageFromChat);
+
+    msgMenu->addAction(editDevice);
+    msgMenu->addAction(deleteDevice);
+    ui->chatList->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->chatList->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->chatList->setSelectionMode(QAbstractItemView::NoSelection);
+    ui->chatList->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    connect(ui->chatList,&ChatView::customContextMenuRequested,this,&MainWidget::showContextMenu);
     connect(ui->menuButton,&CustomButton::clicked,menuWidget,&MenuWidget::show);
     connect(ui->menuButton,&CustomButton::clicked,this,&MainWidget::menuClicked);
     connect(ui->sendButton,&CustomButton::clicked,this,&MainWidget::sendMessageFromInput);
@@ -85,6 +89,11 @@ void MainWidget::moveEvent(QMoveEvent *event)
     menuWidget->move(event->pos());
 }
 
+void MainWidget::wheelEvent(QWheelEvent *event)
+{
+    ui->chatList->doItemsLayout();
+}
+
 void MainWidget::menuClicked()
 {
     menuWidget->move(QPoint(geometry().x(),geometry().y()));
@@ -94,11 +103,14 @@ void MainWidget::menuClicked()
 void MainWidget::sendMessageFromInput()
 {
 
-    Message message;
+    Msg message;
     QString text = ui->messageInput->toPlainText().trimmed();
+    if(text.size() > 1024)
+        return;
     removeDoubleEnter(text);
     message.text = text.toStdString();
-
+    message.nickname = QString::fromStdString(userModel->getAcc().login);
+    message.idOwner = userModel->getId();
     qDebug() << QString::fromStdString(message.text);
     //message.name = "kostya";
     message.timesend  = 0;
@@ -112,6 +124,10 @@ void MainWidget::sendMessageFromInput()
 void MainWidget::on_groupList_clicked(const QModelIndex &index)
 {
     ui->label->setText(QString::fromStdString(index.model()->data(index).value<Chat>().name));
+    auto net = AppNet::shared();
+    Chat chat = index.model()->data(index).value<Chat>();
+    net->getMsgs(chat.idChat,0,50,chatModel->getChatCallback());
+
   //  QString info = QString::number(index.model()->data(index).value<Chat>().idUsers.size());
     //if(info <= 2)
     //    info += "  участника";
@@ -121,19 +137,42 @@ void MainWidget::on_groupList_clicked(const QModelIndex &index)
     //ui->label_2->setText(info);
 }
 
-void MainWidget::on_searchInput_textChanged(const QString &arg1)
-{
-    //proxyModel->setDynamicSortFilter(true);
-    //proxyModel->setDynamicSortFilter(false);
-}
 
-void MainWidget::after_Login_slot()
+void MainWidget::after_Login_slot(std::shared_ptr<UserModel> &ptr)
 {
+    this->show();
+    userModel = ptr;
+    Account ac = userModel->getAcc();
+    qDebug() <<QString::fromStdString(ac.login);
+    qDebug() <<QString::fromStdString(ac.password);
     auto net = AppNet::shared();
     net->getListChat(4,groupModel->getChatCallBack());
 }
 
+void MainWidget::removeMessageFromChat()
+{
+    Msg msg = ui->chatList->selectionModel()->currentIndex().data().value<Msg>();
+    if(msg.idOwner == userModel->getId()){
+        chatModel->DeleteMessage(ui->chatList->selectionModel()->currentIndex().row());
+    }
+    else{
+
+    }
+    ui->chatList->doItemsLayout();
+}
+
+void MainWidget::editMessageInChat()
+{
+
+}
+
+void MainWidget::showContextMenu(const QPoint &pos)
+{
+  msgMenu->popup(ui->chatList->viewport()->mapToGlobal(pos));
+}
+
 void MainWidget::removeDoubleEnter(QString &str){
+
     int counter = 0;
     int pos = 0;
     for(int i = 0; i < str.size(); ++i){

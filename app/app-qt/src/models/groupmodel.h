@@ -4,15 +4,16 @@
 #include <QAbstractListModel>
 #include "app-qt/src/custommbutton/custombutton.h"
 #include <netlib/info/Info.h>
+#include "app-qt/src/models/chatmodel.h"
 #include <functional>
 #include <memory>
+
 using ChatItem = inf::ChatInfo;
-using Msg = inf::Message;
 using Change = inf::ChatChange;
 
 class Chat : public ChatItem{
 public:
-    QString lastMessage;
+    Msg lastMessage;
     Chat(ChatItem &item)
         :ChatItem(std::move(item)){
     }
@@ -31,9 +32,10 @@ public:
     void addItem(Chat &item);
     void setData(std::vector<ChatItem> &);
     void addCallbacks();
+    MessageItem lastMsg;
 
-    const std::function<void(vector<ChatItem> &, std::optional<string> &)> &getChatCallBack() const ;
-    std::function<void(Msg &, std::optional<string> &)> &getLastMsgCallback() ;
+    std::function<void(vector<ChatItem> &, std::optional<string> &)> &getChatCallBack() ;
+    std::function<void(MessageItem &, std::optional<string> &)> &getLastMsgCallback() ;
     std::function<void(int,std::optional<string>&)> &getCreateChatCallback() ;
     std::function<void(bool,std::optional<string>&)> &getDelChatCallback() ;
     std::function<void(Change&)> &getChatChangeCallback() ;
@@ -43,10 +45,11 @@ private:
     std::vector<Chat> items;
 
     std::function<void(vector<ChatItem> &, std::optional<string> &)> chatCallback;
-    std::function<void(Msg &, std::optional<string> &)>  lastMsgCallback;
+    std::function<void(MessageItem &, std::optional<string> &)>  lastMsgCallback;
     std::function<void(int,std::optional<string>&)> createChatCallback;
     std::function<void(bool,std::optional<string>&)> delChatCallback;
     std::function<void(Change&)> chatChangeCallback;
+
 signals:
 
 public slots:

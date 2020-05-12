@@ -15,21 +15,17 @@ ChatDelegate::ChatDelegate(QObject *parent)
 
 QSize ChatDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    Message item = index.model()->data(index).value<Message>();
+    Msg item = index.model()->data(index).value<Msg>();
     QRect MessageRect = option.rect;
     MessageRect.setY(MessageRect.y() + 15);
     MessageRect.setX(45);
     MessageRect.setWidth(option.widget->width() - 80);
     QFontMetrics fMetrics(option.font);
-    int strWidth = fMetrics.horizontalAdvance(QString::fromStdString(item.text));
-    int strHeight = fMetrics.height();
-    int aspectRatio = strWidth / (option.widget->width() - 80);
-    int aspect = 15 + aspectRatio * strHeight;
-    qDebug() <<aspect;
-    if(aspect <= 45)
-        return QSize(option.widget->width(),45);
+    int height = fMetrics.boundingRect(QRect(0,0,option.widget->width() - 240,0),Qt::TextWordWrap,QString::fromStdString(item.text)).height();
+    if(height <= 45)
+        return QSize(option.widget->width(),55);
     else {
-         return QSize(option.widget->width(),aspect);
+         return QSize(option.widget->width(),height + 15);
     }
 }
 
@@ -49,13 +45,16 @@ bool ChatDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const Q
 
 void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-        Message item = index.model()->data(index).value<Message>();
+        Msg item = index.model()->data(index).value<Msg>();
         QStyleOptionViewItem myOpt = option;
         myOpt.displayAlignment = Qt::AlignLeft;
         painter->save();
         painter->setClipping(true);
 
         QRect rect(myOpt.rect);
+
+        rect.setWidth(option.widget->width());
+
         rect.setHeight(sizeHint(option,index).height());
         const QPalette &palette(myOpt.palette);
         QFont f(myOpt.font);
@@ -91,8 +90,8 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 
         painter->setFont(f);
         painter->setPen(QColor(76,148,224));
-        //painter->drawText(NameRect, Qt::TextSingleLine,
-      //                 QString::fromStdString(item.name));
+        painter->drawText(NameRect, Qt::TextSingleLine,
+                       item.nickname);
 
         QRect TimeRect = myOpt.rect;
         TimeRect.setHeight(15);
@@ -110,7 +109,8 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
                        QString::fromStdString(item.text));
 
 
-
+        painter->restore();
+        painter->save();
         QPen pen;
         painter->setRenderHint(QPainter::Antialiasing);
         pen.setWidth(1);
