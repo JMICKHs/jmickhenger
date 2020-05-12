@@ -77,8 +77,8 @@ void Client::loopRead() {
     auto condition = boost::bind(&Client::readCondition, shared_from_this(), _1, _2);
     auto handler = [self = shared_from_this()](boost::system::error_code err, size_t length) {
         if (!err) {
-            string msg; msg.reserve(length - 3);
-            for(size_t i = 0; i < length - 3; ++i) {
+            string msg; msg.reserve(length - 2);
+            for(size_t i = 0; i < length - 2; ++i) {
                 msg.push_back(self->readMsg[i]);
             }
             if(self->msgHandler) {

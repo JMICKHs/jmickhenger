@@ -9,15 +9,45 @@ using namespace std;
 using namespace inf;
 
 int main() {
-//    //client work test
     auto net = AppNet::shared();
     net->runClient([](int ec) {
         cout << "connection err code - " << ec << endl;
     });
     int c = 0;
     int idUser = 78;
-    string text;
 
+    MyAccount acc;
+    acc.login = "testUser";
+    acc.password = "12321";
+    net->registration(acc, [](int id, optional<string> &){
+        cout << "Я получил id - " << id << endl;
+    });
+    sleep(4);
+    net->auth("vasia", "12345", [](MyAccount & acc, optional<string> &) {
+        cout << acc.login << " смог ввойти в чат!\n";
+    });
+    sleep(4);
+    net->getListChat(4, [](vector<ChatInfo> & a, optional<string> &) {
+        cout << "чаты\n";
+        for(const auto & item : a) {
+            cout << item.name << endl;
+        }
+    });
+
+    sleep(1);
+    net->getLastMsg(3, [](Message & msg, optional<string> &){
+        cout << "посл сообщение " << msg.text << endl;
+    });
+    sleep(1);
+    net->getMsgs(3, 0, 2, [](vector<Message> & msgs, optional<string> &){
+        cout << "получил " << msgs.size() << endl;
+    });
+
+    sleep(3);
+
+    net->stopClient();
+//    string text;
+//
 //    while(getline(cin, text)) {
 //        Message msg(idUser, c++, text, 56, time(nullptr), false);
 //        net->sendMsg(msg, [c](optional<string> &){
@@ -25,19 +55,6 @@ int main() {
 //        });
 //    }
 
-    net->auth("vasia", "12345", [](MyAccount & acc, optional<string> &) {
-        cout << acc.login << " смог ввойти в чат!\n";
-    });
-    sleep(2);
-    //(int idUser, const function<void(vector<ChatInfo> &, errstr &)> & callback);
-    net->getListChat(4, [](vector<ChatInfo> & a, optional<string> &) {
-        cout << "чаты\n";
-        for(const auto & item : a) {
-            cout << item.name << endl;
-        }
-    });
-    sleep(2);
-    net->stopClient();
 
 //    announser work test
 //    Announcer an;
