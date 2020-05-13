@@ -5,6 +5,8 @@
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
 #include "Connection.h"
+#include "../buckup/info/Info.h"
+
 #define MEM_FN2(x,y,z)  boost::bind(&self_type::x, shared_from_this(),y,z)
 #define MEM_FN1(x,y)  boost::bind(&self_type::x, shared_from_this(),y)
 using boost::asio::ip::tcp;
@@ -50,12 +52,7 @@ bool Connection::readCondition(const boost::system::error_code &err, size_t leng
 void Connection::read_handler(const boost::system::error_code &error) {
     if (!error) {
         room_.mailing(read_msg_, shared_from_this());
-//вот тут он тип перманентно должен делать считывание из блядской очереди сообщений
-//а не тригериться только когда в очереди появляется что-то
-//хотя
-//если челик что-то захуярил в смс
-//мы ставим это в очередь к бд
-//быстро
+
         boost::asio::async_read(socket_,
                                 boost::asio::buffer(read_msg_,read_msg_.size()),
                                 boost::bind(&Connection::readCondition, shared_from_this(), _1, _2),
