@@ -16,8 +16,8 @@ MainWidget::MainWidget(QWidget *parent) :
 
     menuWidget = new MenuWidget(this);
     msgMenu = new QMenu(this);
-    chatModel = std::shared_ptr<ChatModel>(new ChatModel(this));
-    groupModel = std::shared_ptr<GroupModel>(new GroupModel(this));
+    chatModel = std::make_shared<ChatModel>();
+    groupModel = std::make_shared<GroupModel>();
     groupModel->addCallbacks();
     chatModel->addCallbacks();
 

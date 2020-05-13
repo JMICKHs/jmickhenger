@@ -20,7 +20,7 @@ LoginWidget::LoginWidget(QWidget *parent) :
     this->resize(400,550);
     this->setMinimumSize(400,550);
     this->setMaximumSize(400,550);
-    userPtr = std::shared_ptr<UserModel>(new UserModel);
+    userPtr = std::make_shared<UserModel>();
     userPtr->setCallBacks();
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::white);
@@ -76,7 +76,6 @@ void LoginWidget::on_registrateButton_clicked()
     acc.login = ui->loginRegInput->text().toStdString();
     acc.password = ui->fPassRegInput->text().toStdString();
     this->registration(acc);
-
 }
 
 void LoginWidget::showMainWidgetSlot()
