@@ -18,15 +18,15 @@ QVariant GroupModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
            return QVariant();
 
-       if (index.row() >= items.size())
-           return QVariant();
+    if (index.row() >= items.size())
+        return QVariant();
 
-       if (role == Qt::DisplayRole){
-           Chat item = items.at(index.row());
-           return QVariant::fromValue(item);
-       }
-       else
-           return QVariant();
+    if (role == Qt::DisplayRole){
+        Chat item = items.at(index.row());
+        return QVariant::fromValue(item);
+    }
+    else
+        return QVariant();
 }
 
 void GroupModel::addItem(Chat &item)

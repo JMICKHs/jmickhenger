@@ -112,6 +112,7 @@ void MainWidget::sendMessageFromInput()
     message.nickname = QString::fromStdString(userModel->getAcc().login);
     message.idOwner = userModel->getId();
     message.timesend  = 0;
+
     chatModel->createMessage(message);
     ui->messageInput->clear();
     auto net = AppNet::shared();

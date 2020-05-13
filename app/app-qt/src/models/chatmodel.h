@@ -8,19 +8,27 @@
 #include <time.h>
 using MessageItem = inf::Message;
 
+enum class MessageType{
+    SELF_MESSAGE_IN_PROGRESS,
+    SELF_MESSAGE_DONE,
+    OTHER_MESSAGE
+};
+
 class Msg : public MessageItem
 {
 public:
+    MessageType type;
     QString time;
     QString nickname;
     Msg(MessageItem &item)
         :MessageItem(std::move(item)){
+        type = MessageType::OTHER_MESSAGE;
         char buffer [100];
         tm* timeinfo = localtime(&item.timesend);
         strftime(buffer,100,"%H-%M",timeinfo);
         time = QString::fromStdString(string(buffer));
     }
-    Msg(){};
+    Msg(){type = MessageType::SELF_MESSAGE_IN_PROGRESS;}
 };
 
 Q_DECLARE_METATYPE(Msg)
