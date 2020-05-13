@@ -42,15 +42,14 @@ void AppNet::stopClient() {
 
 void AppNet::readHandler(const string &str) {
     Reply reply;
-//    cout << str;
-    reply.decode(str);
 
-//    try {
-//        reply.decode(str);
-//    } catch(...) {
-//        cout << "server uncodeble" << endl;
-//        return;
-//    }
+    try {
+        reply.decode(str);
+    } catch(...) {
+        cout << str << endl;
+        cout << "server uncodeble" << endl;
+        return;
+    }
 
     optional<string> err;
     string body(reply.body);

@@ -53,7 +53,7 @@ public:
     void saveAvatar(const string & path, const function<void(errstr &)> & callback){}//TODO
     void changeMe(const inf::MyAccount & acc, const function<void(errstr &)> & callback){}//TODO
 private:
-    AppNet();
+    explicit AppNet();
     void readHandler(const string & str);
     void setHandlers();
     static optional<shared_ptr<AppNet>> single;
