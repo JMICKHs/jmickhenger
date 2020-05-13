@@ -2,6 +2,10 @@
 
 MainLogic::MainLogic()
 {
+}
+
+void MainLogic::runApp()
+{
     lgWidget = new LoginWidget;
     mainWidget = new MainWidget;
     lgWidget->show();

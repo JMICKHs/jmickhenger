@@ -11,6 +11,7 @@ class MainLogic : public QObject
     Q_OBJECT
 public:
     MainLogic();
+    void runApp();
 private:
     LoginWidget *lgWidget;
     MainWidget *mainWidget;
