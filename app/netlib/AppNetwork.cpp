@@ -67,28 +67,8 @@ void AppNet::readHandler(const string &str) {
     }
 }
 
-// query
-//{
-//  "cmd": "1",
-//  "body": {
-//      "login": "testLogin",
-//      "password": "hwahjdssfjg"
-//  }
-//}
-// reply
-//{
-//  "error": "",
-//  "status": "0",
-//  "cmd": "1",
-//  "body": {
-//      "id": "-1",
-//      "login": "NIL",
-//      "password": "NIL",
-//      "pathImage": "NIL",
-//      "chats": [],
-//      "friends": []
-//  }
-//}
+
+// лучше сделать фабрику body, а не делать в каждом методе
 void AppNet::auth(const string &login, const string &pass, const function<void(MyAccount &, errstr &)> &callback) {
     Parser parser;
     parser.addStr(login, MyAccount::nameLogin);
@@ -144,29 +124,6 @@ void AppNet::getMsgs(int idChat, int start, int end, const function<void(vector<
     client->write(query.encode());
 }
 
-
-//query
-//{
-//"cmd": "8",
-//"body": {
-//"id": "6"
-//}
-//}
-//reply
-//{
-//    "error": "",
-//    "status": "0",
-//    "cmd": "8",
-//    "body": {
-//        "idChat": "-1",
-//        "number": "-1",
-//        "text": "",
-//        "owner": "-1",
-//        "time": "0",
-//        "checked": "false"
-//    }
-//}
-
 void AppNet::getLastMsg(int idChat, const function<void(Message &, errstr &)> &callback) {
     Parser parser;
     parser.addInt(idChat, ChatRoom::nameId);
@@ -186,6 +143,7 @@ void AppNet::addFrnd(int idFrnd, const function<void(errstr &)> &callback) {
 
 
 void AppNet::setHandlers() {
+
     auto self = shared_from_this();
     handlers.reserve((int)Cmds::test); // test - последняя по номеру команда
     auto f1 = [self](int cmd, errstr & err, const string & body) {
