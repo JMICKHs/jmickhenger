@@ -19,7 +19,7 @@
      <x>0</x>
      <y>1</y>
      <width>258</width>
-     <height>381</height>
+     <height>411</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="mainLayout">
@@ -99,7 +99,7 @@
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>20</height>
+            <height>40</height>
            </size>
           </property>
          </spacer>
@@ -182,14 +182,14 @@ QFrame[frameShape=&quot;4&quot;]
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
      </layout>
-    </item>
-    <item>
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
     </item>
     <item>
      <spacer name="verticalSpacer">
@@ -202,7 +202,7 @@ QFrame[frameShape=&quot;4&quot;]
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>60</height>
+        <height>80</height>
        </size>
       </property>
      </spacer>
@@ -222,9 +222,25 @@ QFrame[frameShape=&quot;4&quot;]
        </size>
       </property>
       <property name="text">
-       <string>TextLabel</string>
+       <string>JMICKHs</string>
       </property>
      </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
     </item>
    </layout>
   </widget>
@@ -233,7 +249,7 @@ QFrame[frameShape=&quot;4&quot;]
   <customwidget>
    <class>CustomButton</class>
    <extends>QPushButton</extends>
-   <header>custommbutton/custombutton.h</header>
+   <header>app-qt/src/custommbutton/custombutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

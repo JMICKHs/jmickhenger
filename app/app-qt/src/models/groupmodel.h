@@ -32,7 +32,6 @@ public:
     void addItem(Chat &item);
     void setData(std::vector<ChatItem> &);
     void addCallbacks();
-    MessageItem lastMsg;
 
     std::function<void(vector<ChatItem> &, std::optional<string> &)> &getChatCallBack() ;
     std::function<void(MessageItem &, std::optional<string> &)> &getLastMsgCallback() ;
@@ -43,6 +42,7 @@ public:
 private:
     std::optional<string> errString;
     std::vector<Chat> items;
+    std::vector<MessageItem> lastMsgs;
 
     std::function<void(vector<ChatItem> &, std::optional<string> &)> chatCallback;
     std::function<void(MessageItem &, std::optional<string> &)>  lastMsgCallback;

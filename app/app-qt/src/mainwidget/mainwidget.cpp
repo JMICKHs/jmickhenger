@@ -111,8 +111,6 @@ void MainWidget::sendMessageFromInput()
     message.text = text.toStdString();
     message.nickname = QString::fromStdString(userModel->getAcc().login);
     message.idOwner = userModel->getId();
-    qDebug() << QString::fromStdString(message.text);
-    //message.name = "kostya";
     message.timesend  = 0;
     chatModel->createMessage(message);
     ui->messageInput->clear();
@@ -130,7 +128,7 @@ void MainWidget::on_groupList_clicked(const QModelIndex &index)
     ui->chatList->doItemsLayout();
     ui->chatList->update();
 
-  //  QString info = QString::number(index.model()->data(index).value<Chat>().idUsers.size());
+    //QString info = QString::number(index.model()->data(index).value<Chat>().);
     //if(info <= 2)
     //    info += "  участника";
     //else
@@ -145,8 +143,6 @@ void MainWidget::after_Login_slot(std::shared_ptr<UserModel> &ptr)
     this->show();
     userModel = ptr;
     Account ac = userModel->getAcc();
-    qDebug() <<QString::fromStdString(ac.login);
-    qDebug() <<QString::fromStdString(ac.password);
     auto net = AppNet::shared();
     net->getListChat(ac.id,groupModel->getChatCallBack());
 }
@@ -170,7 +166,7 @@ void MainWidget::editMessageInChat()
 
 void MainWidget::showContextMenu(const QPoint &pos)
 {
-  msgMenu->popup(ui->chatList->viewport()->mapToGlobal(pos));
+    msgMenu->popup(ui->chatList->viewport()->mapToGlobal(pos));
 }
 
 void MainWidget::removeDoubleEnter(QString &str){

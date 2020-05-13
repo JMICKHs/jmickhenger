@@ -5,14 +5,20 @@
 #include "app-qt/src/custommbutton/custombutton.h"
 #include <netlib/info/Info.h>
 #include <memory>
+#include <time.h>
 using MessageItem = inf::Message;
 
 class Msg : public MessageItem
 {
 public:
+    QString time;
     QString nickname;
     Msg(MessageItem &item)
         :MessageItem(std::move(item)){
+        char buffer [100];
+        tm* timeinfo = localtime(&item.timesend);
+        strftime(buffer,100,"%H-%M",timeinfo);
+        time = QString::fromStdString(string(buffer));
     }
     Msg(){};
 };

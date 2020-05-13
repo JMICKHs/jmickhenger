@@ -76,9 +76,7 @@ void ChatModel::setData(std::vector<MessageItem> &msgs)
     for(auto &obj : msgs){
         qDebug() << QString::fromStdString(obj.text);
         items.emplace_back(Msg(obj));
-
     }
-
     endInsertRows();
 }
 

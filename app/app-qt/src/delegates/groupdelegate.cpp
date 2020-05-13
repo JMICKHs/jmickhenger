@@ -47,26 +47,27 @@ void GroupDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     GroupNameRect.setX(groupIconSize.x() + 15);
     GroupNameRect.setWidth(width - 130);
 
+    f.setBold(true);
     painter->setFont(f);
     painter->setPen(palette.text().color());
     painter->drawText(GroupNameRect, Qt::TextSingleLine,
                       font.elidedText(QString::fromStdString(item.name),Qt::ElideRight,width - 150));
 
-
+    f.setBold(false);
     QRect LastMessageRect = QRect(groupIconSize.x() + 15,GroupNameRect.y() + 35,width - 130,30);
     painter->setFont(f);
     painter->setPen(palette.text().color());
-   // painter->drawText(LastMessageRect, Qt::TextSingleLine,
-     //                 font.elidedText(item.lastMessage,Qt::ElideRight,width - 150));
+    painter->drawText(LastMessageRect, Qt::TextSingleLine,
+                      font.elidedText(QString::fromStdString(item.lastMessage.text),Qt::ElideRight,width - 150));
 
 
-    //if(sizeHint(option,index).width() > 140){
-    //    QRect TimeMessageRect = QRect(width - groupIconSize.x() - 20 ,GroupNameRect.y() + 5,40,30);
-    //    painter->setFont(f);
-    //    painter->setPen(palette.text().color());
-    //    painter->drawText(TimeMessageRect, Qt::TextSingleLine,
-    //                  item.time);
-    //}
+    if(sizeHint(option,index).width() > 140){
+        QRect TimeMessageRect = QRect(width - groupIconSize.x() - 20 ,GroupNameRect.y() + 5,40,30);
+        painter->setFont(f);
+        painter->setPen(palette.text().color());
+        painter->drawText(TimeMessageRect, Qt::TextSingleLine,
+                      item.lastMessage.time);
+    }
     painter->setPen(palette.mid().color());
     if(rect.y() != 0)
         painter->drawLine(GroupNameRect.x(),rect.y(),rect.width(),rect.y());

@@ -1,5 +1,6 @@
 #include "groupmodel.h"
 #include "netlib/AppNetwork.h"
+#include <QDebug>
 
 
 GroupModel::GroupModel(QObject *parent)
@@ -46,9 +47,8 @@ void GroupModel::setData(std::vector<ChatItem> &chats)
         items.emplace_back(Chat(obj));
     }
     auto net = AppNet::shared();
-    for(auto &obj : items){
-        net->getLastMsg(obj.idChat,this->lastMsgCallback);
-        obj.lastMessage = Msg(lastMsg);
+    for(size_t i = 0; i < items.size(); ++i){
+        net->getLastMsg(items[i].idChat,this->lastMsgCallback);
     }
     endInsertRows();
 }
@@ -56,15 +56,18 @@ void GroupModel::setData(std::vector<ChatItem> &chats)
 void GroupModel::addCallbacks()
 {
     chatCallback = [self = shared_from_this()](vector<ChatItem> &chats, std::optional<string> &err){
-        if(err == nullopt)
+        if(err == nullopt){
             self->setData(chats);
+        }
         else{
             self->errString = err;
         }
     };
     lastMsgCallback = [self = shared_from_this()](MessageItem & msg, std::optional<string> & err){
-        if(err == nullopt)
-            self->lastMsg = msg;
+        if(err == nullopt){
+            self->items[self->lastMsgs.size()].lastMessage = msg;
+            self->lastMsgs.push_back(std::move(msg));
+        }
         else
             self->errString = err;
     };
