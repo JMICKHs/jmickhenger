@@ -2,7 +2,7 @@
 #define TEST_CHAT_H
 
 #include <QtTest/QtTest>
-#include "../mainwindow/mainwindow.h"
+#include "app-qt/src/mainwidget/mainwidget.h"
 
 class test_chat : public MainWidget
 {

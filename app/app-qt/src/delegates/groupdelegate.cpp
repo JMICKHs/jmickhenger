@@ -25,44 +25,41 @@ void GroupDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                              palette.highlight().color() :
                              palette.light().color());
     painter->setFont(myOpt.font);
-
     int width = sizeHint(option,index).width();
 
     QFontMetrics font(f);
-
-    QPointF groupIconSize{50,50};
-
-    QPixmap scaled = groupIcon->scaled(groupIconSize.x(), groupIconSize.y(),
+    QPixmap scaled = groupIcon->scaled(groupIconSize,
                                        Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 
     painter->save();
     QBrush brush(scaled);
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setBrush(brush);
-    painter->translate(QPointF(5,rect.y() + 5));
-    painter->drawRoundedRect(0, 0, groupIconSize.x(), groupIconSize.y(), 100, 100);
+    painter->translate(QPointF(rect.topLeft() + offset));
+    painter->drawRoundedRect(QRect(QPoint(0,0), groupIconSize), groupIconRadius, groupIconRadius);
     painter->restore();
 
     QRect GroupNameRect = myOpt.rect;
-    GroupNameRect.setX(groupIconSize.x() + 15);
-    GroupNameRect.setWidth(width - 130);
+    GroupNameRect.setY(GroupNameRect.y() + textTopOffset);
+    GroupNameRect.setX(groupIconSize.width() + textLeftOffset);
+    GroupNameRect.setWidth(width - textRigthOffset);
 
     f.setBold(true);
     painter->setFont(f);
     painter->setPen(palette.text().color());
     painter->drawText(GroupNameRect, Qt::TextSingleLine,
-                      font.elidedText(QString::fromStdString(item.name),Qt::ElideRight,width - 150));
+                      font.elidedText(QString::fromStdString(item.name),Qt::ElideRight,width - textRigthOffset));
 
     f.setBold(false);
-    QRect LastMessageRect = QRect(groupIconSize.x() + 15,GroupNameRect.y() + 35,width - 130,30);
+    QRect LastMessageRect = QRect(groupIconSize.width() + textLeftOffset,
+                                  GroupNameRect.y() + lastMessageTopOffset,width - textRigthOffset,baseTextHeigth);
     painter->setFont(f);
     painter->setPen(palette.text().color());
     painter->drawText(LastMessageRect, Qt::TextSingleLine,
-                      font.elidedText(QString::fromStdString(item.lastMessage.text),Qt::ElideRight,width - 150));
+                      font.elidedText(QString::fromStdString(item.lastMessage.text),Qt::ElideRight,width - textRigthOffset));
 
-
-    if(sizeHint(option,index).width() > 140){
-        QRect TimeMessageRect = QRect(width - groupIconSize.x() - 20 ,GroupNameRect.y() + 5,40,30);
+    if(sizeHint(option,index).width() > timeMessageMaxOffset){
+        QRect TimeMessageRect = QRect(width - groupIconSize.width() - timeRigthOffset ,GroupNameRect.y(),timeMessageWidth,baseTextHeigth);
         painter->setFont(f);
         painter->setPen(palette.text().color());
         painter->drawText(TimeMessageRect, Qt::TextSingleLine,
@@ -79,5 +76,5 @@ QSize GroupDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIn
 {
     QStyleOptionViewItem opt(option);
     initStyleOption(&opt, index);
-    return QSize(option.widget->width() - (option.widget->contentsMargins().left() + option.widget->contentsMargins().right()),60);
+    return QSize(option.widget->width() - (option.widget->contentsMargins().left() + option.widget->contentsMargins().right()),baseItemHeight);
 }

@@ -22,6 +22,15 @@ private:
     QPixmap *avatar;
     QPixmap *check;
     QPixmap *uncheck;
+    QPoint offset{5,5};
+    int textOffset{15};
+    int mainMessageTopOffset{15};
+    int baseItemHeight{55};
+    int rightMessageOffset{80};
+    int avatarRadius{100};
+    float baseTextHeight{15};
+    QSize avatarSize{30,30};
+    QSize avatarScale{40,40};
 };
 
 

@@ -36,14 +36,14 @@ void test_chat::test_case2()
 
 void test_chat::test_case3()
 {
-//    QString mess{"12321Message"};
-//    QTest::keyClicks(this->textMessage, mess);
-//    QTest::mouseClick(this->send,Qt::LeftButton);
-//    std::list<QListWidgetItem*> items = chatList->getItems();
-//    QString text = chatList->itemWidget(items.back())->findChild<QLabel*>("text")->text();
+//   QString mess{"12321Message"};
+//   QTest::keyClicks(this->textMessage, mess);
+//   QTest::mouseClick(this->send,Qt::LeftButton);
+//   std::list<QListWidgetItem*> items = chatList->getItems();
+//   QString text = chatList->itemWidget(items.back())->findChild<QLabel*>("text")->text();
 
-//    QCOMPARE(text,"12321Message");
-//    this->textMessage->clear();
+//   QCOMPARE(text,"12321Message");
+//   this->textMessage->clear();
 }
 
 #include "test_chat.moc"

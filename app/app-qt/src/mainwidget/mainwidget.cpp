@@ -108,6 +108,7 @@ void MainWidget::sendMessageFromInput()
     if(text.size() > 1024)
         return;
     removeDoubleEnter(text);
+    message.chatId = ui->chatList->selectionModel()->currentIndex().data().value<Chat>().idChat;
     message.text = text.toStdString();
     message.nickname = QString::fromStdString(userModel->getAcc().login);
     message.idOwner = userModel->getId();

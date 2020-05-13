@@ -15,6 +15,18 @@ public:
     QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index ) const override;
 private:
     QPixmap *groupIcon;
+    QPoint offset{5,5};
+    int textLeftOffset{15};
+    int textTopOffset{5};
+    int baseTextHeigth{15};
+    int lastMessageTopOffset{30};
+    int textRigthOffset{150};
+    int timeMessageWidth{40};
+    int timeMessageMaxOffset{140};
+    int baseItemHeight{60};
+    int timeRigthOffset{20};
+    QSize groupIconSize{50,50};
+    int groupIconRadius{100};
 };
 
 #endif // GROUPDELEGATE_H

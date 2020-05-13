@@ -199,6 +199,9 @@
             <height>30</height>
            </size>
           </property>
+          <property name="echoMode">
+           <enum>QLineEdit::Password</enum>
+          </property>
           <property name="placeholderText">
            <string> Пароль</string>
           </property>
@@ -564,6 +567,9 @@ border-image: url(&quot;/home/kostikan/jmickhenger/app/img/ret.png&quot;);
           <height>30</height>
          </size>
         </property>
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
         <property name="placeholderText">
          <string> Введите пароль</string>
         </property>
@@ -612,6 +618,9 @@ border-image: url(&quot;/home/kostikan/jmickhenger/app/img/ret.png&quot;);
           <width>0</width>
           <height>30</height>
          </size>
+        </property>
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
         </property>
         <property name="placeholderText">
          <string> Повторите пароль</string>
