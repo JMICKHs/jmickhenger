@@ -6,46 +6,50 @@
 #define TCP_CONNECTION_H
 
 
-#include <iostream>
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/asio.hpp>
-#include <boost/bind.hpp>
+#include "AbstractConnection.h"
+#include <array>
+#include "../BusinessLogicProxy/BusinessLogicProxy.h"
 
-class Connection : public std::enable_shared_from_this<Connection> {
+using boost::asio::ip::tcp;
+
+class Connection : public abstract_Connection,
+        public std::enable_shared_from_this<Connection> {
     typedef Connection self_type;
-    Connection(std::shared_ptr<Connection> sharedPtr, int index);
+public:
+    Connection(boost::asio::io_service& io_service,
+               boost::asio::io_service::strand& strand, BusinessLogicProxy& room)
+            : socket_(io_service), strand_(strand), room_(room)
+    {
+    }
 public:
     typedef boost::system::error_code error_code;
     typedef std::shared_ptr<Connection> ptr;
 
+
+    tcp::socket& socket();
+    bool readCondition(const boost::system::error_code &err, size_t length);
+
     void start();
-    static ptr new_(int index);
 
-    void new_session();
+    void on_message(std::array<char, MAX_IP_PACK_SIZE>& msg);
 
-    void start_session();
-    void stop_session();
-    bool is_active();
-
-    boost::asio::ip::tcp::socket &get_socket();
 private:
-    void on_read(const error_code & err, size_t bytes);
 
-    void on_write(const error_code & err, size_t bytes);
-    void do_write(const std::string & msg);
 
-    void handle_write();
-    void handle_read();
+    void name_handler(const boost::system::error_code& error);
+
+    void read_handler(const boost::system::error_code& error);
+
+    void write_handler(const boost::system::error_code& error);
+
 private:
-    boost::asio::ip::tcp::socket socket;
-    enum { max_msg = 1024 };
-//    std::string read_buffer;
-//    ResponseStruct write_buffer;
-    char read_buffer_[max_msg];
-    char write_buffer_[max_msg];
-    bool started_;
+    tcp::socket socket_;
+    boost::asio::io_service::strand& strand_;
+    BusinessLogicProxy& room_;
+    std::array<char, MAX_NICKNAME> nickname_;
+    std::array<char, MAX_IP_PACK_SIZE> read_msg_;
     int connection_id;
+    std::deque<std::array<char, MAX_IP_PACK_SIZE> > write_msgs_;
 };
 
 #endif //TCP_CONNECTION_H

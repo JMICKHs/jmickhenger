@@ -4,43 +4,28 @@
 
 #include "Server.h"
 #include "../Connection/Connection.h"
+#include <boost/asio.hpp>
+#include "../BusinessLogicProxy/BusinessLogicProxy.h"
+#include <boost/thread/thread.hpp>
+#include <thread>
+#include <mutex>
 
-ip::tcp::endpoint ep( ip::address::from_string("127.0.0.1"), 8000);
-
-Server::Server(boost::asio::io_service &io_service)
-        : io_service_(io_service), acceptor_(io_service,ep), user_count(0) {
+Server::Server(boost::asio::io_service& io_service,
+boost::asio::io_service::strand& strand, const tcp::endpoint& endpoint) : io_service_(io_service),
+                                        strand_(strand),
+                                        acceptor_(io_service, endpoint) {
+    run();
 }
 
-Server::ptr Server::create() {
-    return std::make_shared<Server>(service);
+
+void Server::run() {
+    std::shared_ptr<Connection> new_abstract_Connection(new Connection(io_service_, strand_, room_));
+    acceptor_.async_accept(new_abstract_Connection->socket(), strand_.wrap(boost::bind(&Server::on_accept, this, new_abstract_Connection, _1)));
 }
 
-void Server::handle_accept(const Connection::ptr &new_Connection, const boost::system::error_code &error) {
+void Server::on_accept(std::shared_ptr<Connection> new_abstract_Connection, const boost::system::error_code& error) {
     if (!error) {
-        new_Connection->start();
-        Connection::ptr new_connection2 = Connection::new_(user_count);
-        client_collection[user_count++] = std::shared_ptr<Connection>(new_connection2);
-
-        acceptor_.async_accept(new_connection2->get_socket(),
-                               boost::bind(&Server::handle_accept, shared_from_this(), new_connection2,
-                                           boost::asio::placeholders::error));
+        new_abstract_Connection->start();
     }
-
-}
-
-void Server::run_server() {
-    Connection::ptr new_connection = Connection::new_(user_count);
-    client_collection[user_count++] = std::shared_ptr<Connection>(new_connection);
-    acceptor_.async_accept(new_connection->get_socket(),
-                           boost::bind(&Server::handle_accept, shared_from_this(), new_connection,
-                                       boost::asio::placeholders::error));
-
-}
-
-void Server::stop_server() {
-
-}
-
-void Server::start_accept() {
-
+    run();
 }
