@@ -34,6 +34,7 @@ private:
 
 signals:
     void showMainWidget();
+    void nickNameChanged(const QString&);
 };
 
 #endif // USETMODEL_H

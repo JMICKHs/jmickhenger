@@ -102,7 +102,6 @@ std::function<void (std::optional<string> &)>& ChatModel::getDelMsgCallback()
 
 void ChatModel::DeleteMessage(int pos)
 {
-    qDebug() <<pos;
     if(pos >= 0 && pos < items.size())
         items.erase(items.begin() + pos);
 }

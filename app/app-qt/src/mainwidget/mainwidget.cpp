@@ -147,6 +147,8 @@ void MainWidget::after_Login_slot(std::shared_ptr<UserModel> &ptr)
     Account ac = userModel->getAcc();
     auto net = AppNet::shared();
     net->getListChat(ac.id,groupModel->getChatCallBack());
+    menuWidget->setName(QString::fromStdString(ac.login));
+    connect(userModel.get(),&UserModel::nickNameChanged,menuWidget,&MenuWidget::on_nickname_rename);
 }
 
 void MainWidget::removeMessageFromChat()

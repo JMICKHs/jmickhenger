@@ -30,7 +30,6 @@ std::function<void (int, std::optional<string> &)> &UserModel::getRegistrationCa
     return registrationCallback;
 }
 
-
 void UserModel::setCallBacks()
 {
     errString = nullopt;
@@ -75,6 +74,7 @@ int UserModel::getId() const
 void UserModel::setLogin(const std::string &login)
 {
     myAcc.login = login;
+    emit nickNameChanged(QString::fromStdString(login));
 }
 
 void UserModel::setPassword(const std::string &password)

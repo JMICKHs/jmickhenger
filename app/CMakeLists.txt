@@ -73,6 +73,10 @@ add_executable(jmichkenger
      app-qt/src/custominputforms/custominputforms.cpp
      app-qt/src/mainlogic/mainlogic.cpp
      app-qt/src/mainlogic/mainlogic.h
+     app-qt/src/models/friendsmodel.cpp
+     app-qt/src/models/friendsmodel.h
+     app-qt/src/views/friendsview.cpp
+     app-qt/src/views/friendsview.h
      main.cpp
  )
 target_link_libraries(jmichkenger PRIVATE Qt5::Widgets ${USED_LIBS} netlib)

@@ -18,8 +18,6 @@ class MenuWidget : public QFrame
 
 public:
     explicit MenuWidget(QWidget *parent = nullptr);
-     CustomButton* getCreateButton();
-
     ~MenuWidget();
 
 private:
@@ -27,6 +25,8 @@ private:
 
 public slots:
     void setPosition();
+    void setName(const QString &name);
+    void on_nickname_rename(const QString &nick);
 
 };
 

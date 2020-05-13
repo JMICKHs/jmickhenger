@@ -61,13 +61,12 @@ void LoginWidget::on_loginButton_clicked()
 
 void LoginWidget::on_RegistrationButton_clicked()
 {
-
-  this->setCurrentWidget(reg);
+    this->setCurrentWidget(reg);
 }
 
 void LoginWidget::on_returnButton_clicked()
 {
-  this->setCurrentWidget(log);
+    this->setCurrentWidget(log);
 }
 
 void LoginWidget::on_registrateButton_clicked()
