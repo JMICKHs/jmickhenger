@@ -1,10 +1,8 @@
 #ifndef CHATVIEW_H
 #define CHATVIEW_H
 
-
 #include <QListView>
 #include <QScrollEvent>
-
 
 class ChatView : public QListView
 {

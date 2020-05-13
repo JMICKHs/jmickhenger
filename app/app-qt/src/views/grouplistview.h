@@ -2,8 +2,6 @@
 #define GROUPLISTVIEW_H
 
 #include <QListView>
-
-
 class GroupListView : public QListView
 {
     Q_OBJECT

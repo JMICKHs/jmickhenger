@@ -1,19 +1,8 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
-#include <QWidget>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QLineEdit>
-#include <QFrame>
-#include <QSplitter>
-#include <QResizeEvent>
-#include <QMoveEvent>
-#include <QLabel>
 #include "app-qt/src/custommbutton/custombutton.h"
 #include "app-qt/src/menuwidget/menuwidget.h"
-#include "app-qt/src/authwidget/authwidget.h"
-#include <QListView>
 #include <app-qt/src/models/groupmodel.h>
 #include <app-qt/src/views/grouplistview.h>
 #include <app-qt/src/delegates/groupdelegate.h>
@@ -23,9 +12,8 @@
 #include <app-qt/src/proxy/proxymodel.h>
 #include <app-qt/src/models/usermodel.h>
 #include <QFocusEvent>
-#include <memory>
-
-class AppNetwork;
+#include <QAction>
+#include <QMenu>
 
 enum class Buttons{
     SEND_MESSAGE_BUTTON,
@@ -69,6 +57,7 @@ protected:
     MenuWidget *menuWidget;
     QMenu *msgMenu;
     ProxyModel *proxyModel;
+
 private slots:
     void on_groupList_clicked(const QModelIndex &index);
 };

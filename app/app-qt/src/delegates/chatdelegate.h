@@ -1,12 +1,9 @@
 #ifndef CHATDELEGATE_H
 #define CHATDELEGATE_H
 
-
-#include <QItemDelegate>
 #include "app-qt/src/models/chatmodel.h"
-#include <QPainter>
 #include <QStyledItemDelegate>
-#include <QRect>
+#include <QPainter>
 
 class ChatDelegate : public QStyledItemDelegate
 {

@@ -37,8 +37,6 @@ SET(USED_LIBS ${Boost_THREAD_LIBRARY}  ${Boost_SYSTEM_LIBRARY} ${Boost_REGEX_LIB
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -pthread")
 
 add_executable(jmichkenger
-     app-qt/src/authwidget/authwidget.cpp
-     app-qt/src/authwidget/authwidget.h
      app-qt/src/chatinput/chatinput.h
      app-qt/src/chatinput/chatinput.cpp
      app-qt/src/creategroup/creategroupwidget.cpp
@@ -69,12 +67,12 @@ add_executable(jmichkenger
      app-qt/src/loginwidget/loginwidget.cpp
      app-qt/src/loginwidget/loginwidget.h
      app-qt/src/loginwidget/loginwidget.ui
-    app-qt/src/models/usermodel.h
-    app-qt/src/models/usermodel.cpp
-    app-qt/src/custominputforms/custominputforms.h
-    app-qt/src/custominputforms/custominputforms.cpp
-    app-qt/src/mainlogic/mainlogic.cpp
-    app-qt/src/mainlogic/mainlogic.h
+     app-qt/src/models/usermodel.h
+     app-qt/src/models/usermodel.cpp
+     app-qt/src/custominputforms/custominputforms.h
+     app-qt/src/custominputforms/custominputforms.cpp
+     app-qt/src/mainlogic/mainlogic.cpp
+     app-qt/src/mainlogic/mainlogic.h
      main.cpp
  )
 target_link_libraries(jmichkenger PRIVATE Qt5::Widgets ${USED_LIBS} netlib)

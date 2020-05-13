@@ -1,10 +1,9 @@
 #ifndef GROUPDELEGATE_H
 #define GROUPDELEGATE_H
 
-#include <QItemDelegate>
 #include "app-qt/src/models/groupmodel.h"
-#include <QPainter>
 #include <QStyledItemDelegate>
+#include <QPainter>
 
 class GroupDelegate : public QStyledItemDelegate
 {

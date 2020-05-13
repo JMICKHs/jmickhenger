@@ -1,9 +1,7 @@
 #ifndef PROXYMODEL_H
 #define PROXYMODEL_H
 
-
 #include <QSortFilterProxyModel>
-#include <QAbstractProxyModel>
 
 class ProxyModel : public QSortFilterProxyModel
 {

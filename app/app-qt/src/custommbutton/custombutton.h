@@ -3,7 +3,6 @@
 
 #include <QPushButton>
 #include <QString>
-#include <netlib/info/Info.h>
 
 class CustomButton : public QPushButton
 {

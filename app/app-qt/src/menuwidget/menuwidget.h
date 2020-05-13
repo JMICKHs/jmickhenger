@@ -3,17 +3,8 @@
 
 
 #include <QWidget>
-#include <QMdiArea>
-#include <QSize>
-#include <QPoint>
-#include <QVBoxLayout>
-#include <QPushButton>
 #include "app-qt/src/custommbutton/custombutton.h"
-#include <QLabel>
 #include <QFrame>
-#include <QFocusEvent>
-#include <QMenuBar>
-
 #include <netlib/info/Info.h>
 
 using namespace inf;

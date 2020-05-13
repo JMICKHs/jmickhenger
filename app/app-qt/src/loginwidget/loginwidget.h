@@ -7,6 +7,7 @@
 #include <netlib/info/Info.h>
 #include <app-qt/src/models/usermodel.h>
 #include <memory>
+
 using namespace inf;
 
 namespace Ui {
@@ -25,14 +26,13 @@ public:
 
 private slots:
     void on_loginButton_clicked();
-
     void on_RegistrationButton_clicked();
-
     void on_returnButton_clicked();
-
     void on_registrateButton_clicked();
+
 public slots:
     void showMainWidgetSlot();
+
 signals:
    void openMainWidget(std::shared_ptr<UserModel> &);
 

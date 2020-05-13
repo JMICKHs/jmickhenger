@@ -4,7 +4,6 @@
 #include "app-qt/src/mainwidget/mainwidget.h"
 #include <QApplication>
 #include "app-qt/src/loginwidget/loginwidget.h"
-#include <QObject>
 
 class MainLogic : public QObject
 {
