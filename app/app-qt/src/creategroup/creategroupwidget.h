@@ -7,7 +7,7 @@
 #include <app-qt/src/models/groupmodel.h>
 #include <app-qt/src/models/usermodel.h>
 #include <app-qt/src/models/friendsmodel.h>
-
+#include <app-qt/src/proxy/friendmodelproxy.h>
 namespace Ui {
 class CreateGroupWidget;
 }
@@ -24,10 +24,24 @@ public:
     ~CreateGroupWidget();
     void setWidget(WidgetType type);
 
+private slots:
+    void on_pushButton_clicked();
+    void on_closeContactsButton_clicked();
+    void on_SearchEditToCreateGroup_textChanged(const QString &arg1);
+
+    void on_SearchLineEditFriends_textChanged(const QString &arg1);
+
+    void on_pushButton_2_clicked();
+
+signals:
+    void text_changed(const QString&);
+    void groupCreated(const inf::ChatRoom &);
+
 private:
     Ui::CreateGroupWidget *ui;
     QWidget *createWidget;
     QWidget *contactsWidget;
+    FriendModelProxy *proxy;
     std::shared_ptr<FriendsModel> friendModel;
 };
 

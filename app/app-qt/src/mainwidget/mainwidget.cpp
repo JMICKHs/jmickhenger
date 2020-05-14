@@ -63,6 +63,7 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->chatList->setSelectionMode(QAbstractItemView::NoSelection);
     ui->chatList->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
+    connect(menuWidget->getCreateWidget(),&CreateGroupWidget::groupCreated,groupModel.get(),&GroupModel::createChatByUser);
     connect(ui->chatList,&ChatView::customContextMenuRequested,this,&MainWidget::showContextMenu);
     connect(ui->menuButton,&CustomButton::clicked,menuWidget,&MenuWidget::show);
     connect(ui->menuButton,&CustomButton::clicked,this,&MainWidget::menuClicked);

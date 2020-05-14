@@ -71,9 +71,11 @@ void GroupModel::addCallbacks()
         else
             self->errString = err;
     };
-    createChatCallback = [self = shared_from_this()](int,std::optional<string> &err){
-        if(err != nullopt)
-              self->errString = err;
+    createChatCallback = [self = shared_from_this()](int id,std::optional<string> &err){
+        if(err == nullopt)
+            self->items[self->items.size()].idChat = id;
+        else
+            self->errString = err;
     };
 
     delChatCallback = [self = shared_from_this()](bool state, std::optional<string> &err){
@@ -106,4 +108,15 @@ std::function<void (bool, std::optional<string> &)>& GroupModel::getDelChatCallb
 std::function<void (Change &)> &GroupModel::getChatChangeCallback()
 {
     return chatChangeCallback;
+}
+
+void GroupModel::createChatByUser(const ChatRoom &room)
+{
+    int row = this->rowCount();
+    Chat chat;
+    chat.name = room.name;
+    beginInsertRows(QModelIndex(),row,row);
+    items.push_back(chat);
+    endInsertRows();
+    AppNet::shared()->createChat(room,createChatCallback);
 }

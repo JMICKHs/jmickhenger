@@ -20,7 +20,7 @@ class MenuWidget : public QFrame
 public:
     explicit MenuWidget(QWidget *parent = nullptr);
     ~MenuWidget();
-
+    CreateGroupWidget* getCreateWidget();
 private:
     Ui::MenuWidget *ui;
     std::shared_ptr<CreateGroupWidget> friendsWidget;

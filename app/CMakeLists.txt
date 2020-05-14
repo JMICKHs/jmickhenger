@@ -59,6 +59,8 @@ add_executable(jmichkenger
      app-qt/src/models/groupmodel.cpp
      app-qt/src/proxy/proxymodel.cpp
      app-qt/src/proxy/proxymodel.h
+     app-qt/src/proxy/friendmodelproxy.cpp
+     app-qt/src/proxy/friendmodelproxy.h
      app-qt/src/views/chatview.cpp
      app-qt/src/views/chatview.h
      app-qt/src/views/grouplistview.cpp

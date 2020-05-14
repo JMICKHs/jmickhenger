@@ -14,13 +14,17 @@ MenuWidget::MenuWidget(QWidget *parent)
     Pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);
     this->setPalette(Pal);
-
     friendsWidget = std::shared_ptr<CreateGroupWidget>(new CreateGroupWidget(parent));
 }
 
 MenuWidget::~MenuWidget()
 {
     delete ui;
+}
+
+CreateGroupWidget *MenuWidget::getCreateWidget()
+{
+    return friendsWidget.get();
 }
 
 void MenuWidget::setPosition()

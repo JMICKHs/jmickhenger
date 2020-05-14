@@ -21,7 +21,7 @@ void friendsDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
     QFont f(myOpt.font);
 
     painter->fillRect(rect, myOpt.state & QStyle::State_Selected ?
-                             palette.highlight().color() :
+                             qRgb(230,230,230) :
                              palette.light().color());
     painter->setFont(myOpt.font);
     int width = sizeHint(option,index).width();

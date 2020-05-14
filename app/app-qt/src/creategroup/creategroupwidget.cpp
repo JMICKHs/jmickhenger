@@ -26,6 +26,8 @@ CreateGroupWidget::CreateGroupWidget(QWidget *parent) :
     Pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);
     this->setPalette(Pal);
+    proxy = new FriendModelProxy();
+    proxy->setSourceModel(friendModel.get());
     UserInf inf;
     inf.id = 3;
     inf.login = "str";
@@ -34,13 +36,14 @@ CreateGroupWidget::CreateGroupWidget(QWidget *parent) :
     inf1.login = "kek";
     friendModel->addFriend(inf);
     friendModel->addFriend(inf1);
+    connect(this,&CreateGroupWidget::text_changed,proxy,&FriendModelProxy::search_String_Changed);
+    connect(this,&CreateGroupWidget::text_changed,proxy,&FriendModelProxy::search_String_Changed);
 
-    ui->listView->setModel(friendModel.get());
-    ui->listView_2->setModel(friendModel.get());
-
-    ui->listView->setItemDelegate(new friendsDelegate);
-    ui->listView_2->setItemDelegate(new friendsDelegate);
-
+    ui->createGroupView->setModel(proxy);
+    ui->friendsView->setModel(proxy);
+    ui->createGroupView->setItemDelegate(new friendsDelegate);
+    ui->friendsView->setItemDelegate(new friendsDelegate);
+    ui->createGroupView->setSelectionMode(QAbstractItemView::MultiSelection);
 }
 
 CreateGroupWidget::~CreateGroupWidget()
@@ -56,4 +59,44 @@ void CreateGroupWidget::setWidget(WidgetType type)
         setCurrentWidget(contactsWidget);
     else
         setCurrentWidget(createWidget);
+}
+
+void CreateGroupWidget::on_pushButton_clicked()
+{
+    this->close();
+}
+
+void CreateGroupWidget::on_closeContactsButton_clicked()
+{
+    this->close();
+}
+
+void CreateGroupWidget::on_SearchEditToCreateGroup_textChanged(const QString &arg1)
+{
+    emit text_changed(arg1);
+}
+
+void CreateGroupWidget::on_SearchLineEditFriends_textChanged(const QString &arg1)
+{
+    emit text_changed(arg1);
+}
+
+void CreateGroupWidget::on_pushButton_2_clicked()
+{
+    if(!ui->createGroupView->selectionModel()->hasSelection())
+        return;
+    else
+    {
+        QModelIndexList indexList = ui->createGroupView->selectionModel()->selectedRows();
+        inf::ChatRoom item;
+        std::vector<int> usrIds;
+        for(auto& indexData : indexList){
+            usrIds.push_back(indexData.data().value<UserInf>().id);
+            qDebug() << indexData.data().value<UserInf>().id;
+        }
+        item.idUsers = std::move(usrIds);
+        item.name = ui->lineEdit->text().toStdString();
+        emit groupCreated(item);
+        close();
+    }
 }

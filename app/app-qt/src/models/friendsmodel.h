@@ -29,6 +29,7 @@ private:
     std::function<void(std::vector<int> &,std::optional<std::string> &)> friendsCallback;
     std::vector<UserInf> items;
     std::vector<int> ids;
+    std::optional<std::string> errString;
 };
 
 #endif // FRIENDSMODEL_H

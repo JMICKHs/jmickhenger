@@ -53,6 +53,7 @@ private:
 signals:
 
 public slots:
+    void createChatByUser(const inf::ChatRoom &room);
 };
 
 #endif // GROUPMODEL_H
