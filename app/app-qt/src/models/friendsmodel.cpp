@@ -5,6 +5,16 @@ FriendsModel::FriendsModel()
 
 }
 
+void FriendsModel::setData(std::vector<int> &_ids)
+{
+    ids = std::move(_ids);
+}
+
+void FriendsModel::addFriend(UserInf &usr)
+{
+    items.push_back(std::move(usr));
+}
+
 int FriendsModel::rowCount(const QModelIndex &parent) const
 {
     return items.size();

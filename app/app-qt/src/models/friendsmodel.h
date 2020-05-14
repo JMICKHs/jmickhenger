@@ -15,7 +15,8 @@ class FriendsModel : public QAbstractListModel, public enable_shared_from_this<F
 {
 public:
     FriendsModel();
-    void setData();
+    void setData(std::vector<int> &);
+    void addFriend(UserInf &usr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     void addCallbacks();

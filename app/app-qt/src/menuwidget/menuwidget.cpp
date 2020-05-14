@@ -7,15 +7,15 @@ MenuWidget::MenuWidget(QWidget *parent)
 {
     ui->setupUi(this);
     this->setLayout(ui->mainLayout);
-    this->setWindowFlags(Qt::Popup);
     this->setFrameShadow(QFrame::Raised);
     this->setMinimumWidth(260);
+    this->setWindowFlags(Qt::Popup);
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);
     this->setPalette(Pal);
 
-    friendsWidget = std::make_shared<CreateGroupWidget>();
+    friendsWidget = std::shared_ptr<CreateGroupWidget>(new CreateGroupWidget(parent));
 }
 
 MenuWidget::~MenuWidget()
