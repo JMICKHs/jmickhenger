@@ -33,17 +33,17 @@ std::function<void (int, std::optional<string> &)> &UserModel::getRegistrationCa
 void UserModel::setCallBacks()
 {
     errString = nullopt;
-    saveAvatarCallback = [self = shared_from_this()](bool state,std::optional<string>& err){
+    saveAvatarCallback = [self = instance()](bool state,std::optional<string>& err){
         if(err == nullopt){
             self->errString = err;
         }
     };
-    changeMeCallback = [self = shared_from_this()](bool state,std::optional<string>& err){
+    changeMeCallback = [self = instance()](bool state,std::optional<string>& err){
         if(err == nullopt){
             self->errString = err;
         }
     };
-    registrationCallback = [self = shared_from_this()](int id,std::optional<string>& err){
+    registrationCallback = [self = instance()](int id,std::optional<string>& err){
         if(err == nullopt){
             self->myAcc.id = id;
             emit self->showMainWidget();
@@ -51,7 +51,7 @@ void UserModel::setCallBacks()
         else
             self->errString = err;
     };
-    authCallback = [self = shared_from_this()](Account& newAcc,std::optional<string>& err){
+    authCallback = [self = instance()](Account& newAcc,std::optional<string>& err){
         if(err == nullopt){
             self->setData(newAcc);
             emit self->showMainWidget();

@@ -7,11 +7,10 @@
 
 using Account = inf::MyAccount;
 
-class UserModel : public QObject ,public enable_shared_from_this<UserModel>
+class UserModel : public QObject
 {
     Q_OBJECT
 public:
-    UserModel();
     void setData(Account &acc);
     std::function<void(bool,std::optional<string>&)> &getSaveAvatarCallback()  ;
     std::function<void(bool,std::optional<string>&)> &getChangeMeCallback()  ;
@@ -23,8 +22,13 @@ public:
     void setId(int id);
     void setLogin(const std::string &login);
     void setPassword(const std::string &password);
+    static UserModel* instance(){
+        static UserModel inst;
+        return &inst;
+    }
 
 private:
+    UserModel();
     std::optional<string> errString;
     Account myAcc;
     std::function<void(bool,std::optional<string>&)> saveAvatarCallback;

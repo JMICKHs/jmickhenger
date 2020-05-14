@@ -14,6 +14,8 @@ MenuWidget::MenuWidget(QWidget *parent)
     Pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);
     this->setPalette(Pal);
+
+    friendsWidget = std::make_shared<CreateGroupWidget>();
 }
 
 MenuWidget::~MenuWidget()
@@ -35,4 +37,16 @@ void MenuWidget::setName(const QString &name)
 void MenuWidget::on_nickname_rename(const QString &nick)
 {
     ui->nickName->setText(nick);
+}
+
+void MenuWidget::on_createGroupButton_clicked()
+{
+    friendsWidget->setWidget(WidgetType::CREATE_GROUP);
+    friendsWidget->show();
+}
+
+void MenuWidget::on_contactsButton_clicked()
+{
+    friendsWidget->setWidget(WidgetType::CONTACTS);
+    friendsWidget->show();
 }

@@ -39,7 +39,7 @@ public:
 public slots:
     void menuClicked();
     void sendMessageFromInput();
-    void after_Login_slot(std::shared_ptr<UserModel> &ptr);
+    void after_Login_slot();
     void removeMessageFromChat();
     void editMessageInChat();
     void showContextMenu(const QPoint &pos);
@@ -53,7 +53,6 @@ private:
 protected:
     std::shared_ptr<GroupModel> groupModel;
     std::shared_ptr<ChatModel> chatModel;
-    std::shared_ptr<UserModel> userModel;
     MenuWidget *menuWidget;
     QMenu *msgMenu;
     ProxyModel *proxyModel;

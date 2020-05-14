@@ -47,6 +47,8 @@ add_executable(jmichkenger
      app-qt/src/delegates/chatdelegate.h
      app-qt/src/delegates/groupdelegate.cpp
      app-qt/src/delegates/groupdelegate.h
+     app-qt/src/delegates/friendsdelegate.cpp
+     app-qt/src/delegates/friendsdelegate.h
      app-qt/src/mainwidget/mainwidget.cpp
      app-qt/src/mainwidget/mainwidget.h
      app-qt/src/menuwidget/menuwidget.cpp

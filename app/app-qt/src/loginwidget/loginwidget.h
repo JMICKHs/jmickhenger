@@ -34,13 +34,12 @@ public slots:
     void showMainWidgetSlot();
 
 signals:
-   void openMainWidget(std::shared_ptr<UserModel> &);
+   void openMainWidget();
 
 private:
     Ui::LoginWidget *ui;
     QWidget *log;
     QWidget *reg;
-    std::shared_ptr<UserModel> userPtr;
 };
 
 #endif // LOGINWIDGET_H

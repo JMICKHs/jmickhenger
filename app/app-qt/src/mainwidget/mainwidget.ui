@@ -641,6 +641,11 @@ QFrame[frameShape=&quot;4&quot;]
    <header>app-qt/src/custommbutton/custombutton.h</header>
   </customwidget>
   <customwidget>
+   <class>CustomInputForms</class>
+   <extends>QLineEdit</extends>
+   <header>app-qt/src/custominputforms/custominputforms.h</header>
+  </customwidget>
+  <customwidget>
    <class>ChatView</class>
    <extends>QListView</extends>
    <header>app-qt/src/views/chatview.h</header>
@@ -654,11 +659,6 @@ QFrame[frameShape=&quot;4&quot;]
    <class>ChatInput</class>
    <extends>QTextEdit</extends>
    <header>app-qt/src/chatinput/chatinput.h</header>
-  </customwidget>
-  <customwidget>
-   <class>CustomInputForms</class>
-   <extends>QLineEdit</extends>
-   <header>app-qt/src/custominputforms/custominputforms.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

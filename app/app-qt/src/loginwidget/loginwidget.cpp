@@ -20,23 +20,22 @@ LoginWidget::LoginWidget(QWidget *parent) :
     this->resize(400,550);
     this->setMinimumSize(400,550);
     this->setMaximumSize(400,550);
-    userPtr = std::make_shared<UserModel>();
-    userPtr->setCallBacks();
+    UserModel::instance()->setCallBacks();
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);
     this->setPalette(Pal);
     auto net = AppNet::shared();
     net->runClient([](int){});
-    connect(userPtr.get(),&UserModel::showMainWidget,this,&LoginWidget::showMainWidgetSlot);
-    connect(userPtr.get(),&UserModel::showMainWidget,this,&LoginWidget::close);
+    connect(UserModel::instance(),&UserModel::showMainWidget,this,&LoginWidget::showMainWidgetSlot);
+    connect(UserModel::instance(),&UserModel::showMainWidget,this,&LoginWidget::close);
 }
 
 void LoginWidget::login(const QString &log, const QString &password)
 {
     auto net = AppNet::shared();
     qDebug() <<"log";
-    net->auth(log.toStdString(),password.toStdString(),userPtr->getAuthCallback());
+    net->auth(log.toStdString(),password.toStdString(),UserModel::instance()->getAuthCallback());
 
 }
 
@@ -44,9 +43,9 @@ void LoginWidget::registration(const Account &acc)
 {
     auto net = AppNet::shared();
     qDebug() <<"reg" << QString::fromStdString(acc.login) << QString::fromStdString(acc.password);
-    userPtr->setLogin(acc.login);
-    userPtr->setPassword(acc.password);
-    net->registration(acc,userPtr->getRegistrationCallback());
+    UserModel::instance()->setLogin(acc.login);
+    UserModel::instance()->setPassword(acc.password);
+    net->registration(acc,UserModel::instance()->getRegistrationCallback());
 }
 
 LoginWidget::~LoginWidget()
@@ -79,5 +78,5 @@ void LoginWidget::on_registrateButton_clicked()
 
 void LoginWidget::showMainWidgetSlot()
 {
-    emit openMainWidget(userPtr);
+    emit openMainWidget();
 }

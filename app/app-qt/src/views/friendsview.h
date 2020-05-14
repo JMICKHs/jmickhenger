@@ -2,10 +2,12 @@
 #define FRIENDSVIEW_H
 
 
-class FriendsView
+#include <QListView>
+class FriendsView : public QListView
 {
 public:
-    FriendsView();
+    explicit FriendsView(QWidget *parent = nullptr);
+    void resizeEvent(QResizeEvent *e) override;
 };
 
 #endif // FRIENDSVIEW_H

@@ -1,6 +1,12 @@
 #include "friendsview.h"
 
-FriendsView::FriendsView()
+FriendsView::FriendsView(QWidget *parent)
+    :QListView(parent)
 {
 
+}
+
+void FriendsView::resizeEvent(QResizeEvent *e)
+{
+    this->doItemsLayout();
 }

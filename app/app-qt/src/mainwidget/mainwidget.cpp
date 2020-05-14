@@ -110,8 +110,8 @@ void MainWidget::sendMessageFromInput()
     removeDoubleEnter(text);
     message.chatId = ui->chatList->selectionModel()->currentIndex().data().value<Chat>().idChat;
     message.text = text.toStdString();
-    message.nickname = QString::fromStdString(userModel->getAcc().login);
-    message.idOwner = userModel->getId();
+    message.nickname = QString::fromStdString(UserModel::instance()->getAcc().login);
+    message.idOwner = UserModel::instance()->getId();
     message.timesend  = 0;
 
     chatModel->createMessage(message);
@@ -140,21 +140,20 @@ void MainWidget::on_groupList_clicked(const QModelIndex &index)
 }
 
 
-void MainWidget::after_Login_slot(std::shared_ptr<UserModel> &ptr)
+void MainWidget::after_Login_slot()
 {
     this->show();
-    userModel = ptr;
-    Account ac = userModel->getAcc();
+    Account ac = UserModel::instance()->getAcc();
     auto net = AppNet::shared();
     net->getListChat(ac.id,groupModel->getChatCallBack());
     menuWidget->setName(QString::fromStdString(ac.login));
-    connect(userModel.get(),&UserModel::nickNameChanged,menuWidget,&MenuWidget::on_nickname_rename);
+    connect(UserModel::instance(),&UserModel::nickNameChanged,menuWidget,&MenuWidget::on_nickname_rename);
 }
 
 void MainWidget::removeMessageFromChat()
 {
     Msg msg = ui->chatList->selectionModel()->currentIndex().data().value<Msg>();
-    if(msg.idOwner == userModel->getId()){
+    if(msg.idOwner == UserModel::instance()->getId()){
         chatModel->DeleteMessage(ui->chatList->selectionModel()->currentIndex().row());
     }
     else{
