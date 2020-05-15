@@ -8,7 +8,7 @@ shared_ptr<Client> Client::shared()  {
     if (!single) {
         mtx.lock();
         tcp::resolver resolver(service);
-        auto eit = resolver.resolve({"127.0.0.1", "8000"});
+        auto eit = resolver.resolve({"23.111.202.91", "8000"});
         single = shared_ptr<Client>(new Client(eit));
         mtx.unlock();
     }
@@ -53,6 +53,7 @@ Client::Client(tcp::resolver::iterator &endpointIterator) : sock(service) {
 //        ba::socket_base::keep_alive option(true);
 //        sock.set_option(option);
     eit = endpointIterator;
+    memset(readMsg.data(), '\0', maxMsg);
 }
 
 void Client::connect(tcp::resolver::iterator &it) {
@@ -73,6 +74,7 @@ void Client::connect(tcp::resolver::iterator &it) {
 }
 
 void Client::loopRead() {
+    memset(readMsg.data(), '\0', maxMsg);
     auto buf = ba::buffer(readMsg);
     auto condition = boost::bind(&Client::readCondition, shared_from_this(), _1, _2);
     auto handler = [self = shared_from_this()](boost::system::error_code err, size_t length) {

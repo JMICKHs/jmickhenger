@@ -61,6 +61,7 @@ namespace inf {
         static const string nameId;
         static const string nameLogin;
         static const string namePathImage;
+        static const string nameListFrnd;
     };
 
     class Message : public Codeble {

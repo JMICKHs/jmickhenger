@@ -72,6 +72,7 @@ void inf::UserInfo::decode(const string &json) {
 const string inf::UserInfo::nameId = "id";
 const string inf::UserInfo::nameLogin = "login";
 const string inf::UserInfo::namePathImage = "pathImage";
+const string inf::UserInfo::nameListFrnd = "frnds";
 
 inf::Message::Message()
     : chatId(-1), number(-1), text(), idOwner(-1), timesend(), checked(false) {}
