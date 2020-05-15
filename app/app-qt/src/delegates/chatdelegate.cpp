@@ -45,6 +45,7 @@ bool ChatDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const Q
 void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Msg item = index.model()->data(index).value<Msg>();
+    qDebug() << QString::fromStdString(item.text);
     QStyleOptionViewItem myOpt = option;
     myOpt.displayAlignment = Qt::AlignLeft;
     painter->save();

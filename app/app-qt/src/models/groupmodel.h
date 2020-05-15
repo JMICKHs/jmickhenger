@@ -38,22 +38,28 @@ public:
     std::function<void(int,std::optional<string>&)> &getCreateChatCallback() ;
     std::function<void(bool,std::optional<string>&)> &getDelChatCallback() ;
     std::function<void(Change&)> &getChatChangeCallback() ;
+    std::function<void(Change&)>& getUnknownChatChangeCallback();
+    std::function<void(inf::ChatRoom &,std::optional<string>&)>& getChatRoom();
 
 private:
     std::optional<string> errString;
     std::vector<Chat> items;
-    std::vector<MessageItem> lastMsgs;
 
     std::function<void(vector<ChatItem> &, std::optional<string> &)> chatCallback;
     std::function<void(MessageItem &, std::optional<string> &)>  lastMsgCallback;
     std::function<void(int,std::optional<string>&)> createChatCallback;
     std::function<void(bool,std::optional<string>&)> delChatCallback;
     std::function<void(Change&)> chatChangeCallback;
+    std::function<void(Change&)> unknownChatChangeCallback;
+    std::function<void(inf::ChatRoom &, std::optional<string>&)> chatRoom;
+    std::function<void(inf::ChatRoom &, std::optional<string>&)> unknownChatRoomAdd;
 
 signals:
 
 public slots:
+    void messageCreateByUser(const Msg &msg);
     void createChatByUser(const inf::ChatRoom &room);
+    void unknownChatCreate(inf::ChatRoom &room);
 };
 
 #endif // GROUPMODEL_H

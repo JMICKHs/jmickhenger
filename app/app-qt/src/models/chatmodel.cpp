@@ -29,7 +29,7 @@ QVariant ChatModel::data(const QModelIndex &index, int role) const
         return QVariant();
 }
 
-void ChatModel::createMessage(Msg &_message)
+void ChatModel::createMessage(const Msg &_message)
 {
     if(_message.text != "")
     {

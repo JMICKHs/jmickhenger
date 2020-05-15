@@ -70,6 +70,7 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(ui->sendButton,&CustomButton::clicked,this,&MainWidget::sendMessageFromInput);
     connect(ui->searchInput,&QLineEdit::textChanged,proxyModel,&ProxyModel::search_String_Changed);
     connect(ui->messageInput,&ChatInput::sendMessageOnEnter,this,&MainWidget::sendMessageFromInput);
+    connect(chatModel.get(),&ChatModel::messageCreateByUser,groupModel.get(),&GroupModel::messageCreateByUser);
     this->setLayout(ui->MainLayout);
 }
 
@@ -109,17 +110,19 @@ void MainWidget::sendMessageFromInput()
     if(text.size() > 1024)
         return;
     removeDoubleEnter(text);
-    message.chatId = ui->chatList->selectionModel()->currentIndex().data().value<Chat>().idChat;
+    message.chatId = ui->groupList->selectionModel()->currentIndex().data().value<Chat>().idChat;
     message.text = text.toStdString();
     message.nickname = QString::fromStdString(UserModel::instance()->getAcc().login);
     message.idOwner = UserModel::instance()->getId();
     message.timesend  = 0;
 
     chatModel->createMessage(message);
+    emit chatModel->messageCreateByUser(message);
     ui->messageInput->clear();
     auto net = AppNet::shared();
-    net->sendMsg(message,[](std::optional<string>&){});
+    net->sendMsg(message,chatModel->getSendMsgCallback());
     emit ui->chatList->doItemsLayout();
+    emit ui->groupList->doItemsLayout();
 }
 
 void MainWidget::on_groupList_clicked(const QModelIndex &index)

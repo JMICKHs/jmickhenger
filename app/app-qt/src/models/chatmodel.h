@@ -39,7 +39,6 @@ public:
     ChatModel(QObject *parent = nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    void createMessage(Msg &_message);
     void addCallbacks();
 
     void setData(std::vector<MessageItem>& msgs);
@@ -59,6 +58,9 @@ private:
     std::function<void(std::optional<string>&)> changeMsgCallback;
     std::function<void(std::optional<string>&)> delMsgCallback;
 signals:
+    void messageCreateByUser(const Msg &_message);
+public slots:
+    void createMessage(const Msg &_message);
 };
 
 #endif // CHATMODEL_H
