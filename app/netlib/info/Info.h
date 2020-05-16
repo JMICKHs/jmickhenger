@@ -5,22 +5,18 @@
 #ifndef NETLIB_INFO_H
 #define NETLIB_INFO_H
 
-
-#include <vector>
 #include <string>
-#include <ctime>
 #include <memory>
-#include "../parser/Parser.h"
 
-using namespace std;
+#include "../parser/Parser.h"
 
 class Codeble {
 public:
     Codeble();
-    virtual string encode() const = 0;
-    virtual void decode(const string & json) = 0;
+    virtual std::string encode() const = 0;
+    virtual void decode(const std::string & json) = 0;
 protected:
-    shared_ptr<AbstractParser> parser;
+    std::shared_ptr<AbstractParser> parser;
 };
 
 namespace inf {
@@ -28,136 +24,136 @@ namespace inf {
     public:
         MyAccount();
         MyAccount(int id,
-                const string & nickname,
-                const string & image,
-                const string & pass,
-                const vector<int> & chats,
-                const vector<int> & friends);
+                const std::string & nickname,
+                const std::string & image,
+                const std::string & pass,
+                const std::vector<int> & chats,
+                const std::vector<int> & friends);
         int id;
-        string login;
-        string pathToAvatar;
-        string password;
-        vector<int> chats;
-        vector<int> friends;
-        string encode() const override;
-        void decode(const string & json) override;
-        static const string nameId;
-        static const string nameLogin;
-        static const string namePathImage;
-        static const string namePassword;
-        static const string nameChats;
-        static const string nameFriends;
+        std::string login;
+        std::string pathToAvatar;
+        std::string password;
+        std::vector<int> chats;
+        std::vector<int> friends;
+        std::string encode() const override;
+        void decode(const std::string & json) override;
+        static const std::string nameId;
+        static const std::string nameLogin;
+        static const std::string namePathImage;
+        static const std::string namePassword;
+        static const std::string nameChats;
+        static const std::string nameFriends;
     };
 
     class UserInfo : public Codeble {
     public:
         UserInfo();
-        UserInfo(int id, const string & login, const string & image);
+        UserInfo(int id, const std::string & login, const std::string & image);
         int id;
-        string login;
-        string pathToAvatar;
-        string encode() const override;
-        void decode(const string & json) override;
-        static const string nameId;
-        static const string nameLogin;
-        static const string namePathImage;
-        static const string nameListFrnd;
+        std::string login;
+        std::string pathToAvatar;
+        std::string encode() const override;
+        void decode(const std::string & json) override;
+        static const std::string nameId;
+        static const std::string nameLogin;
+        static const std::string namePathImage;
+        static const std::string nameListFrnd;
     };
 
     class Message : public Codeble {
     public:
         Message();
         //ТУТ
-        Message(int id, int n, const string & text, int owner, time_t send, bool check);
+        Message(int id, int n, const std::string & text, int owner, time_t send, bool check);
         int chatId;
         int number;
-        string text;
+        std::string text;
         int idOwner;
         time_t timesend;
         bool checked;
-        string encode() const override;
-        void decode(const string & json) override;
-        static const string nameId;
-        static const string nameNumber;
-        static const string nameText;
-        static const string nameOwner;
-        static const string nameTime;
-        static const string nameCheck;
-        static const string nameArr;
+        std::string encode() const override;
+        void decode(const std::string & json) override;
+        static const std::string nameId;
+        static const std::string nameNumber;
+        static const std::string nameText;
+        static const std::string nameOwner;
+        static const std::string nameTime;
+        static const std::string nameCheck;
+        static const std::string nameArr;
     };
 
     class ChatInfo : public Codeble {
     public:
         ChatInfo();
-        ChatInfo(int id, const string & name);
+        ChatInfo(int id, const std::string & name);
         int idChat;
-        string name;
+        std::string name;
         bool operator ==(const ChatInfo &other) const;
-        string encode() const override;
-        void decode(const string & json) override;
-        static const string nameId;
-        static const string nameChat;
-        static const string nameChatList;
+        std::string encode() const override;
+        void decode(const std::string & json) override;
+        static const std::string nameId;
+        static const std::string nameChat;
+        static const std::string nameChatList;
     };
 
     class ChatRoom : public Codeble {
     public:
         ChatRoom();
-        ChatRoom(int id, const string & name, const vector<int> & users, const vector<int> & admins);
+        ChatRoom(int id, const std::string & name, const std::vector<int> & users, const std::vector<int> & admins);
         int idChat;
-        string name;
-        vector<int> idUsers;
-        vector<int> idAdmins;
-        string encode() const override;
-        void decode(const string & json) override;
-        static const string nameId;
-        static const string nameChat;
-        static const string nameUsers;
-        static const string nameAdmins;
-        static const string nameStart;
-        static const string nameEnd;
+        std::string name;
+        std::vector<int> idUsers;
+        std::vector<int> idAdmins;
+        std::string encode() const override;
+        void decode(const std::string & json) override;
+        static const std::string nameId;
+        static const std::string nameChat;
+        static const std::string nameUsers;
+        static const std::string nameAdmins;
+        static const std::string nameStart;
+        static const std::string nameEnd;
     };
 
     class ChatChange : public Codeble {
     public:
         ChatChange();
-        ChatChange(int id, const string & cmd, const vector<inf::Message> & msgs);
+        ChatChange(int id, const std::string & cmd, const std::vector<inf::Message> & msgs);
         int idChat;
-        string action;
-        vector<Message> messages;
-        string encode() const override;
-        void decode(const string & json) override;
-        static const string nameId;
-        static const string nameCmd;
-        static const string nameMsg;
+        std::string action;
+        std::vector<Message> messages;
+        std::string encode() const override;
+        void decode(const std::string & json) override;
+        static const std::string nameId;
+        static const std::string nameCmd;
+        static const std::string nameMsg;
     };
 
     class Reply : public Codeble {
     public:
         Reply();
-        Reply(const string & ec, int stat, int cmd, const string & body);
-        string err;
+        Reply(const std::string & ec, int stat, int cmd, const std::string & body);
+        std::string err;
         int status;
         int cmd;
-        string body;
-        string encode() const override;
-        void decode(const string & json) override;
-        static const string nameErr;
-        static const string nameStatus;
-        static const string nameCmd;
-        static const string nameBody;
+        std::string body;
+        std::string encode() const override;
+        void decode(const std::string & json) override;
+        static const std::string nameErr;
+        static const std::string nameStatus;
+        static const std::string nameCmd;
+        static const std::string nameBody;
     };
 
     class Query : public Codeble {
     public:
         Query();
-        Query(int command, const string & essence);
+        Query(int command, const std::string & essence);
         int cmd;
-        string body;
-        string encode() const override;
-        void decode(const string & json) override;
-        static const string nameCmd;
-        static const string nameBody;
+        std::string body;
+        std::string encode() const override;
+        void decode(const std::string & json) override;
+        static const std::string nameCmd;
+        static const std::string nameBody;
     };
 }
 

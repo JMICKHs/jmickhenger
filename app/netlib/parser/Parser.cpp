@@ -4,6 +4,9 @@
 
 #include "Parser.h"
 
+using namespace std;
+namespace bptree = boost::property_tree;
+
 void Parser::addBool(bool value, const string &name) {
     root.put(name, value);
 }

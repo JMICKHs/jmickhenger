@@ -133,3 +133,15 @@ TEST(testCodeble, test2) {
         ASSERT_EQ(acc.friends[i], frndsTest[i]);
     }
 }
+
+TEST(testCodeble, test3) {
+    string json = "{\n"
+                  "    \"idChat\": \"78\",\n"
+                  "    \"number\": \"6\",\n"
+                  "    \"text\": \"msg number 6 for 78 chat from 99 user\",\n"
+                  "    \"owner\": \"99\",\n"
+                  "    \"time\": \"1589639870\",\n"
+                  "    \"checked\": \"false\"\n"
+                  "}";
+    Message msg; msg.decode(json);
+}

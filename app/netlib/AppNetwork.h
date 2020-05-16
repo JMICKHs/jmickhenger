@@ -5,69 +5,53 @@
 #ifndef NETLIB_APPNETWORK_H
 #define NETLIB_APPNETWORK_H
 
-
-
-
-
-#include "announcer/Announcer.h"
-#include <boost/bind.hpp>
-#include "client/Client.h"
-#include "cache/Cache.h"
-#include "info/Info.h"
-#include <string>
-#include <functional>
-#include <vector>
-#include <optional>
-#include <memory>
-#include <mutex>
 #include <unordered_map>
 
-using namespace std;
-using namespace inf;
+#include "announcer/Announcer.h"
+#include "client/Client.h"
+#include "cache/Cache.h"
 
-using errstr = optional<string>;
+using errstr = std::optional<std::string>;
 
-class AppNet: public enable_shared_from_this<AppNet> {
+class AppNet: public std::enable_shared_from_this<AppNet> {
 public:
     AppNet(const AppNet &other) = delete;
     AppNet(AppNet &&other) = delete;
-    static shared_ptr<AppNet> shared();
-    void runClient(const function<void(int)> & errHandler);
+    static std::shared_ptr<AppNet> shared();
+    void runClient(const std::function<void(int)> & errHandler);
     void stopClient();
     bool check() {} //TODO
-    optional<MyAccount> accFromCache(); //TODO
-    void auth(const string & login, const string & pass, const function<void(MyAccount &, errstr &)> & callback);
-    void registration(const MyAccount & acc, const function<void(int, errstr &)>& callback);
-    void getListChat(int idUser, const function<void(vector<ChatInfo> &, errstr &)> & callback);
-    void getChatRoom(int idUser, int idChat, const function<void(ChatRoom &, errstr &)> & callback);
-    void sendMsg(const Message & msg, const function<void(errstr &)> & callback);
-    void setObserverChat(int idChat, const function<void(ChatChange &)>& callback);
-    void setObserverUnknownChat(const function<void(ChatChange &)>& callback);
-    void getMsgs(int idUser, int idChat, int start, int end, const function<void(vector<Message> &, errstr &)> & callback);
-    void getLastMsg(int idUser, int idChat, const function<void(Message &, errstr &)> & callback);
-    void addFrnd(int idUser, int idFrnd, const function<void(errstr &)> & callback);
-    void getListFrnd(int id, const function<void(vector<int> &, errstr &)> & callback);
-    void delFrnd(int idUser, int idFrnd, const function<void(errstr &)> & callback);
-    void getInfoMe(int id, const function<void(MyAccount &, errstr &)> & callback);
-    void getUser(int myId, int id, const function<void(UserInfo &, errstr &)> & callback);
-    void createChat(const ChatRoom & room, const function<void(int, errstr &)> & callback);
-    void addAdminChat(int idChat, int idUser, const function<void(errstr &)> & callback){}//TODO
-    void dellChat(int idChat, const function<void(errstr &)> & callback){}//TODO
-    void dellMsg(int idChat, int numberMsg, const function<void(errstr &)> & callback){}//TODO
-    void changeMsg(const Message & msg, const function<void(errstr &)> & callback){}//TODO
-    void saveAvatar(const string & path, const function<void(errstr &)> & callback){}//TODO
-    void changeMe(const inf::MyAccount & acc, const function<void(errstr &)> & callback){}//TODO
+    std::optional<inf::MyAccount> accFromCache(); //TODO
+    void auth(const std::string & login, const std::string & pass, const std::function<void(inf::MyAccount &, errstr &)> & callback);
+    void registration(const inf::MyAccount & acc, const std::function<void(int, errstr &)>& callback);
+    void getListChat(int idUser, const std::function<void(std::vector<inf::ChatInfo> &, errstr &)> & callback);
+    void getChatRoom(int idUser, int idChat, const std::function<void(inf::ChatRoom &, errstr &)> & callback);
+    void sendMsg(const inf::Message & msg, const std::function<void(errstr &)> & callback);
+    void setObserverChat(int idChat, const std::function<void(inf::ChatChange &)>& callback);
+    void setObserverUnknownChat(const std::function<void(inf::ChatChange &)>& callback);
+    void getMsgs(int idUser, int idChat, int start, int end, const std::function<void(std::vector<inf::Message> &, errstr &)> & callback);
+    void getLastMsg(int idUser, int idChat, const std::function<void(inf::Message &, errstr &)> & callback);
+    void addFrnd(int idUser, int idFrnd, const std::function<void(errstr &)> & callback);
+    void getListFrnd(int id, const std::function<void(std::vector<int> &, errstr &)> & callback);
+    void delFrnd(int idUser, int idFrnd, const std::function<void(errstr &)> & callback);
+    void getInfoMe(int id, const std::function<void(inf::MyAccount &, errstr &)> & callback);
+    void getUser(int myId, int id, const std::function<void(inf::UserInfo &, errstr &)> & callback);
+    void createChat(const inf::ChatRoom & room, const std::function<void(int, errstr &)> & callback);
+    void addAdminChat(int idChat, int idUser, const std::function<void(errstr &)> & callback){}//TODO
+    void dellChat(int idChat, const std::function<void(errstr &)> & callback){}//TODO
+    void dellMsg(int idChat, int numberMsg, const std::function<void(errstr &)> & callback){}//TODO
+    void changeMsg(const inf::Message & msg, const std::function<void(errstr &)> & callback){}//TODO
+    void saveAvatar(const std::string & path, const std::function<void(errstr &)> & callback){}//TODO
+    void changeMe(const inf::MyAccount & acc, const std::function<void(errstr &)> & callback){}//TODO
 private:
     explicit AppNet();
-    void readHandler(const string & str);
+    void readHandler(const std::string & str);
     void setHandlers();
-    static optional<shared_ptr<AppNet>> single;
-    unique_ptr<Announcer> announcer;
-    unique_ptr<AbstractCache> cache; //TODO
-    shared_ptr<AbstractClient> client;
-    unordered_map<int, function<void(int, errstr &, const string &)>> handlers;
+    std::unique_ptr<Announcer> announcer;
+    std::unique_ptr<AbstractCache> cache; //TODO
+    std::shared_ptr<AbstractClient> client;
+    std::unordered_map<int, std::function<void(int, errstr &, const std::string &)>> handlers;
     // почему unoredered? в среднем работает за O(1) и мы не меняем в нём данные, поэтому худшего случая не будет
-    static std::mutex mtx;
     bool clientStarted = false;
     enum class Cmds: int {
         registration = 1,

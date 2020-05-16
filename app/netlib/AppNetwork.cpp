@@ -1,8 +1,7 @@
 #include "AppNetwork.h"
 
-std::mutex AppNet::mtx = std::mutex();
-
-optional<shared_ptr<AppNet>> AppNet::single = nullopt;
+using namespace std;
+using namespace inf;
 
 string getIdNameForServer(int id) {
     return "id: " + to_string(id);
@@ -19,14 +18,8 @@ AppNet::AppNet() {
 }
 
 shared_ptr<AppNet> AppNet::shared() {
-    if(!single) {
-        mtx.lock();
-        if (!single) {
-            single = shared_ptr<AppNet>(new AppNet);
-        }
-        mtx.unlock();
-    }
-    return single.value();
+    static shared_ptr<AppNet> single(new AppNet);//make_shared использовать нельзя, так как нет доступного конструктора
+    return single;
 }
 
 void AppNet::runClient(const function<void(int)> & errHandler) {
@@ -201,6 +194,9 @@ void AppNet::setHandlers() {
         MyAccount acc;
         acc.decode(body);
         auto f = self->announcer->getCallback<string, int, errstr &>(cmd, acc.login);
+        if(!err) {
+            self->client->write(getIdNameForServer(acc.id));
+        }
         if (f) {
             f.value()(acc.id, err);
         } else {
@@ -212,6 +208,9 @@ void AppNet::setHandlers() {
         MyAccount acc;
         acc.decode(body);
         auto f = self->announcer->getCallback<string, inf::MyAccount &, errstr &>(cmd, acc.login);
+        if(!err) {
+            self->client->write(getIdNameForServer(acc.id));
+        }
         if (f) {
             f.value()(acc, err);
         } else {
@@ -357,6 +356,10 @@ void AppNet::setHandlers() {
         }
     };
     handlers[(int)Cmds::createChat] = f14;
+}
+
+optional<MyAccount> AppNet::accFromCache() {
+    return nullopt;
 }
 
 

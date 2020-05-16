@@ -1,18 +1,15 @@
 #include "Client.h"
 
+
+using boost::asio::ip::tcp;
+namespace ba = boost::asio;
+using namespace std;
+
 ba::io_service Client::service = ba::io_service();
-optional<shared_ptr<Client>> Client::single = nullopt;
-std::mutex Client::mtx = std::mutex();
 
 shared_ptr<Client> Client::shared()  {
-    if (!single) {
-        mtx.lock();
-        tcp::resolver resolver(service);
-        auto eit = resolver.resolve({"23.111.202.91", "8841"});
-        single = shared_ptr<Client>(new Client(eit));
-        mtx.unlock();
-    }
-    return single.value();
+    static shared_ptr<Client> single(new Client(service));
+    return single;
 }
 
 void Client::run() {
@@ -49,8 +46,9 @@ void Client::setErrHandler(const function<void(int)> &f) {
     errHandler = f;
 }
 
-Client::Client(tcp::resolver::iterator &endpointIterator) : sock(service) {
-    eit = endpointIterator;
+Client::Client(ba::io_service & service): sock(service) {
+    tcp::resolver resolver(service);
+    eit = resolver.resolve({"23.111.202.91", "8841"});
 }
 
 void Client::connect(tcp::resolver::iterator &it) {

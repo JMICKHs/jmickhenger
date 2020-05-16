@@ -4,6 +4,8 @@
 
 #include "Info.h"
 
+using namespace std;
+
 Codeble::Codeble() {
     parser = shared_ptr<AbstractParser>(new Parser);
 }
