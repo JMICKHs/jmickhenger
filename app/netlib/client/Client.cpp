@@ -1,5 +1,7 @@
 #include "Client.h"
 
+#include <fstream>
+#include <cassert>
 
 using boost::asio::ip::tcp;
 namespace ba = boost::asio;
@@ -7,8 +9,32 @@ using namespace std;
 
 ba::io_service Client::service = ba::io_service();
 
+optional<pair<string, string>> getHostFromConfig() {
+    static string fileConfig = "../netlib/configs/clientConfig";
+    static string ipKey = "IP:";
+    static string portKey = "PORT:";
+    pair<string, string> result;
+    ifstream conf(fileConfig);
+    string line;
+    getline(conf, line);
+    if(line == ipKey) {
+        getline(conf, line);
+        result.first = line;
+    } else {
+        return nullopt;
+    }
+    getline(conf, line);
+    if(line == portKey) {
+        getline(conf, line);
+        result.second = line;
+    } else {
+        return nullopt;
+    }
+    return result;
+}
+
 shared_ptr<Client> Client::shared()  {
-    static shared_ptr<Client> single(new Client(service));
+    static shared_ptr<Client> single(new Client);
     return single;
 }
 
@@ -46,9 +72,12 @@ void Client::setErrHandler(const function<void(int)> &f) {
     errHandler = f;
 }
 
-Client::Client(ba::io_service & service): sock(service) {
+Client::Client(): sock(service) {
     tcp::resolver resolver(service);
-    eit = resolver.resolve({"23.111.202.91", "8841"});
+    auto host = getHostFromConfig();
+    assert(host && "config неправильно заполнен\n"); //assert тут для того, чтобы во время разработки не ломать голову
+    // где же крашнулось. В проде assert никогда не сработает
+    eit = resolver.resolve({host.value().first, host.value().second});
 }
 
 void Client::connect(tcp::resolver::iterator &it) {
@@ -121,5 +150,3 @@ void Client::writeFromQue() {
     };
     ba::async_write(sock, buf, handler);
 }
-
-

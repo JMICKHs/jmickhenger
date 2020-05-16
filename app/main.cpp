@@ -1,17 +1,20 @@
-#include <iostream>
-#include "netlib/announcer/Announcer.h"
-#include "netlib/client/Client.h"
 #include <ctime>
-#include "netlib/AppNetwork.h"
+#include <fstream>
 
+#include "netlib/AppNetwork.h"
 
 using namespace std;
 using namespace inf;
 
+
+
 int main() {
+
 
 //    Message msg(78, 6, "msg number 6 for 78 chat from 99 user", 99, time(nullptr), false);
 //    cout << msg.encode();
+
+
     auto net = AppNet::shared();
     net->runClient([](int ec) {
         cout << "connection err code - " << ec << endl;

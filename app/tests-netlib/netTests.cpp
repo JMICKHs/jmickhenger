@@ -8,7 +8,6 @@
 using namespace inf;
 using namespace std;
 
-
 TEST(testAnnounser, test1) {
     Announcer an;
     int c = 0;
@@ -144,4 +143,118 @@ TEST(testCodeble, test3) {
                   "    \"checked\": \"false\"\n"
                   "}";
     Message msg; msg.decode(json);
+    ASSERT_EQ(msg.chatId, 78);
+    ASSERT_EQ(msg.number, 6);
+    ASSERT_EQ(msg.text, "msg number 6 for 78 chat from 99 user");
+    ASSERT_EQ(msg.idOwner, 99);
+    ASSERT_EQ(msg.timesend, 1589639870);
+    ASSERT_EQ(msg.checked, false);
+}
+
+TEST(testCodeble, test4) {
+    string json = "{\n"
+                  "    \"idUser\": \"4\",\n"
+                  "    \"login\": \"testUser\",\n"
+                  "    \"pathImage\": \"3avatar.jpg\"\n"
+                  "}";
+    UserInfo info; info.decode(json);
+    ASSERT_EQ(info.id, 4);
+    ASSERT_EQ(info.login, "testUser");
+    ASSERT_EQ(info.pathToAvatar, "3avatar.jpg");
+}
+
+TEST(testCodeble, test5) {
+    string json = "{\n"
+                  "    \"idChat\": \"6\",\n"
+                  "    \"name\": \"testName\",\n"
+                  "    \"users\": [\n"
+                  "        \"5\",\n"
+                  "        \"19\",\n"
+                  "        \"90\"\n"
+                  "    ],\n"
+                  "    \"admins\": [\n"
+                  "        \"5\"\n"
+                  "    ]\n"
+                  "}";
+    ChatRoom room; room.decode(json);
+    ASSERT_EQ(room.idChat, 6);
+    ASSERT_EQ(room.name, "testName");
+    vector<int> testUsers = {5, 19, 90};
+    for(size_t i = 0; i < room.idUsers.size(); ++i) {
+        ASSERT_EQ(testUsers.at(i), room.idUsers.at(i));
+    }
+    vector<int> testAdmins = {5};
+    for(size_t i = 0; i < room.idAdmins.size(); ++i) {
+        ASSERT_EQ(testAdmins.at(i), room.idAdmins.at(i));
+    }
+}
+
+TEST(testCodeble, test6) {
+    string json = "{\n"
+                  "    \"idChat\": \"78\",\n"
+                  "    \"cmd\": \"newMsg\",\n"
+                  "    \"messages\": [\n"
+                  "        {\n"
+                  "            \"idChat\": \"6\",\n"
+                  "            \"number\": \"2\",\n"
+                  "            \"text\": \"randomText\",\n"
+                  "            \"owner\": \"999\",\n"
+                  "            \"time\": \"1589657915\",\n"
+                  "            \"checked\": \"false\"\n"
+                  "        }\n"
+                  "    ]\n"
+                  "}";
+
+    ChatChange change; change.decode(json);
+    ASSERT_EQ(change.idChat, 78);
+    ASSERT_EQ(change.action, "newMsg");
+    Message testMsg(6, 2, "randomText", 999, time(nullptr), false);
+    vector<Message> testMsgs = {testMsg};
+    for(size_t i = 0; i < change.messages.size(); ++i) {
+        ASSERT_EQ(testMsgs.at(i).text, change.messages.at(i).text);
+        // дальше нет смысла проверять, и так inf::Message уже проверен
+    }
+}
+
+TEST(testCodeble, test7) {
+    string json = "{\n"
+                  "    \"error\": \"\",\n"
+                  "    \"status\": \"0\",\n"
+                  "    \"cmd\": \"5\",\n"
+                  "    \"body\": {\n"
+                  "        \"idChat\": \"6\",\n"
+                  "        \"number\": \"2\",\n"
+                  "        \"text\": \"randomText\",\n"
+                  "        \"owner\": \"999\",\n"
+                  "        \"time\": \"1589658525\",\n"
+                  "        \"checked\": \"false\"\n"
+                  "    }\n"
+                  "}";
+    Message testMsg(6, 2, "randomText", 999, time(nullptr), false);
+    Reply reply; reply.decode(json);
+    ASSERT_EQ(reply.cmd, 5);
+    ASSERT_EQ(reply.err, "");
+    ASSERT_EQ(reply.status, 0);
+    Message msg; msg.decode(reply.body);
+    ASSERT_EQ(msg.text, testMsg.text);
+    // дальше нет смысла проверять, и так inf::Message уже проверен
+}
+
+TEST(testCodeble, test8) {
+    string json = "{\n"
+                  "    \"cmd\": \"5\",\n"
+                  "    \"body\": {\n"
+                  "        \"idChat\": \"6\",\n"
+                  "        \"number\": \"2\",\n"
+                  "        \"text\": \"randomText\",\n"
+                  "        \"owner\": \"999\",\n"
+                  "        \"time\": \"1589659581\",\n"
+                  "        \"checked\": \"false\"\n"
+                  "    }\n"
+                  "}";
+
+    Query query; query.decode(json);
+    ASSERT_EQ(query.cmd, 5);
+    Message testMsg; testMsg.decode(query.body);
+    ASSERT_EQ(testMsg.text, "randomText");
 }

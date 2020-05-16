@@ -38,7 +38,7 @@ public:
     void setMsgHandler(const std::function<void(const std::string &)> & f) override;
     void setErrHandler(const std::function<void(int)> & f) override;
 private:
-    explicit Client(boost::asio::io_service & service);
+    explicit Client();
     void connect(boost::asio::ip::tcp::resolver::iterator & it);
     void loopRead();
     bool readCondition(const boost::system::error_code & err, size_t length);

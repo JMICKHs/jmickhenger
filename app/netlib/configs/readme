@@ -1,2 +1,2 @@
-в clientConfig необходимо указать ip и порт
+в clientConfig необходимо указать ip и порт согласно примеру
 в testUserCinfig необходимо пооложить сущность inf::MyAccount в виде JSON
