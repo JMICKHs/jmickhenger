@@ -107,7 +107,7 @@ void MainWidget::sendMessageFromInput()
 
     Msg message;
     QString text = ui->messageInput->toPlainText().trimmed();
-    if(text.size() > 1024)
+    if(text.size() > 1024 || text == "")
         return;
     removeDoubleEnter(text);
     message.chatId = ui->groupList->selectionModel()->currentIndex().data().value<Chat>().idChat;

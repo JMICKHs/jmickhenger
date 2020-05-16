@@ -1,6 +1,8 @@
 #include "chatmodel.h"
 #include <memory>
 #include <QDebug>
+#include <unordered_set>
+#include <netlib/AppNetwork.h>
 
 ChatModel::ChatModel(QObject *parent)
     :QAbstractListModel(parent)
@@ -65,6 +67,15 @@ void ChatModel::addCallbacks()
             self->errString = err;
         }
     };
+    userInfForMessage = [self = shared_from_this()](inf::UserInfo &info,std::optional<string>&err){
+        if(err == nullopt){
+            std::for_each(self->items.begin(),self->items.end(),[info](Msg& msg){
+                 if(msg.idOwner == info.id){
+                     msg.nickname = QString::fromStdString(info.login);
+                 }
+            });
+        }
+    };
 }
 
 void ChatModel::setData(std::vector<MessageItem> &msgs)
@@ -72,10 +83,14 @@ void ChatModel::setData(std::vector<MessageItem> &msgs)
     items.clear();
     int row = this->rowCount();
     items.reserve(msgs.size());
+    auto iniqIds = getUniqueIds(msgs);
     beginInsertRows(QModelIndex(),row,msgs.size() - 1);
     for(auto &obj : msgs){
         qDebug() << QString::fromStdString(obj.text);
         items.emplace_back(Msg(obj));
+    }
+    for(auto &obj : iniqIds){
+        AppNet::shared()->getUser(obj,userInfForMessage);
     }
     endInsertRows();
 }
@@ -104,6 +119,15 @@ void ChatModel::DeleteMessage(int pos)
 {
     if(pos >= 0 && pos < items.size())
         items.erase(items.begin() + pos);
+}
+
+std::vector<int> ChatModel::getUniqueIds(const std::vector<MessageItem> &vec)
+{
+    std::unordered_set<int> set;
+    std::for_each(vec.begin(),vec.end(),[&set](const MessageItem& p){
+        set.insert(p.idOwner);
+    });
+    return std::vector<int>(set.begin(),set.end());
 }
 
 

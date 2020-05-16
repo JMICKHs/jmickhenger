@@ -50,8 +50,15 @@ void GroupDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     painter->drawText(GroupNameRect, Qt::TextSingleLine,
                       font.elidedText(QString::fromStdString(item.name),Qt::ElideRight,width - textRigthOffset));
 
+   //QRect LastMessageNick = QRect(groupIconSize.width() + textLeftOffset,
+    //                              GroupNameRect.y() + lastMessageTopOffset,width - textRigthOffset,baseTextHeigth);
+    //
+    //painter->setPen(QColor(76,148,224));
+    //painter->drawText(LastMessageNick, Qt::TextSingleLine,
+    //                  font.elidedText(item.lastMessage.nickname + ':',Qt::ElideRight,width - textRigthOffset));
+
     f.setBold(false);
-    QRect LastMessageRect = QRect(groupIconSize.width() + textLeftOffset,
+    QRect LastMessageRect = QRect(groupIconSize.width() + textLeftOffset + 5,
                                   GroupNameRect.y() + lastMessageTopOffset,width - textRigthOffset,baseTextHeigth);
     painter->setFont(f);
     painter->setPen(palette.text().color());

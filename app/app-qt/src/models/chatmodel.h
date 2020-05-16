@@ -57,10 +57,13 @@ private:
     std::function<void(std::optional<string>&)> sendMsgCallback;
     std::function<void(std::optional<string>&)> changeMsgCallback;
     std::function<void(std::optional<string>&)> delMsgCallback;
+    std::function<void(inf::UserInfo &info,std::optional<string>&)> userInfForMessage;
+    std::vector<int> getUniqueIds(const std::vector<MessageItem> &vec);
 signals:
     void messageCreateByUser(const Msg &_message);
 public slots:
     void createMessage(const Msg &_message);
+
 };
 
 #endif // CHATMODEL_H
