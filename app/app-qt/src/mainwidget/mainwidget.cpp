@@ -114,7 +114,9 @@ void MainWidget::sendMessageFromInput()
     message.text = text.toStdString();
     message.nickname = QString::fromStdString(UserModel::instance()->getAcc().login);
     message.idOwner = UserModel::instance()->getId();
-    message.timesend  = 0;
+    long int ttime;
+    ttime = time(NULL);
+    message.timesend  = ttime;
 
     chatModel->createMessage(message);
     emit chatModel->messageCreateByUser(message);

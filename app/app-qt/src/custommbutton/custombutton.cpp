@@ -49,8 +49,4 @@ void CustomButton::setButtonRect(const QRect &rect)
     this->setGeometry(rect);
 }
 
-void CustomButton::clickedById()
-{
-    emit sendId(id);
-}
 
