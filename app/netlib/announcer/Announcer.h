@@ -8,6 +8,7 @@
 #include <map>
 #include <functional>
 #include <optional>
+#include <memory>
 
 #include "../info/Info.h"
 
@@ -20,22 +21,20 @@ public:
     void notifyChat(inf::ChatChange & change);
     template<typename Context, typename... Args>
     void addCallback(int cmd, Context context, const std::function<void(Args...)>& callback) {
-        Context * tmpContext = new Context; //выделяем память, что бы не потерялось =) при удалении очистим
-        *tmpContext = context;
-        auto item = std::pair<void *, void *>((void *)tmpContext, (void *)&callback); //value - контекст и функция
-        callbacks.insert(std::pair<int, std::pair<void *, void *>>(cmd, item));
+        auto tmpContext = std::make_shared<Context>(context);
+        auto item = std::pair<std::shared_ptr<void>, void *>(std::move(tmpContext), (void *)&callback); //value - контекст и функция
+        callbacks.insert(std::pair<int, std::pair<std::shared_ptr<void>, void *>>(cmd, item));
     }
     template<typename Context, typename... Args>
     std::optional<std::function<void(Args...)>> getCallback(int cmd, Context context) {
         auto iterPair = callbacks.equal_range(cmd);
         for (; iterPair.first != iterPair.second; ++iterPair.first) {
             auto tmpIter = iterPair.first;
-            Context * itemContext = (Context *)tmpIter->second.first;
+            Context * itemContext = (Context *)tmpIter->second.first.get();
             if(context == *itemContext) {
                 auto tmpF = tmpIter->second.second; // берем указатель void на функцию
                 auto f = reinterpret_cast<std::function<void(Args...)> *>(tmpF); // возвращаем тип на нужный
                 callbacks.erase(tmpIter); // удаляем пару ключ значение
-                delete itemContext; // освобождаем память, что выделели на контекст
                 //(возможно подумать и переделать на умный указатель), но решение с двумя void * кажется красивым
                 return *f;
             }
@@ -45,7 +44,7 @@ public:
 private:
     std::map<int, std::function<void(inf::ChatChange &)>> chatCallbacks;
     std::optional<std::function<void(inf::ChatChange &)>> generalCallback; // для обработки чатов, о которых юзер пока не знает
-    std::multimap<int, std::pair<void *, void *>> callbacks; // для хранения различных callback
+    std::multimap<int, std::pair<std::shared_ptr<void>, void *>> callbacks; // для хранения различных callback
     // int - cmd различных callback
     // первый void * - контекст
     // второй void * - callback
