@@ -9,14 +9,13 @@ using namespace std;
 using namespace inf;
 
 int main() {
-    MyAccount acc(78, "testUser", "3", "12345", {1, 189, 90}, {78, 90, 23});
-    cout << acc.encode();
-//    auto net = AppNet::shared();
-//    net->runClient([](int ec) {
-//        cout << "connection err code - " << ec << endl;
-//    });
-//    int c = 0;
-//    int idUser = 78;
+
+    auto net = AppNet::shared();
+    net->runClient([](int ec) {
+        cout << "connection err code - " << ec << endl;
+    });
+    int c = 0;
+    int idUser = 78;
 //
 //    MyAccount acc;
 //    acc.login = "testUser";
@@ -25,9 +24,18 @@ int main() {
 //        cout << "Я получил id - " << id << endl;
 //    });
 //    sleep(4);
-//    net->auth("vasia", "12345", [](MyAccount & acc, optional<string> &) {
-//        cout << acc.login << " смог ввойти в чат!\n";
-//    });
+    net->auth("vasadhsadjh", "12345", [](MyAccount & acc, optional<string> &) {
+        cout << acc.login << " смог ввойти в чат!\n";
+    });
+    string text;
+    while(getline(cin, text)) {
+        Message msg;
+        msg.text = text;
+        net->sendMsg(msg, [](optional<string> &){
+
+        });
+    }
+        net->stopClient();
 //    sleep(4);
 //    net->getListChat(4, [](vector<ChatInfo> & a, optional<string> &) {
 //        cout << "чаты\n";
@@ -47,7 +55,7 @@ int main() {
 //
 //    sleep(3);
 //
-//    net->stopClient();
+
 
 
 

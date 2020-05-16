@@ -40,7 +40,7 @@ void inf::MyAccount::decode(const string &json) {
     chats = parser->getArrInt(nameChats);
 }
 
-const string inf::MyAccount::nameId = "id";
+const string inf::MyAccount::nameId = "myId";
 const string inf::MyAccount::nameLogin = "login";
 const string inf::MyAccount::namePathImage = "pathImage";
 const string inf::MyAccount::namePassword = "password";
@@ -69,7 +69,7 @@ void inf::UserInfo::decode(const string &json) {
     pathToAvatar = parser->getStr(namePathImage);
 }
 
-const string inf::UserInfo::nameId = "id";
+const string inf::UserInfo::nameId = "idUser";
 const string inf::UserInfo::nameLogin = "login";
 const string inf::UserInfo::namePathImage = "pathImage";
 const string inf::UserInfo::nameListFrnd = "frnds";
@@ -130,7 +130,7 @@ void inf::ChatInfo::decode(const string & json) {
     name = parser->getStr(nameChat);
 }
 
-const string inf::ChatInfo::nameId = "id";
+const string inf::ChatInfo::nameId = "idChat";
 const string inf::ChatInfo::nameChat = "name";
 const string inf::ChatInfo::nameChatList = "chatList";
 
@@ -164,7 +164,7 @@ void inf::ChatRoom::decode(const string & json) {
     idAdmins = parser->getArrInt(nameAdmins);
 }
 
-const string inf::ChatRoom::nameId = "id";
+const string inf::ChatRoom::nameId = "idChat";
 const string inf::ChatRoom::nameChat = "name";
 const string inf::ChatRoom::nameUsers = "users";
 const string inf::ChatRoom::nameAdmins = "admins";
@@ -201,7 +201,7 @@ void inf::ChatChange::decode(const string &json) {
     }
 }
 
-const string inf::ChatChange::nameId = "id";
+const string inf::ChatChange::nameId = "idChat";
 const string inf::ChatChange::nameCmd = "cmd";
 const string inf::ChatChange::nameMsg = "messages";
 

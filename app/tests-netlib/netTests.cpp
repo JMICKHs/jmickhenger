@@ -95,7 +95,7 @@ TEST(testAnnounser, test5) {
 
 TEST(testCodeble, test1) {
     string json = "{\n"
-                  "    \"id\": \"5\",\n"
+                  "    \"idChat\": \"5\",\n"
                   "    \"name\": \"testChat\"\n"
                   "}";
     ChatInfo info; info.decode(json);
@@ -105,7 +105,7 @@ TEST(testCodeble, test1) {
 
 TEST(testCodeble, test2) {
     string json = "{\n"
-                  "    \"id\": \"78\",\n"
+                  "    \"myId\": \"78\",\n"
                   "    \"login\": \"testUser\",\n"
                   "    \"password\": \"12345\",\n"
                   "    \"pathImage\": \"3\",\n"
