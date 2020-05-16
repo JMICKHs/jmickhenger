@@ -46,4 +46,3 @@ void test_chat::test_case3()
 //   this->textMessage->clear();
 }
 
-#include "test_chat.moc"

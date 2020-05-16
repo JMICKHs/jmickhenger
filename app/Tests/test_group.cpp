@@ -13,8 +13,8 @@ test_group::~test_group()
 
 void test_group::test_gr1()
 {
-//    QTest::mouseClick(this->menu,Qt::LeftButton);
-//    QCOMPARE(this->menuWidget->isVisible(),1);
+     QTest::mouseClick(this->menuWidget,Qt::LeftButton);
+     QCOMPARE(this->menuWidget->isVisible(),1);
 
 }
 
@@ -63,4 +63,3 @@ void test_group::test_gr4()
 //    QCOMPARE(lastMessage,chat.lastMessage);
 }
 
-#include "test_group.moc"
