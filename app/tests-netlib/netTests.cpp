@@ -258,3 +258,49 @@ TEST(testCodeble, test8) {
     Message testMsg; testMsg.decode(query.body);
     ASSERT_EQ(testMsg.text, "randomText");
 }
+
+
+TEST(cache, test1) {
+    Cache cache;
+    int id = 9;
+    UserInfo info(id, "testLogin", "3aavatar.jpg");
+    ASSERT_EQ(true, cache.save(info));
+    auto user = cache.getUser(id);
+    ASSERT_EQ((bool)user, true);
+    if(user) {
+        ASSERT_EQ(user.value().id, info.id);
+        ASSERT_EQ(user.value().login, info.login);
+        ASSERT_EQ(user.value().pathToAvatar, info.pathToAvatar);
+    }
+}
+
+TEST(cache, test2) {
+    Cache cache;
+    MyAccount acc(6, "testNick", "3avatar.jpg", "12345", {5, 78}, {8, 9, 10, 11});
+    ASSERT_EQ(cache.save(acc), true);
+    auto test = cache.getMyAccount();
+    ASSERT_EQ((bool)test, true);
+    if(test) {
+        ASSERT_EQ(test.value().id, acc.id);
+        ASSERT_EQ(test.value().login, acc.login);
+        ASSERT_EQ(test.value().pathToAvatar, acc.pathToAvatar);
+        ASSERT_EQ(test.value().password, acc.password);
+        ASSERT_EQ(test.value().friends, acc.friends);
+        ASSERT_EQ(test.value().chats, acc.chats);
+    }
+}
+
+TEST(cache, test3) {
+    Cache cache;
+    inf::ChatInfo i1(1, "test1");
+    inf::ChatInfo i2(2, "test2");
+    inf::ChatInfo i3(1, "test3");
+    vector<inf::ChatInfo> vec = {i1, i2, i3};
+    cache.save(vec);
+    vector<inf::ChatInfo> test = cache.getChatList();
+    ASSERT_EQ(test.size(), vec.size());
+    for (size_t i = 0; i < vec.size(); ++i) {
+        ASSERT_EQ(vec[i].idChat, test[i].idChat);
+        ASSERT_EQ(vec[i].name, test[i].name);
+    }
+}
