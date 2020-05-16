@@ -27,8 +27,23 @@ LoginWidget::LoginWidget(QWidget *parent) :
     this->setPalette(Pal);
     auto net = AppNet::shared();
     net->runClient([](int){});
+
+    ui->avatarButton->setFlat(true);
+    ui->avatarButton->setFixedSize(70,70);
+    QPixmap pix1("/home/kostikan/jmickhenger/app/img/standartAvatar.jpg");
+    QPixmap pix(pix1.scaled(55,55, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
+    QPalette palette;
+    palette.setBrush(ui->avatarButton->backgroundRole(), QBrush(pix));
+    ui->avatarButton->setAutoFillBackground(true);
+    ui->avatarButton->setPalette(palette);
+    QRect rect(0,0,55,55);
+    QRegion region(rect, QRegion::Ellipse);
+    ui->avatarButton->setMask(region);
+
     connect(UserModel::instance(),&UserModel::showMainWidget,this,&LoginWidget::showMainWidgetSlot);
     connect(UserModel::instance(),&UserModel::showMainWidget,this,&LoginWidget::close);
+    avatarWidget = new SetAvatarWidget(this);
+    connect(avatarWidget,&SetAvatarWidget::avatarChangeSignal,this,&LoginWidget::avatarChange);
 }
 
 void LoginWidget::login(const QString &log, const QString &password)
@@ -73,10 +88,33 @@ void LoginWidget::on_registrateButton_clicked()
     Account acc;
     acc.login = ui->loginRegInput->text().toStdString();
     acc.password = ui->fPassRegInput->text().toStdString();
+    acc.pathToAvatar = path.toStdString();
     this->registration(acc);
+}
+
+void LoginWidget::on_avatarButton_clicked()
+{
+    avatarWidget->show();
+    avatarWidget->move(pos().x() + size().width()/(4),
+               pos().y() + size().height()/(4));
+
+
+}
+
+void LoginWidget::avatarChange(const QString &path)
+{
+    QPixmap pix1(path);
+    QPixmap pix(pix1.scaled(55,55, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
+    QPalette palette;
+    palette.setBrush(ui->avatarButton->backgroundRole(), QBrush(pix));
+    ui->avatarButton->setAutoFillBackground(true);
+    ui->avatarButton->setPalette(palette);
+    this->path = path;
 }
 
 void LoginWidget::showMainWidgetSlot()
 {
     emit openMainWidget();
 }
+
+

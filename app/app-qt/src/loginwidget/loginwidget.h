@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <netlib/info/Info.h>
 #include <app-qt/src/models/usermodel.h>
+#include <app-qt/src/setavatarwidget/setavatarwidget.h>
 #include <memory>
 
 using namespace inf;
@@ -30,6 +31,9 @@ private slots:
     void on_returnButton_clicked();
     void on_registrateButton_clicked();
 
+    void on_avatarButton_clicked();
+    void avatarChange(const QString &path);
+
 public slots:
     void showMainWidgetSlot();
 
@@ -40,6 +44,8 @@ private:
     Ui::LoginWidget *ui;
     QWidget *log;
     QWidget *reg;
+    SetAvatarWidget *avatarWidget;
+    QString path;
 };
 
 #endif // LOGINWIDGET_H

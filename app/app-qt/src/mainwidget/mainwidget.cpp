@@ -130,7 +130,7 @@ void MainWidget::on_groupList_clicked(const QModelIndex &index)
     ui->label->setText(QString::fromStdString(index.model()->data(index).value<Chat>().name));
     auto net = AppNet::shared();
     Chat chat = index.model()->data(index).value<Chat>();
-    net->getMsgs(chat.idChat,0,50,chatModel->getChatCallback());
+    net->getMsgs(UserModel::instance()->getId(),chat.idChat,0,50,chatModel->getChatCallback());
     ui->chatList->doItemsLayout();
     ui->chatList->update();
 

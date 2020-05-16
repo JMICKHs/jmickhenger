@@ -11,7 +11,7 @@ using UserInf = inf::UserInfo;
 
 Q_DECLARE_METATYPE(UserInf)
 
-class FriendsModel : public QAbstractListModel, public enable_shared_from_this<FriendsModel>
+class FriendsModel : public QAbstractListModel, public std::enable_shared_from_this<FriendsModel>
 {
 public:
     FriendsModel();

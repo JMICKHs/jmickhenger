@@ -367,8 +367,8 @@ color:white;</string>
     <rect>
      <x>420</x>
      <y>20</y>
-     <width>350</width>
-     <height>471</height>
+     <width>436</width>
+     <height>478</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="mainRegistrationLayout">
@@ -485,6 +485,61 @@ border-image: url(&quot;/home/kostikan/jmickhenger/app/img/ret.png&quot;);
         <property name="sizeHint" stdset="0">
          <size>
           <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_10">
+      <item>
+       <spacer name="horizontalSpacer_19">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="avatarButton">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>60</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>60</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_20">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>320</width>
           <height>20</height>
          </size>
         </property>
@@ -713,7 +768,7 @@ color:white;</string>
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>140</height>
+        <height>150</height>
        </size>
       </property>
      </spacer>

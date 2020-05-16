@@ -26,13 +26,13 @@ public:
         char buffer [100];
         tm* timeinfo = localtime(&item.timesend);
         strftime(buffer,100,"%H-%M",timeinfo);
-        time = QString::fromStdString(string(buffer));
+        time = QString::fromStdString(std::string(buffer));
     }
     Msg(){type = MessageType::SELF_MESSAGE_IN_PROGRESS;}
 };
 
 Q_DECLARE_METATYPE(Msg)
-class ChatModel : public QAbstractListModel,public enable_shared_from_this<ChatModel>
+class ChatModel : public QAbstractListModel,public std::enable_shared_from_this<ChatModel>
 {
     Q_OBJECT
 public:
@@ -42,22 +42,22 @@ public:
     void addCallbacks();
 
     void setData(std::vector<MessageItem>& msgs);
-    std::function<void(std::vector<MessageItem>&,std::optional<string>&)> &getChatCallback() ;
-    std::function<void(std::optional<string>&)> &getSendMsgCallback() ;
-    std::function<void(std::optional<string>&)> &getChangeMsgCallback() ;
-    std::function<void(std::optional<string>&)> &getDelMsgCallback() ;
+    std::function<void(std::vector<MessageItem>&,std::optional<std::string>&)> &getChatCallback() ;
+    std::function<void(std::optional<std::string>&)> &getSendMsgCallback() ;
+    std::function<void(std::optional<std::string>&)> &getChangeMsgCallback() ;
+    std::function<void(std::optional<std::string>&)> &getDelMsgCallback() ;
 
     void slotEditMessage();
     void DeleteMessage(int pos);
 private:
     std::vector<Msg> items;
     bool newMessageOnBottom;
-    std::optional<string> errString;
-    std::function<void(std::vector<MessageItem>&,std::optional<string>&)> chatCallback;
-    std::function<void(std::optional<string>&)> sendMsgCallback;
-    std::function<void(std::optional<string>&)> changeMsgCallback;
-    std::function<void(std::optional<string>&)> delMsgCallback;
-    std::function<void(inf::UserInfo &info,std::optional<string>&)> userInfForMessage;
+    std::optional<std::string> errString;
+    std::function<void(std::vector<MessageItem>&,std::optional<std::string>&)> chatCallback;
+    std::function<void(std::optional<std::string>&)> sendMsgCallback;
+    std::function<void(std::optional<std::string>&)> changeMsgCallback;
+    std::function<void(std::optional<std::string>&)> delMsgCallback;
+    std::function<void(inf::UserInfo &info,std::optional<std::string>&)> userInfForMessage;
     std::vector<int> getUniqueIds(const std::vector<MessageItem> &vec);
 signals:
     void messageCreateByUser(const Msg &_message);

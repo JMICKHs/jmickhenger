@@ -10,49 +10,49 @@ void UserModel::setData(Account &acc)
     myAcc = std::move(acc);
 }
 
-std::function<void (bool, std::optional<string> &)> &UserModel::getSaveAvatarCallback()
+std::function<void (bool, std::optional<std::string> &)> &UserModel::getSaveAvatarCallback()
 {
     return saveAvatarCallback;
 }
 
-std::function<void (bool, std::optional<string> &)> &UserModel::getChangeMeCallback()
+std::function<void (bool, std::optional<std::string> &)> &UserModel::getChangeMeCallback()
 {
     return changeMeCallback;
 }
 
-std::function<void (Account&,std::optional<string>&)>& UserModel::getAuthCallback()
+std::function<void (Account&,std::optional<std::string>&)>& UserModel::getAuthCallback()
 {
     return authCallback;
 }
 
-std::function<void (int, std::optional<string> &)> &UserModel::getRegistrationCallback()
+std::function<void (int, std::optional<std::string> &)> &UserModel::getRegistrationCallback()
 {
     return registrationCallback;
 }
 
 void UserModel::setCallBacks()
 {
-    errString = nullopt;
-    saveAvatarCallback = [self = instance()](bool state,std::optional<string>& err){
-        if(err == nullopt){
+    errString = std::nullopt;
+    saveAvatarCallback = [self = instance()](bool state,std::optional<std::string>& err){
+        if(err == std::nullopt){
             self->errString = err;
         }
     };
-    changeMeCallback = [self = instance()](bool state,std::optional<string>& err){
-        if(err == nullopt){
+    changeMeCallback = [self = instance()](bool state,std::optional<std::string>& err){
+        if(err == std::nullopt){
             self->errString = err;
         }
     };
-    registrationCallback = [self = instance()](int id,std::optional<string>& err){
-        if(err == nullopt){
+    registrationCallback = [self = instance()](int id,std::optional<std::string>& err){
+        if(err == std::nullopt){
             self->myAcc.id = id;
             emit self->showMainWidget();
         }
         else
             self->errString = err;
     };
-    authCallback = [self = instance()](Account& newAcc,std::optional<string>& err){
-        if(err == nullopt){
+    authCallback = [self = instance()](Account& newAcc,std::optional<std::string>& err){
+        if(err == std::nullopt){
             self->setData(newAcc);
             emit self->showMainWidget();
         }

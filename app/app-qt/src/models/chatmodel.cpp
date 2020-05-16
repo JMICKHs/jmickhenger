@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <unordered_set>
 #include <netlib/AppNetwork.h>
+#include "app-qt/src/models/usermodel.h"
 
 ChatModel::ChatModel(QObject *parent)
     :QAbstractListModel(parent)
@@ -44,31 +45,31 @@ void ChatModel::createMessage(const Msg &_message)
 
 void ChatModel::addCallbacks()
 {
-    chatCallback = [self = shared_from_this()](std::vector<MessageItem>& msgs,std::optional<string>& err){
-        if(err == nullopt){
+    chatCallback = [self = shared_from_this()](std::vector<MessageItem>& msgs,std::optional<std::string>& err){
+        if(err == std::nullopt){
             self->setData(msgs);
         }
         else{
             self->errString = err;
         }
     };
-    sendMsgCallback = [self = shared_from_this()](std::optional<string>& err){
-        if(err != nullopt){
+    sendMsgCallback = [self = shared_from_this()](std::optional<std::string>& err){
+        if(err != std::nullopt){
             self->errString = err;
         }
     };
-    changeMsgCallback = [self = shared_from_this()](std::optional<string>& err){
-        if(err != nullopt){
+    changeMsgCallback = [self = shared_from_this()](std::optional<std::string>& err){
+        if(err != std::nullopt){
             self->errString = err;
         }
     };
-    delMsgCallback = [self = shared_from_this()](std::optional<string>& err){
-        if(err != nullopt){
+    delMsgCallback = [self = shared_from_this()](std::optional<std::string>& err){
+        if(err != std::nullopt){
             self->errString = err;
         }
     };
-    userInfForMessage = [self = shared_from_this()](inf::UserInfo &info,std::optional<string>&err){
-        if(err == nullopt){
+    userInfForMessage = [self = shared_from_this()](inf::UserInfo &info,std::optional<std::string>&err){
+        if(err == std::nullopt){
             std::for_each(self->items.begin(),self->items.end(),[info](Msg& msg){
                  if(msg.idOwner == info.id){
                      msg.nickname = QString::fromStdString(info.login);
@@ -90,27 +91,27 @@ void ChatModel::setData(std::vector<MessageItem> &msgs)
         items.emplace_back(Msg(obj));
     }
     for(auto &obj : iniqIds){
-        AppNet::shared()->getUser(obj,userInfForMessage);
+        AppNet::shared()->getUser(UserModel::instance()->getId(),obj,userInfForMessage);
     }
     endInsertRows();
 }
 
-std::function<void(std::vector<MessageItem>&,std::optional<string>&)>& ChatModel::getChatCallback()
+std::function<void(std::vector<MessageItem>&,std::optional<std::string>&)>& ChatModel::getChatCallback()
 {
     return chatCallback;
 }
 
-std::function<void (std::optional<string> &)>& ChatModel::getSendMsgCallback()
+std::function<void (std::optional<std::string> &)>& ChatModel::getSendMsgCallback()
 {
     return sendMsgCallback;
 }
 
-std::function<void (std::optional<string> &)>& ChatModel::getChangeMsgCallback()
+std::function<void (std::optional<std::string> &)>& ChatModel::getChangeMsgCallback()
 {
     return changeMsgCallback;
 }
 
-std::function<void (std::optional<string> &)>& ChatModel::getDelMsgCallback()
+std::function<void (std::optional<std::string> &)>& ChatModel::getDelMsgCallback()
 {
     return delMsgCallback;
 }

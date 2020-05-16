@@ -17,7 +17,7 @@ CreateGroupWidget::CreateGroupWidget(QWidget *parent) :
     createWidget->setLayout(ui->CreateGroupLayout);
     this->addWidget(contactsWidget);
     contactsWidget->setLayout(ui->ContactsLayout);
-    friendModel = make_shared<FriendsModel>();
+    friendModel = std::make_shared<FriendsModel>();
     friendModel->addCallbacks();
 
     this->setWindowFlags(Qt::Popup);

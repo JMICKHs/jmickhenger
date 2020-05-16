@@ -22,7 +22,7 @@ public:
 
 Q_DECLARE_METATYPE(Chat)
 
-class GroupModel : public QAbstractListModel,public enable_shared_from_this<GroupModel>
+class GroupModel : public QAbstractListModel,public std::enable_shared_from_this<GroupModel>
 {
     Q_OBJECT
 public:
@@ -33,26 +33,26 @@ public:
     void setData(std::vector<ChatItem> &);
     void addCallbacks();
 
-    std::function<void(vector<ChatItem> &, std::optional<string> &)> &getChatCallBack() ;
-    std::function<void(MessageItem &, std::optional<string> &)> &getLastMsgCallback() ;
-    std::function<void(int,std::optional<string>&)> &getCreateChatCallback() ;
-    std::function<void(bool,std::optional<string>&)> &getDelChatCallback() ;
+    std::function<void(std::vector<ChatItem> &, std::optional<std::string> &)> &getChatCallBack() ;
+    std::function<void(MessageItem &, std::optional<std::string> &)> &getLastMsgCallback() ;
+    std::function<void(int,std::optional<std::string>&)> &getCreateChatCallback() ;
+    std::function<void(bool,std::optional<std::string>&)> &getDelChatCallback() ;
     std::function<void(Change&)> &getChatChangeCallback() ;
     std::function<void(Change&)>& getUnknownChatChangeCallback();
-    std::function<void(inf::ChatRoom &,std::optional<string>&)>& getChatRoom();
+    std::function<void(inf::ChatRoom &,std::optional<std::string>&)>& getChatRoom();
 
 private:
-    std::optional<string> errString;
+    std::optional<std::string> errString;
     std::vector<Chat> items;
 
-    std::function<void(vector<ChatItem> &, std::optional<string> &)> chatCallback;
-    std::function<void(MessageItem &, std::optional<string> &)>  lastMsgCallback;
-    std::function<void(int,std::optional<string>&)> createChatCallback;
-    std::function<void(bool,std::optional<string>&)> delChatCallback;
+    std::function<void(std::vector<ChatItem> &, std::optional<std::string> &)> chatCallback;
+    std::function<void(MessageItem &, std::optional<std::string> &)>  lastMsgCallback;
+    std::function<void(int,std::optional<std::string>&)> createChatCallback;
+    std::function<void(bool,std::optional<std::string>&)> delChatCallback;
     std::function<void(Change&)> chatChangeCallback;
     std::function<void(Change&)> unknownChatChangeCallback;
-    std::function<void(inf::ChatRoom &, std::optional<string>&)> chatRoom;
-    std::function<void(inf::ChatRoom &, std::optional<string>&)> unknownChatRoomAdd;
+    std::function<void(inf::ChatRoom &, std::optional<std::string>&)> chatRoom;
+    std::function<void(inf::ChatRoom &, std::optional<std::string>&)> unknownChatRoomAdd;
 
 signals:
 

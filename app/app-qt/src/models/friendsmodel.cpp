@@ -19,7 +19,7 @@ void FriendsModel::addFriend(UserInf &usr)
     int row = this->rowCount();
     beginInsertRows(QModelIndex(),row,row);
     items.push_back(std::move(usr));
-    AppNet::shared()->addFrnd(usr.id,addFriendCallback);
+    AppNet::shared()->addFrnd(UserModel::instance()->getId(),usr.id,addFriendCallback);
     endInsertRows();
 }
 
@@ -50,7 +50,7 @@ void FriendsModel::addCallbacks()
         self->errString = err;
     };
     friendsCallback = [self = shared_from_this()](std::vector<int> &ids,std::optional<std::string> &err){
-        if(err == nullopt){
+        if(err == std::nullopt){
             self->setData(ids);
         }
         else{
@@ -63,7 +63,7 @@ std::function<void(std::optional<std::string> &)>& FriendsModel::getAddFriendCal
     return addFriendCallback;
 }
 
-std::function<void (std::vector<int> &, std::optional<string> &)> &FriendsModel::getFrinedsCallback()
+std::function<void (std::vector<int> &, std::optional<std::string> &)> &FriendsModel::getFrinedsCallback()
 {
     return friendsCallback;
 }

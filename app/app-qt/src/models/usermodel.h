@@ -12,10 +12,10 @@ class UserModel : public QObject
     Q_OBJECT
 public:
     void setData(Account &acc);
-    std::function<void(bool,std::optional<string>&)> &getSaveAvatarCallback()  ;
-    std::function<void(bool,std::optional<string>&)> &getChangeMeCallback()  ;
-    std::function<void(Account&,std::optional<string>&)> &getAuthCallback() ;
-    std::function<void(int,std::optional<string>&)> &getRegistrationCallback();
+    std::function<void(bool,std::optional<std::string>&)> &getSaveAvatarCallback()  ;
+    std::function<void(bool,std::optional<std::string>&)> &getChangeMeCallback()  ;
+    std::function<void(Account&,std::optional<std::string>&)> &getAuthCallback() ;
+    std::function<void(int,std::optional<std::string>&)> &getRegistrationCallback();
     void setCallBacks();
     Account getAcc() const;
     int getId() const;
@@ -29,12 +29,12 @@ public:
 
 private:
     UserModel();
-    std::optional<string> errString;
+    std::optional<std::string> errString;
     Account myAcc;
-    std::function<void(bool,std::optional<string>&)> saveAvatarCallback;
-    std::function<void(bool,std::optional<string>&)> changeMeCallback;
-    std::function<void(Account&,std::optional<string>&)> authCallback;
-    std::function<void(int,std::optional<string>&)> registrationCallback;
+    std::function<void(bool,std::optional<std::string>&)> saveAvatarCallback;
+    std::function<void(bool,std::optional<std::string>&)> changeMeCallback;
+    std::function<void(Account&,std::optional<std::string>&)> authCallback;
+    std::function<void(int,std::optional<std::string>&)> registrationCallback;
 
 signals:
     void showMainWidget();

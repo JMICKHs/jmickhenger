@@ -1,5 +1,6 @@
 #include "groupmodel.h"
 #include "netlib/AppNetwork.h"
+#include "app-qt/src/models/usermodel.h"
 #include <QDebug>
 
 
@@ -47,7 +48,7 @@ void GroupModel::setData(std::vector<ChatItem> &chats)
     }
     auto net = AppNet::shared();
     for(size_t i = 0; i < items.size(); ++i){
-        net->getLastMsg(items[i].idChat,this->lastMsgCallback);
+        net->getLastMsg(UserModel::instance()->getId(),items[i].idChat,this->lastMsgCallback);
         AppNet::shared()->setObserverChat(items[i].idChat,chatChangeCallback);
     }
     endInsertRows();
@@ -55,16 +56,16 @@ void GroupModel::setData(std::vector<ChatItem> &chats)
 
 void GroupModel::addCallbacks()
 {
-    chatCallback = [self = shared_from_this()](vector<ChatItem> &chats, std::optional<string> &err){
-        if(err == nullopt){
+    chatCallback = [self = shared_from_this()](std::vector<ChatItem> &chats, std::optional<std::string> &err){
+        if(err == std::nullopt){
             self->setData(chats);
         }
         else{
             self->errString = err;
         }
     };
-    lastMsgCallback = [self = shared_from_this()](MessageItem & msg, std::optional<string> & err){
-        if(err == nullopt){
+    lastMsgCallback = [self = shared_from_this()](MessageItem & msg, std::optional<std::string> & err){
+        if(err == std::nullopt){
             auto it = std::find_if(self->items.begin(),self->items.end(),[msg](const Chat &chat){
                 return  chat.idChat == msg.chatId;
             });
@@ -73,21 +74,21 @@ void GroupModel::addCallbacks()
         else
             self->errString = err;
     };
-    createChatCallback = [self = shared_from_this()](int id,std::optional<string> &err){
-        if(err == nullopt)
+    createChatCallback = [self = shared_from_this()](int id,std::optional<std::string> &err){
+        if(err == std::nullopt)
             self->items[self->items.size()].idChat = id;
         else
             self->errString = err;
     };
 
-    delChatCallback = [self = shared_from_this()](bool state, std::optional<string> &err){
-        if(err != nullopt)
+    delChatCallback = [self = shared_from_this()](bool state, std::optional<std::string> &err){
+        if(err != std::nullopt)
               self->errString = err;
     };
-    unknownChatChangeCallback = [self = shared_from_this()](ChatChange &change){
-        AppNet::shared()->getChatRoom(change.idChat,self->unknownChatRoomAdd);
+    unknownChatChangeCallback = [self = shared_from_this()](inf::ChatChange &change){
+        AppNet::shared()->getChatRoom(UserModel::instance()->getId(),change.idChat,self->unknownChatRoomAdd);
     };
-    chatChangeCallback = [self = shared_from_this()](ChatChange &change){
+    chatChangeCallback = [self = shared_from_this()](inf::ChatChange &change){
         if(change.action == "changeChat"){
 
         }
@@ -98,29 +99,29 @@ void GroupModel::addCallbacks()
             self->items.erase(it);
         }
     };
-    unknownChatRoomAdd = [self = shared_from_this()](inf::ChatRoom &room, std::optional<string>&err){
-        if(err == nullopt)
+    unknownChatRoomAdd = [self = shared_from_this()](inf::ChatRoom &room, std::optional<std::string>&err){
+        if(err == std::nullopt)
             self->unknownChatCreate(room);
     };
     std::function<void(Change&)> chatChangeCallback;
 }
 
-std::function<void (vector<ChatItem> &, std::optional<string> &)> &GroupModel::getChatCallBack()
+std::function<void (std::vector<ChatItem> &, std::optional<std::string> &)> &GroupModel::getChatCallBack()
 {
     return chatCallback;
 }
 
-std::function<void (MessageItem &, std::optional<string> &)>& GroupModel::getLastMsgCallback()
+std::function<void (MessageItem &, std::optional<std::string> &)>& GroupModel::getLastMsgCallback()
 {
     return lastMsgCallback;
 }
 
-std::function<void (int, std::optional<string> &)>& GroupModel::getCreateChatCallback()
+std::function<void (int, std::optional<std::string> &)>& GroupModel::getCreateChatCallback()
 {
     return createChatCallback;
 }
 
-std::function<void (bool, std::optional<string> &)>& GroupModel::getDelChatCallback()
+std::function<void (bool, std::optional<std::string> &)>& GroupModel::getDelChatCallback()
 {
     return delChatCallback;
 }
@@ -135,7 +136,7 @@ std::function<void (Change &)> &GroupModel::getUnknownChatChangeCallback()
     return unknownChatChangeCallback;
 }
 
-std::function<void (ChatRoom &, std::optional<string> &)> &GroupModel::getChatRoom()
+std::function<void (inf::ChatRoom &, std::optional<std::string> &)> &GroupModel::getChatRoom()
 {
     return chatRoom;
 }
@@ -148,7 +149,7 @@ void GroupModel::messageCreateByUser(const Msg &msg)
     it.base()->lastMessage = msg;
 }
 
-void GroupModel::createChatByUser(const ChatRoom &room)
+void GroupModel::createChatByUser(const inf::ChatRoom &room)
 {
     int row = this->rowCount();
     Chat chat;
@@ -160,7 +161,7 @@ void GroupModel::createChatByUser(const ChatRoom &room)
     AppNet::shared()->setObserverChat(room.idChat,chatChangeCallback);
 }
 
-void GroupModel::unknownChatCreate(ChatRoom &room)
+void GroupModel::unknownChatCreate(inf::ChatRoom &room)
 {
     int row = this->rowCount();
     Chat chat;
@@ -168,6 +169,6 @@ void GroupModel::unknownChatCreate(ChatRoom &room)
     beginInsertRows(QModelIndex(),row,row);
     items.emplace_back(chat);
     endInsertRows();
-    AppNet::shared()->getLastMsg(room.idChat,getLastMsgCallback());
+    AppNet::shared()->getLastMsg(UserModel::instance()->getId(),room.idChat,getLastMsgCallback());
     AppNet::shared()->setObserverChat(room.idChat,chatChangeCallback);
 }
