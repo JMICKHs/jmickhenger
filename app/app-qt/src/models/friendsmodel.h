@@ -16,7 +16,7 @@ class FriendsModel : public QAbstractListModel, public std::enable_shared_from_t
 public:
     FriendsModel();
     void setData(std::vector<int> &);
-    void addFriend(UserInf &usr);
+    void addFriend(int login);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     void addCallbacks();
@@ -27,6 +27,7 @@ public slots:
 private:
     std::function<void(std::optional<std::string> &)> addFriendCallback;
     std::function<void(std::vector<int> &,std::optional<std::string> &)> friendsCallback;
+    std::function<void(inf::UserInfo &user,std::optional<std::string>&)> userForFriend;
     std::vector<UserInf> items;
     std::vector<int> ids;
     std::optional<std::string> errString;

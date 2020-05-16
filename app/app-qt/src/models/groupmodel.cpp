@@ -103,6 +103,11 @@ void GroupModel::addCallbacks()
         if(err == std::nullopt)
             self->unknownChatCreate(room);
     };
+    chatRoom = [self = shared_from_this()](inf::ChatRoom &room, std::optional<std::string>&err){
+          if(err == std::nullopt){
+              emit self->sendChatRoom(room);
+          }
+    };
     std::function<void(Change&)> chatChangeCallback;
 }
 

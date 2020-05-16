@@ -14,12 +14,15 @@ void FriendsModel::setData(std::vector<int> &_ids)
     endInsertRows();
 }
 
-void FriendsModel::addFriend(UserInf &usr)
+void FriendsModel::addFriend(int login)
 {
     int row = this->rowCount();
     beginInsertRows(QModelIndex(),row,row);
-    items.push_back(std::move(usr));
-    AppNet::shared()->addFrnd(UserModel::instance()->getId(),usr.id,addFriendCallback);
+    UserInf user;
+    user.id = login;
+    items.push_back(std::move(user));
+    AppNet::shared()->addFrnd(UserModel::instance()->getId(),user.id,addFriendCallback);
+    AppNet::shared()->getUser(UserModel::instance()->getId(),user.id,userForFriend);
     endInsertRows();
 }
 
@@ -52,6 +55,20 @@ void FriendsModel::addCallbacks()
     friendsCallback = [self = shared_from_this()](std::vector<int> &ids,std::optional<std::string> &err){
         if(err == std::nullopt){
             self->setData(ids);
+        }
+        else{
+            self->errString = err;
+        }
+    };
+    userForFriend = [self = shared_from_this()](inf::UserInfo &user,std::optional<std::string>& err){
+        if(err == std::nullopt){
+            auto it = std::find_if(self->items.begin(),self->items.end(),[user](const UserInf &inf){
+                return inf.id == user.id;
+            });
+            if(it != self->items.end()){
+                it.base()->login = user.login;
+                it.base()->pathToAvatar = user.pathToAvatar;
+            }
         }
         else{
             self->errString = err;

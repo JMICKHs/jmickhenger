@@ -29,15 +29,15 @@ CreateGroupWidget::CreateGroupWidget(QWidget *parent) :
     proxy->setSourceModel(friendModel.get());
     UserInf inf;
     inf.id = 3;
-    inf.login = "str";
     UserInf inf1;
     inf1.id = 4;
-    inf1.login = "kek";
-    friendModel->addFriend(inf);
-    friendModel->addFriend(inf1);
-    connect(this,&CreateGroupWidget::text_changed,proxy,&FriendModelProxy::search_String_Changed);
+    friendModel->addFriend(inf.id);
+    friendModel->addFriend(inf1.id);
     connect(this,&CreateGroupWidget::text_changed,proxy,&FriendModelProxy::search_String_Changed);
 
+
+    addFriend = new addFriendWidget(parent);
+    connect(addFriend,&addFriendWidget::friendAddSignal,this,&CreateGroupWidget::on_addFriend);
     ui->createGroupView->setModel(proxy);
     ui->friendsView->setModel(proxy);
     ui->createGroupView->setItemDelegate(new friendsDelegate);
@@ -91,11 +91,22 @@ void CreateGroupWidget::on_pushButton_2_clicked()
         std::vector<int> usrIds;
         for(auto& indexData : indexList){
             usrIds.push_back(indexData.data().value<UserInf>().id);
-            qDebug() << indexData.data().value<UserInf>().id;
         }
         item.idUsers = std::move(usrIds);
         item.name = ui->lineEdit->text().toStdString();
         emit groupCreated(item);
         close();
     }
+}
+
+void CreateGroupWidget::on_addFriend(int id1)
+{
+    friendModel->addFriend(id1);
+}
+
+void CreateGroupWidget::on_addFriendButton_clicked()
+{
+    addFriend->show();
+    addFriend->move(pos().x() + size().width()/(4),
+               pos().y() + size().height()/(4));
 }

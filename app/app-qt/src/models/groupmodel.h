@@ -54,8 +54,9 @@ private:
     std::function<void(inf::ChatRoom &, std::optional<std::string>&)> chatRoom;
     std::function<void(inf::ChatRoom &, std::optional<std::string>&)> unknownChatRoomAdd;
 
-signals:
 
+signals:
+    void sendChatRoom(const inf::ChatRoom &inf);
 public slots:
     void messageCreateByUser(const Msg &msg);
     void createChatByUser(const inf::ChatRoom &room);

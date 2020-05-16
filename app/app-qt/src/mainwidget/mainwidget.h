@@ -43,6 +43,7 @@ public slots:
     void removeMessageFromChat();
     void editMessageInChat();
     void showContextMenu(const QPoint &pos);
+    void setGroupInfoSlot(const inf::ChatRoom &room);
 
 signals:
     void sendMessageFromInput_s(const Message &message);

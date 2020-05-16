@@ -84,6 +84,9 @@ add_executable(jmichkenger
      app-qt/src/setavatarwidget/setavatarwidget.cpp
      app-qt/src/setavatarwidget/setavatarwidget.h
      app-qt/src/setavatarwidget/setavatarwidget.ui
+     app-qt/src/addfriendwidget/addfriendwidget.cpp
+     app-qt/src/addfriendwidget/addfriendwidget.h
+     app-qt/src/addfriendwidget/addfriendwidget.ui
      main.cpp
  )
 target_link_libraries(jmichkenger PRIVATE Qt5::Widgets ${USED_LIBS} netlib)

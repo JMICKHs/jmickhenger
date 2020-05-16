@@ -71,6 +71,7 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(ui->searchInput,&QLineEdit::textChanged,proxyModel,&ProxyModel::search_String_Changed);
     connect(ui->messageInput,&ChatInput::sendMessageOnEnter,this,&MainWidget::sendMessageFromInput);
     connect(chatModel.get(),&ChatModel::messageCreateByUser,groupModel.get(),&GroupModel::messageCreateByUser);
+    connect(groupModel.get(),&GroupModel::sendChatRoom,this,&MainWidget::setGroupInfoSlot);
     this->setLayout(ui->MainLayout);
 }
 
@@ -133,16 +134,8 @@ void MainWidget::on_groupList_clicked(const QModelIndex &index)
     auto net = AppNet::shared();
     Chat chat = index.model()->data(index).value<Chat>();
     net->getMsgs(UserModel::instance()->getId(),chat.idChat,0,50,chatModel->getChatCallback());
+    net->getChatRoom(UserModel::instance()->getId(),chat.idChat,groupModel->getChatRoom());
     ui->chatList->doItemsLayout();
-    ui->chatList->update();
-
-    //QString info = QString::number(index.model()->data(index).value<Chat>().);
-    //if(info <= 2)
-    //    info += "  участника";
-    //else
-    //    info += "  участников";
-    //
-    //ui->label_2->setText(info);
 }
 
 
@@ -162,9 +155,6 @@ void MainWidget::removeMessageFromChat()
     if(msg.idOwner == UserModel::instance()->getId()){
         chatModel->DeleteMessage(ui->chatList->selectionModel()->currentIndex().row());
     }
-    else{
-
-    }
     ui->chatList->doItemsLayout();
 }
 
@@ -176,6 +166,17 @@ void MainWidget::editMessageInChat()
 void MainWidget::showContextMenu(const QPoint &pos)
 {
     msgMenu->popup(ui->chatList->viewport()->mapToGlobal(pos));
+}
+
+void MainWidget::setGroupInfoSlot(const ChatRoom &room)
+{
+    QString info = QString::number(room.idUsers.size());
+    if(info <= 2)
+        info += "  участника";
+    else
+        info += "  участников";
+
+    ui->label_2->setText(info);
 }
 
 void MainWidget::removeDoubleEnter(QString &str){

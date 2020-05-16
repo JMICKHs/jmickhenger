@@ -8,6 +8,7 @@
 #include <app-qt/src/models/usermodel.h>
 #include <app-qt/src/models/friendsmodel.h>
 #include <app-qt/src/proxy/friendmodelproxy.h>
+#include <app-qt/src/addfriendwidget/addfriendwidget.h>
 namespace Ui {
 class CreateGroupWidget;
 }
@@ -32,6 +33,8 @@ private slots:
     void on_SearchLineEditFriends_textChanged(const QString &arg1);
 
     void on_pushButton_2_clicked();
+    void on_addFriend(int id1);
+    void on_addFriendButton_clicked();
 
 signals:
     void text_changed(const QString&);
@@ -41,6 +44,7 @@ private:
     Ui::CreateGroupWidget *ui;
     QWidget *createWidget;
     QWidget *contactsWidget;
+    addFriendWidget *addFriend;
     FriendModelProxy *proxy;
     std::shared_ptr<FriendsModel> friendModel;
 };
