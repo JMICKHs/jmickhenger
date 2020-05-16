@@ -61,15 +61,30 @@
            </spacer>
           </item>
           <item>
-           <widget class="CustomButton" name="pushButton">
+           <widget class="QPushButton" name="pushButton">
             <property name="maximumSize">
              <size>
-              <width>50</width>
-              <height>50</height>
+              <width>60</width>
+              <height>60</height>
              </size>
             </property>
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
             <property name="text">
-             <string>avatar</string>
+             <string/>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
             </property>
            </widget>
           </item>

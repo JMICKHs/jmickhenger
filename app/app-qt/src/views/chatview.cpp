@@ -6,7 +6,6 @@
 ChatView::ChatView(QWidget *parent)
     :QListView(parent)
 {
-     this->setFocusPolicy(Qt::StrongFocus);
     this->setStyleSheet(                   
                         "QListWidget{ outline: 0;}"
                         "QListWidget::item:hover{   background-color:  rgb(240, 240, 243);selection-color: transperent;}"

@@ -7,6 +7,7 @@
 #include <QFrame>
 #include <netlib/info/Info.h>
 #include <app-qt/src/creategroup/creategroupwidget.h>
+#include <app-qt/src/setavatarwidget/setavatarwidget.h>
 
 using namespace inf;
 namespace Ui {
@@ -23,6 +24,7 @@ public:
     CreateGroupWidget* getCreateWidget();
 private:
     Ui::MenuWidget *ui;
+    SetAvatarWidget *avatWidget;
     std::shared_ptr<CreateGroupWidget> friendsWidget;
 public slots:
     void setPosition();
@@ -32,6 +34,8 @@ public slots:
 private slots:
     void on_createGroupButton_clicked();
     void on_contactsButton_clicked();
+    void on_image_change(const QString &str);
+    void on_pushButton_clicked();
 };
 
 #endif // MENUWIDGET_H
