@@ -30,11 +30,10 @@ public slots:
     void setPosition();
     void setName(const QString &name);
     void on_nickname_rename(const QString &nick);
-
+    void on_image_change(const QString &str);
 private slots:
     void on_createGroupButton_clicked();
     void on_contactsButton_clicked();
-    void on_image_change(const QString &str);
     void on_pushButton_clicked();
 };
 

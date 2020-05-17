@@ -1,0 +1,7 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/imges">
+        <file>check.jpg</file>
+        <file>img518924.png</file>
+        <file>standartAvatar.jpg</file>
+    </qresource>
+</RCC>

@@ -1,5 +1,6 @@
 #include "menuwidget.h"
 #include "ui_menuwidget.h"
+#include <QDebug>
 
 MenuWidget::MenuWidget(QWidget *parent)
     :QFrame(parent),
@@ -19,7 +20,7 @@ MenuWidget::MenuWidget(QWidget *parent)
     ui->pushButton->setFixedSize(70,70);
     ui->pushButton->setFlat(true);
 
-    QPixmap pix1("/home/kostikan/jmickhenger/app/img/standartAvatar.jpg");
+    QPixmap pix1(":/imges/standartAvatar.jpg");
     QPixmap pix(pix1.scaled(55,55, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
     QPalette palette;
     palette.setBrush(ui->pushButton->backgroundRole(), QBrush(pix));
@@ -74,7 +75,8 @@ void MenuWidget::on_contactsButton_clicked()
 
 void MenuWidget::on_image_change(const QString &str)
 {
-    QPixmap pix1(str);
+    QString path = ":/imges/" + str;
+    QPixmap pix1(path);
     QPixmap pix(pix1.scaled(55,55, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
     QPalette palette;
     palette.setBrush(ui->pushButton->backgroundRole(), QBrush(pix));

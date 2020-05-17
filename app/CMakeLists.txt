@@ -90,6 +90,7 @@ add_executable(jmichkenger
      app-qt/src/addfriendwidget/addfriendwidget.cpp
      app-qt/src/addfriendwidget/addfriendwidget.h
      app-qt/src/addfriendwidget/addfriendwidget.ui
+     img/images.qrc
      main.cpp
  )
 target_link_libraries(jmichkenger PRIVATE Qt5::Widgets ${USED_LIBS} netlib)

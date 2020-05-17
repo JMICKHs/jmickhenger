@@ -2,6 +2,7 @@
 #include "ui_loginwidget.h"
 #include "netlib/AppNetwork.h"
 #include <QStyle>
+#include <QDir>
 #include <QDebug>
 
 LoginWidget::LoginWidget(QWidget *parent) :
@@ -30,7 +31,7 @@ LoginWidget::LoginWidget(QWidget *parent) :
 
     ui->avatarButton->setFlat(true);
     ui->avatarButton->setFixedSize(70,70);
-    QPixmap pix1("/home/kostikan/jmickhenger/app/img/standartAvatar.jpg");
+    QPixmap pix1(":/imges/standartAvatar.jpg");
     QPixmap pix(pix1.scaled(55,55, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
     QPalette palette;
     palette.setBrush(ui->avatarButton->backgroundRole(), QBrush(pix));
@@ -51,7 +52,6 @@ void LoginWidget::login(const QString &log, const QString &password)
     auto net = AppNet::shared();
     qDebug() <<"log";
     net->auth(log.toStdString(),password.toStdString(),UserModel::instance()->getAuthCallback());
-
 }
 
 void LoginWidget::registration(const Account &acc)
@@ -98,12 +98,12 @@ void LoginWidget::on_avatarButton_clicked()
     avatarWidget->move(pos().x() + size().width()/(4),
                pos().y() + size().height()/(4));
 
-
 }
 
 void LoginWidget::avatarChange(const QString &path)
 {
-    QPixmap pix1(path);
+    QString name = ":/imges/" + path;
+    QPixmap pix1(name);
     QPixmap pix(pix1.scaled(55,55, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
     QPalette palette;
     palette.setBrush(ui->avatarButton->backgroundRole(), QBrush(pix));

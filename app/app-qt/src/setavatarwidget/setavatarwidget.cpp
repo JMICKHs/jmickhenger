@@ -14,12 +14,13 @@ SetAvatarWidget::SetAvatarWidget(QWidget *parent) :
     this->setAutoFillBackground(true);
     this->setPalette(Pal);
     this->setLayout(ui->horizontalLayout);
-    avatars.emplace_back(baseAvatars::AVATAR1,"/home/kostikan/jmickhenger/app/img/standartAvatar.jpg");
-    avatars.emplace_back(baseAvatars::AVATAR2,"/home/kostikan/jmickhenger/app/img/img518924.png");
+    avatars.emplace_back(baseAvatars::AVATAR1,"standartAvatar.jpg");
+    avatars.emplace_back(baseAvatars::AVATAR2,"img518924.png");
     ui->comboForAvatars->addItem("avatar1");
     ui->comboForAvatars->addItem("avatar2");
     ui->avatar->setFixedSize(300,300);
-    QPixmap pix1(avatars[0].second);
+    QString path = ":/imges/" + avatars[0].second;
+    QPixmap pix1(path);
     QPixmap pix(pix1.scaled(ui->avatar->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
     QPalette palette;
     palette.setBrush(ui->avatar->backgroundRole(), QBrush(pix));
@@ -41,7 +42,8 @@ void SetAvatarWidget::on_acceptButton_clicked()
 
 void SetAvatarWidget::on_comboForAvatars_currentIndexChanged(int index)
 {
-    QPixmap pix1(avatars[index].second);
+    QString path = ":/imges/" + avatars[index].second;
+    QPixmap pix1(path);
     QPixmap pix(pix1.scaled(ui->avatar->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
     QPalette palette;
     palette.setBrush(ui->avatar->backgroundRole(), QBrush(pix));

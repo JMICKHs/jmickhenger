@@ -31,19 +31,19 @@ void test_group::test_gr2()
 
 void test_group::test_gr3()
 {
-//    QTest::mouseClick(this->menu,Qt::LeftButton);
-//    QTest::mouseClick(this->menuWidget->getCreateButton(),Qt::LeftButton);
-//    Chat chat;
-//    chat.id =3;
-//    chat.name = "testName";
-//    chat.userIds = {0,3,2};
-//    chat.lastMessage = "test";
-//    emit this->menuWidget->createGroupSignal(chat);
-//    std::list<QListWidgetItem*> items = this->getGroupList().getItems();
+//   QTest::mouseClick(this->menu,Qt::LeftButton);
+//   QTest::mouseClick(this->menuWidget->getCreateButton(),Qt::LeftButton);
+//   Chat chat;
+//   chat.id =3;
+//   chat.name = "testName";
+//   chat.userIds = {0,3,2};
+//   chat.lastMessage = "test";
+//   emit this->menuWidget->createGroupSignal(chat);
+//   std::list<QListWidgetItem*> items = this->getGroupList().getItems();
 
-//   // QString name = getGroupList().itemWidget(items.back())->findChild<QLabel*>("groupName")->text();
-//     QString name = "";
-//    QCOMPARE(name,chat.name);
+//   QString name = getGroupList().itemWidget(items.back())->findChild<QLabel*>("groupName")->text();
+//   QString name = "";
+//   QCOMPARE(name,chat.name);
 }
 
 void test_group::test_gr4()

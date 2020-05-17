@@ -48,6 +48,7 @@ public slots:
 
 signals:
     void sendMessageFromInput_s(const Message &message);
+    void sendAvatar(const QString &path);
 private:
     void removeDoubleEnter(QString &str);
 

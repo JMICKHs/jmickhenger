@@ -1,6 +1,4 @@
 #include "app-qt/src/mainwidget/mainwidget.h"
-
-
 #include "app-qt/src/models/chatmodel.h"
 #include "app-qt/src/chatinput/chatinput.h"
 #include "netlib/AppNetwork.h"
@@ -72,6 +70,7 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(ui->messageInput,&ChatInput::sendMessageOnEnter,this,&MainWidget::sendMessageFromInput);
     connect(chatModel.get(),&ChatModel::messageCreateByUser,groupModel.get(),&GroupModel::messageCreateByUser);
     connect(groupModel.get(),&GroupModel::sendChatRoom,this,&MainWidget::setGroupInfoSlot);
+    connect(this,&MainWidget::sendAvatar,menuWidget,&MenuWidget::on_image_change);
     this->setLayout(ui->MainLayout);
 }
 
@@ -146,6 +145,7 @@ void MainWidget::after_Login_slot()
     auto net = AppNet::shared();
     net->getListChat(ac.id,groupModel->getChatCallBack());
     menuWidget->setName(QString::fromStdString(ac.login));
+    emit sendAvatar(QString::fromStdString(ac.pathToAvatar));
     connect(UserModel::instance(),&UserModel::nickNameChanged,menuWidget,&MenuWidget::on_nickname_rename);
 }
 

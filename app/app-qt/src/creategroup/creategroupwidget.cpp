@@ -27,14 +27,7 @@ CreateGroupWidget::CreateGroupWidget(QWidget *parent) :
     this->setPalette(Pal);
     proxy = new FriendModelProxy();
     proxy->setSourceModel(friendModel.get());
-    UserInf inf;
-    inf.id = 3;
-    UserInf inf1;
-    inf1.id = 4;
-    friendModel->addFriend(inf.id);
-    friendModel->addFriend(inf1.id);
     connect(this,&CreateGroupWidget::text_changed,proxy,&FriendModelProxy::search_String_Changed);
-
 
     addFriend = new addFriendWidget(parent);
     connect(addFriend,&addFriendWidget::friendAddSignal,this,&CreateGroupWidget::on_addFriend);
