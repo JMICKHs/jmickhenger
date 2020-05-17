@@ -116,6 +116,11 @@ std::function<void (std::optional<std::string> &)>& ChatModel::getDelMsgCallback
     return delMsgCallback;
 }
 
+std::vector<Msg> ChatModel::getItems()
+{
+    return items;
+}
+
 void ChatModel::DeleteMessage(int pos)
 {
     if(pos >= 0 && pos < items.size())

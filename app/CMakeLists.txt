@@ -12,15 +12,17 @@ execute_process(COMMAND ${CMAKE_COMMAND} --build .
 add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
         ${CMAKE_BINARY_DIR}/googletest-build)
 
-add_subdirectory(netlib)
-add_subdirectory(Tests)
-enable_testing()
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED)
+
+enable_testing()
+add_subdirectory(netlib)
+add_subdirectory(Tests)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Boost)

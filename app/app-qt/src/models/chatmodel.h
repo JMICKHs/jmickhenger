@@ -46,6 +46,7 @@ public:
     std::function<void(std::optional<std::string>&)> &getSendMsgCallback() ;
     std::function<void(std::optional<std::string>&)> &getChangeMsgCallback() ;
     std::function<void(std::optional<std::string>&)> &getDelMsgCallback() ;
+    std::vector<Msg> getItems();
 
     void slotEditMessage();
     void DeleteMessage(int pos);

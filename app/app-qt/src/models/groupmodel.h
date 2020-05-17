@@ -41,6 +41,8 @@ public:
     std::function<void(Change&)>& getUnknownChatChangeCallback();
     std::function<void(inf::ChatRoom &,std::optional<std::string>&)>& getChatRoom();
 
+    std::vector<Chat> getItems();
+
 private:
     std::optional<std::string> errString;
     std::vector<Chat> items;

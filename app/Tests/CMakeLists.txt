@@ -1,14 +1,7 @@
+cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-include_directories("${PROJECT_SOURCE_DIR}/src")
-
-set(SOURCE_FILES ../app-qt/src/chatinput/chatinput.h
+set(SOURCE_FILES
+    ../app-qt/src/chatinput/chatinput.h
     ../app-qt/src/chatinput/chatinput.cpp
     ../app-qt/src/creategroup/creategroupwidget.cpp
     ../app-qt/src/creategroup/creategroupwidget.h
@@ -71,6 +64,14 @@ set(SOURCE_FILES ../app-qt/src/chatinput/chatinput.h
     ../netlib/AppNetwork.cpp
     ../netlib/AppNetwork.h)
 
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 find_package(Qt5Test REQUIRED)
 find_package(Qt5 COMPONENTS Widgets  REQUIRED)
 find_package(Boost)
@@ -98,7 +99,7 @@ add_executable(Tests
      test_showprofile.cpp
      test_showprofile.h
      test_client.cpp
-      ${SOURCE_FILES}
+     ${SOURCE_FILES}
     )
 add_test(NAME test_chat COMMAND test_chat)
 add_test(NAME test_group COMMAND test_group)

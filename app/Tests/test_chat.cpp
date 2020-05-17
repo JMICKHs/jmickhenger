@@ -1,7 +1,12 @@
 #include <QtTest>
 #include "test_chat.h"
+#include "app-qt/src/mainwidget/mainwidget.h"
+#include "app-qt/src/models/chatmodel.h"
+#include "app-qt/src/chatinput/chatinput.h"
+
 
 test_chat::test_chat()
+    :MainWidget()
 {
 
 }
@@ -13,36 +18,29 @@ test_chat::~test_chat()
 
 void test_chat::test_case1()
 {
+//     QTest::keyClicks(this->ui->messageInput, "Send My Message");
+//     QTest::mouseClick(this->ui->sendButton,Qt::LeftButton);
+//     std::vector<Msg> items = this->chatModel->getItems();
+//     QString text = QString::fromStdString(items.back().text);
 
-//    QTest::keyClicks(this->textMessage, "Send My Message");
-//    QTest::mouseClick(this->send,Qt::LeftButton);
-//    std::list<QListWidgetItem*> items = chatList->getItems();
-//    QString text = chatList->itemWidget(items.back())->findChild<QLabel*>("text")->text();
-
-//    QCOMPARE(text,"Send My Message");
-//    this->textMessage->clear();
+//     QCOMPARE(text,"Send My Message");
 }
 
 void test_chat::test_case2()
 {
-//    QTest::keyClicks(this->textMessage, "");
-//    QTest::mouseClick(this->send,Qt::LeftButton);
-//    std::list<QListWidgetItem*> items = chatList->getItems();
-//    QString text = chatList->itemWidget(items.back())->findChild<QLabel*>("text")->text();
+//    QTest::keyClicks(this->ui->messageInput, "");
+//    QTest::mouseClick(this->ui->sendButton,Qt::LeftButton);
+//    std::vector<Msg> items = this->chatModel->getItems();
 
-//    QCOMPARE(text,"");
-//    this->textMessage->clear();
+//    QCOMPARE(items.size(),0);
 }
 
 void test_chat::test_case3()
 {
-//   QString mess{"12321Message"};
-//   QTest::keyClicks(this->textMessage, mess);
-//   QTest::mouseClick(this->send,Qt::LeftButton);
-//   std::list<QListWidgetItem*> items = chatList->getItems();
-//   QString text = chatList->itemWidget(items.back())->findChild<QLabel*>("text")->text();
+//    QTest::keyClicks(this->ui->messageInput, "12312Message");
+//    QTest::mouseClick(this->ui->sendButton,Qt::LeftButton);
+//    std::vector<Msg> items = this->chatModel->getItems();
+//    QString text = QString::fromStdString(items.back().text);
 
-//   QCOMPARE(text,"12321Message");
-//   this->textMessage->clear();
+//    QCOMPARE(text,"12312Message");
 }
-

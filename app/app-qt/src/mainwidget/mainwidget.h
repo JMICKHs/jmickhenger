@@ -48,10 +48,10 @@ public slots:
 signals:
     void sendMessageFromInput_s(const Message &message);
 private:
-    Ui::MainWidget *ui;
     void removeDoubleEnter(QString &str);
 
 protected:
+    Ui::MainWidget *ui;
     std::shared_ptr<GroupModel> groupModel;
     std::shared_ptr<ChatModel> chatModel;
     MenuWidget *menuWidget;

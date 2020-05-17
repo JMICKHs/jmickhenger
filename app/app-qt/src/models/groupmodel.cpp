@@ -146,6 +146,11 @@ std::function<void (inf::ChatRoom &, std::optional<std::string> &)> &GroupModel:
     return chatRoom;
 }
 
+std::vector<Chat> GroupModel::getItems()
+{
+    return items;
+}
+
 void GroupModel::messageCreateByUser(const Msg &msg)
 {
     auto it = std::find_if(items.begin(), items.end(),[msg](const Chat &chat){

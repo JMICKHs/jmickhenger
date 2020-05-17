@@ -12,8 +12,6 @@ public:
     test_chat();
     ~test_chat();
 
-
-
 private slots:
     void test_case1();
     void test_case2();
