@@ -39,6 +39,11 @@ shared_ptr<Client> Client::shared()  {
 }
 
 void Client::run() {
+    auto host = getHostFromConfig();
+    tcp::resolver resolver(service);
+    assert(host && "config неправильно заполнен"); //assert тут для того, чтобы во время разработки не ломать голову
+    // где же крашнулось. В проде assert никогда не сработает
+    eit = resolver.resolve({host.value().first, host.value().second});
     connect(eit);
     t = thread([self = shared_from_this()](){
         self->service.run();
@@ -72,13 +77,7 @@ void Client::setErrHandler(const function<void(int)> &f) {
     errHandler = f;
 }
 
-Client::Client(): sock(service) {
-    tcp::resolver resolver(service);
-    auto host = getHostFromConfig();
-    assert(host && "config неправильно заполнен\n"); //assert тут для того, чтобы во время разработки не ломать голову
-    // где же крашнулось. В проде assert никогда не сработает
-    eit = resolver.resolve({host.value().first, host.value().second});
-}
+Client::Client(): sock(service) {}
 
 void Client::connect(tcp::resolver::iterator &it) {
     auto handler = [self = shared_from_this()](boost::system::error_code err, const tcp::resolver::iterator& it) {
@@ -103,8 +102,9 @@ void Client::loopRead() {
     auto handler = [self = shared_from_this()](boost::system::error_code err, size_t length) {
         if (!err) {
             string msg; msg.reserve(length);
-            for(size_t i = 0; i < length - 2; ++i) {
-                msg.push_back(self->readMsg[i]);
+            int i = 0;
+            while(i < length && (self->readMsg[i] != '\r' || self->readMsg[i + 1] != '\n')) {
+                msg.push_back(self->readMsg[i++]);
             }
             if(self->msgHandler) {
                 self->msgHandler.value()(msg);

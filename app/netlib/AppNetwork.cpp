@@ -13,7 +13,7 @@ string getAuthNameForServer(const string & nickname) {
 
 AppNet::AppNet() {
     announcer = std::make_unique<Announcer>();
-    cache = unique_ptr<AbstractCache>(new Cache);
+    cache = std::make_unique<Cache>();
     client = Client::shared();
 }
 
@@ -66,7 +66,6 @@ void AppNet::readHandler(const string &str) {
         cout << "err cmd - " << reply.cmd << endl;
     }
 }
-
 
 // лучше сделать фабрику body, а не делать в каждом методе
 void AppNet::auth(const string &login, const string &pass, const function<void(MyAccount &, errstr &)> &callback) {
@@ -360,6 +359,11 @@ void AppNet::setHandlers() {
 
 optional<MyAccount> AppNet::accFromCache() {
     return nullopt;
+}
+
+void AppNet::setClientDelegate(std::shared_ptr<AbstractClient> clientDelegate) {
+    this->client = clientDelegate;
+    clientStarted = false;
 }
 
 

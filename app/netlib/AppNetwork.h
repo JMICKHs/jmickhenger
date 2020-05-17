@@ -22,6 +22,7 @@ public:
     void stopClient();
     bool check() {} //TODO
     std::optional<inf::MyAccount> accFromCache(); //TODO
+    void setClientDelegate(std::shared_ptr<AbstractClient> client); //для мок клиента в тестировании
     void auth(const std::string & login, const std::string & pass, const std::function<void(inf::MyAccount &, errstr &)> & callback);
     void registration(const inf::MyAccount & acc, const std::function<void(int, errstr &)>& callback);
     void getListChat(int idUser, const std::function<void(std::vector<inf::ChatInfo> &, errstr &)> & callback);

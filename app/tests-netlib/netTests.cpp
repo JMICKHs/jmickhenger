@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 
 #include <iostream>
 #include <ctime>
@@ -7,6 +8,11 @@
 
 using namespace inf;
 using namespace std;
+
+using ::testing::_;
+using ::testing::SetArgReferee;
+using ::testing::DoAll;
+using ::testing::Return;
 
 TEST(testAnnounser, test1) {
     Announcer an;
@@ -260,7 +266,7 @@ TEST(testCodeble, test8) {
 }
 
 
-TEST(cache, test1) {
+TEST(testCache, test1) {
     Cache cache;
     int id = 9;
     UserInfo info(id, "testLogin", "3aavatar.jpg");
@@ -274,7 +280,7 @@ TEST(cache, test1) {
     }
 }
 
-TEST(cache, test2) {
+TEST(testCache, test2) {
     Cache cache;
     MyAccount acc(6, "testNick", "3avatar.jpg", "12345", {5, 78}, {8, 9, 10, 11});
     ASSERT_EQ(cache.save(acc), true);
@@ -290,7 +296,7 @@ TEST(cache, test2) {
     }
 }
 
-TEST(cache, test3) {
+TEST(testCache, test3) {
     Cache cache;
     inf::ChatInfo i1(1, "test1");
     inf::ChatInfo i2(2, "test2");
@@ -303,4 +309,86 @@ TEST(cache, test3) {
         ASSERT_EQ(vec[i].idChat, test[i].idChat);
         ASSERT_EQ(vec[i].name, test[i].name);
     }
+}
+
+
+class MockClient: public AbstractClient {
+public:
+
+    MOCK_METHOD1(write, void(const string & msg));
+    MOCK_METHOD0(run, void(void));
+    MOCK_METHOD0(close, void(void));
+    MOCK_METHOD1(setMsgHandler, void(const std::function<void(const std::string &)> & f));
+    void setErrHandler(const std::function<void(int)> & f) {}
+};
+
+
+TEST(testAppNet, test1) {
+    // отправка сообщений
+    auto client = shared_ptr<MockClient>(new MockClient);
+    Message msg(78, 7, "textMsg", 90, time(nullptr), false);
+    Query testQuery(5, msg.encode());
+    EXPECT_CALL(*(client), run()).Times(1);
+    EXPECT_CALL(*(client), setMsgHandler(_)).Times(1);
+    EXPECT_CALL(*(client), write(testQuery.encode())).Times(1);
+    EXPECT_CALL(*(client), close()).Times(1);
+    auto net = AppNet::shared();
+    net->setClientDelegate(client);
+    net->runClient([](int ec){});
+    net->sendMsg(msg, [](errstr &) {
+
+    });
+    net->stopClient();
+    testing::Mock::AllowLeak(client.get());
+}
+
+TEST(testAppNet, test2) {
+    //авторизация
+    auto client = shared_ptr<MockClient>(new MockClient);
+    EXPECT_CALL(*(client), run()).Times(1);
+    EXPECT_CALL(*(client), setMsgHandler(_)).Times(1);
+    EXPECT_CALL(*(client), write(_)).Times(2); //2 раза, потому что высылается еще init сообщение
+    EXPECT_CALL(*(client), close()).Times(1);
+    auto net = AppNet::shared();
+    net->setClientDelegate(client);
+    net->runClient([](int ec){});
+    net->auth("nick", "pass", [](MyAccount & acc, errstr &){});
+    net->stopClient();
+    testing::Mock::AllowLeak(client.get());
+}
+
+TEST(testAppNet, test3) {
+    // регистрация
+    auto client = shared_ptr<MockClient>(new MockClient);
+    EXPECT_CALL(*(client), run()).Times(1);
+    EXPECT_CALL(*(client), setMsgHandler(_)).Times(1);
+    EXPECT_CALL(*(client), write(_)).Times(2); //2 раза, потому что высылается еще init сообщение
+    EXPECT_CALL(*(client), close()).Times(1);
+    auto net = AppNet::shared();
+    net->setClientDelegate(client);
+    net->runClient([](int ec){});
+    MyAccount acc;
+    net->registration(acc, [](int, errstr &){});
+    net->stopClient();
+    testing::Mock::AllowLeak(client.get());
+}
+
+TEST(testAppNet, test4) {
+    // некий кейс: авторизовался, попросил список чатов и список друзей, решил выйти и содать нового пользователя
+    auto client = shared_ptr<MockClient>(new MockClient);
+    EXPECT_CALL(*(client), run()).Times(1);
+    EXPECT_CALL(*(client), setMsgHandler(_)).Times(1);
+    EXPECT_CALL(*(client), write(_)).Times(6);
+    EXPECT_CALL(*(client), close()).Times(1);
+    auto net = AppNet::shared();
+    int testId = 999;
+    net->setClientDelegate(client);
+    net->runClient([](int ec){});
+    net->auth("nick", "pass", [](MyAccount & acc, errstr &){}); //2 раза write
+    net->getListChat(testId, [](const vector<ChatInfo> &, errstr&){}); //1 раз write
+    net->getListFrnd(testId, [](const vector<int>&, errstr&){}); //1 раз write
+    MyAccount acc;
+    net->registration(acc, [](int, errstr&){}); //2 раза write
+    net->stopClient();
+    testing::Mock::AllowLeak(client.get());
 }
