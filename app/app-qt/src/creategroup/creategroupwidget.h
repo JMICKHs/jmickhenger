@@ -25,7 +25,7 @@ public:
     ~CreateGroupWidget();
     void setWidget(WidgetType type);
 
-private slots:
+public slots:
     void on_pushButton_clicked();
     void on_closeContactsButton_clicked();
     void on_SearchEditToCreateGroup_textChanged(const QString &arg1);

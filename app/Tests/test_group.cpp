@@ -2,6 +2,7 @@
 #include "test_group.h"
 
 test_group::test_group()
+    :MainWidget()
 {
 
 }
@@ -13,20 +14,19 @@ test_group::~test_group()
 
 void test_group::test_gr1()
 {
-     QTest::mouseClick(this->menuWidget,Qt::LeftButton);
+     QTest::mouseClick(ui->menuButton,Qt::LeftButton);
      QCOMPARE(this->menuWidget->isVisible(),1);
 
 }
 
 void test_group::test_gr2()
 {
-//    std::list<QListWidgetItem*> items = this->getGroupList().getItems();
-//    int size = items.size();
-//    QTest::mouseClick(this->menu,Qt::LeftButton);
-//    QTest::mouseClick(this->menuWidget->getCreateButton(),Qt::LeftButton);
-//    std::list<QListWidgetItem*> newItems = this->getGroupList().getItems();
-//    int newSize = newItems.size();
-//    QCOMPARE(size + 1,newSize);
+     QTest::mouseClick(ui->menuButton,Qt::LeftButton);
+     int size = this->groupModel->getItems().size();
+     this->menuWidget->getCreateWidget()->on_addFriend(3);
+     this->menuWidget->getCreateWidget()->on_pushButton_2_clicked();
+     int newSize = this->groupModel->getItems().size();
+     QCOMPARE(size + 1,newSize);
 }
 
 void test_group::test_gr3()
