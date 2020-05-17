@@ -14,6 +14,7 @@
 #include <QFocusEvent>
 #include <QAction>
 #include <QMenu>
+#include "ui_mainwidget.h"
 
 enum class Buttons{
     SEND_MESSAGE_BUTTON,

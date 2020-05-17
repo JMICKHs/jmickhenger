@@ -1,75 +1,41 @@
 cmake_minimum_required(VERSION 3.10)
 
 set(SOURCE_FILES
-    ../app-qt/src/chatinput/chatinput.h
     ../app-qt/src/chatinput/chatinput.cpp
     ../app-qt/src/creategroup/creategroupwidget.cpp
-    ../app-qt/src/creategroup/creategroupwidget.h
     ../app-qt/src/custommbutton/custombutton.cpp
-    ../app-qt/src/custommbutton/custombutton.h
     ../app-qt/src/delegates/chatdelegate.cpp
-    ../app-qt/src/delegates/chatdelegate.h
     ../app-qt/src/delegates/groupdelegate.cpp
-    ../app-qt/src/delegates/groupdelegate.h
     ../app-qt/src/delegates/friendsdelegate.cpp
-    ../app-qt/src/delegates/friendsdelegate.h
     ../app-qt/src/mainwidget/mainwidget.cpp
-    ../app-qt/src/mainwidget/mainwidget.h
     ../app-qt/src/menuwidget/menuwidget.cpp
-    ../app-qt/src/menuwidget/menuwidget.h
     ../app-qt/src/models/chatmodel.cpp
-    ../app-qt/src/models/chatmodel.h
-    ../app-qt/src/models/groupmodel.h
     ../app-qt/src/models/groupmodel.cpp
     ../app-qt/src/proxy/proxymodel.cpp
-    ../app-qt/src/proxy/proxymodel.h
     ../app-qt/src/proxy/friendmodelproxy.cpp
-    ../app-qt/src/proxy/friendmodelproxy.h
     ../app-qt/src/views/chatview.cpp
-    ../app-qt/src/views/chatview.h
     ../app-qt/src/views/grouplistview.cpp
-    ../app-qt/src/views/grouplistview.h
-    ../app-qt/src/creategroup/creategroupwidget.ui
-    ../app-qt/src/mainwidget/mainwidget.ui
-    ../app-qt/src/menuwidget/menuwidget.ui
     ../app-qt/src/loginwidget/loginwidget.cpp
-    ../app-qt/src/loginwidget/loginwidget.h
-    ../app-qt/src/loginwidget/loginwidget.ui
-    ../app-qt/src/models/usermodel.h
     ../app-qt/src/models/usermodel.cpp
-    ../app-qt/src/custominputforms/custominputforms.h
     ../app-qt/src/custominputforms/custominputforms.cpp
     ../app-qt/src/mainlogic/mainlogic.cpp
-    ../app-qt/src/mainlogic/mainlogic.h
     ../app-qt/src/models/friendsmodel.cpp
-    ../app-qt/src/models/friendsmodel.h
     ../app-qt/src/views/friendsview.cpp
-    ../app-qt/src/views/friendsview.h
     ../app-qt/src/setavatarwidget/setavatarwidget.cpp
-    ../app-qt/src/setavatarwidget/setavatarwidget.h
-    ../app-qt/src/setavatarwidget/setavatarwidget.ui
     ../app-qt/src/addfriendwidget/addfriendwidget.cpp
-    ../app-qt/src/addfriendwidget/addfriendwidget.h
-    ../app-qt/src/addfriendwidget/addfriendwidget.ui
-    ../netlib/info/Info.h
     ../netlib/info/Info.cpp
-    ../netlib/cache/Cache.h
     ../netlib/cache/Cache.cpp
-    ../netlib/client/Client.h
     ../netlib/client/Client.cpp
-    ../netlib/parser/Parser.h
     ../netlib/parser/Parser.cpp
-    ../netlib/announcer/Announcer.h
     ../netlib/announcer/Announcer.cpp
-    ../netlib/AppNetwork.cpp
-    ../netlib/AppNetwork.h)
+    ../netlib/AppNetwork.cpp)
 
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5Test REQUIRED)

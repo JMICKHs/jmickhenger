@@ -4,7 +4,7 @@
 #include "app-qt/src/models/chatmodel.h"
 #include "app-qt/src/chatinput/chatinput.h"
 #include "netlib/AppNetwork.h"
-#include "ui_mainwidget.h"
+
 #include <QDebug>
 
 MainWidget::MainWidget(QWidget *parent) :

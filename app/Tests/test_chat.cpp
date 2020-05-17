@@ -7,6 +7,7 @@
 
 test_chat::test_chat()
     :MainWidget()
+
 {
 
 }
@@ -18,29 +19,34 @@ test_chat::~test_chat()
 
 void test_chat::test_case1()
 {
-//     QTest::keyClicks(this->ui->messageInput, "Send My Message");
-//     QTest::mouseClick(this->ui->sendButton,Qt::LeftButton);
-//     std::vector<Msg> items = this->chatModel->getItems();
-//     QString text = QString::fromStdString(items.back().text);
+     Chat chat;
+     chat.idChat = 3;
+     groupModel->addItem(chat);
+     QTest::keyClicks(this->ui->messageInput, "");
+     QTest::mouseClick(this->ui->sendButton,Qt::LeftButton);
+     std::vector<Msg> items = this->chatModel->getItems();
+     QString text = QString::fromStdString(items.back().text);
 
-//     QCOMPARE(text,"Send My Message");
+     QCOMPARE(text,"Send My Message");
 }
 
 void test_chat::test_case2()
 {
-//    QTest::keyClicks(this->ui->messageInput, "");
-//    QTest::mouseClick(this->ui->sendButton,Qt::LeftButton);
-//    std::vector<Msg> items = this->chatModel->getItems();
+     QTest::keyClicks(this->ui->messageInput, "");
+     QTest::mouseClick(this->ui->sendButton,Qt::LeftButton);
+     std::vector<Msg> items = this->chatModel->getItems();
 
-//    QCOMPARE(items.size(),0);
+     QCOMPARE(items.size(),0);
 }
 
 void test_chat::test_case3()
 {
-//    QTest::keyClicks(this->ui->messageInput, "12312Message");
-//    QTest::mouseClick(this->ui->sendButton,Qt::LeftButton);
-//    std::vector<Msg> items = this->chatModel->getItems();
-//    QString text = QString::fromStdString(items.back().text);
+     QTest::keyClicks(this->ui->messageInput, "12312Message");
+     QTest::mouseClick(this->ui->sendButton,Qt::LeftButton);
+     std::vector<Msg> items = this->chatModel->getItems();
+     QString text = QString::fromStdString(items.back().text);
 
-//    QCOMPARE(text,"12312Message");
+     QCOMPARE(text,"12312Message");
 }
+
+#include "test_chat.moc"
