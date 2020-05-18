@@ -3,6 +3,7 @@
 //
 
 #include "Parser.h"
+#include <boost/algorithm/string.hpp>
 
 using namespace std;
 namespace bptree = boost::property_tree;
@@ -21,6 +22,9 @@ void Parser::addStr(const string &value, const string &name) {
 
 void Parser::addArrInt(const vector<int> &vec, const string &name) {
     bptree::ptree tmp;
+    if(vec.empty()) {
+        tmp.put("", "[]");
+    }
     for(const auto & item: vec) {
         bptree::ptree element;
         element.put("", item);
@@ -31,6 +35,9 @@ void Parser::addArrInt(const vector<int> &vec, const string &name) {
 
 void Parser::addArrStr(const vector<string> &vec, const string &name) {
     bptree::ptree tmp;
+    if(vec.empty()) {
+        tmp.put("", "[]");
+    }
     for(const auto & item: vec) {
         bptree::ptree element;
         element.put("", item);
@@ -46,7 +53,9 @@ void Parser::clear() {
 string Parser::getRes() {
     stringstream result;
     bptree::write_json(result, root);
-    return result.str();
+    string resStr = result.str();
+    boost::replace_all(resStr, "\"[]\"", "[]");
+    return resStr;
 }
 
 void Parser::setJson(const string &jsonData) {
@@ -70,7 +79,10 @@ string Parser::getStr(const string &name) {
 vector<int> Parser::getArrInt(const string &name) {
     vector<int> res;
     for(const auto & item: root.get_child(name)) {
-        res.push_back(item.second.get_value<int>());
+        auto tmp = item.second.get_value_optional<int>();
+        if(tmp) {
+            res.push_back(tmp.value());
+        }
     }
     return res;
 }
@@ -92,6 +104,9 @@ void Parser::addCustom(const string &json, const string &name) {
 
 void Parser::addArrCustom(const vector<string> &jsons, const string &name) {
     bptree::ptree tmp;
+    if(jsons.empty()) {
+        tmp.put("", "[]");
+    }
     for(const auto & item: jsons) {
         bptree::ptree elem;
         stringstream ss(item);

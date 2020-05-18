@@ -186,6 +186,16 @@ void AppNet::createChat(const ChatRoom &room, const function<void(int, errstr &)
     client->write(query.encode());
 }
 
+void AppNet::dellMsg(int idUser, int idChat, int numberMsg, const std::function<void(errstr &)> &callback) {
+    Parser parser;
+    parser.addInt(idUser, MyAccount::nameId);
+    parser.addInt(idChat, ChatInfo::nameId);
+    parser.addInt(numberMsg, Message::nameNumber);
+    Query query((int)Cmds::delMessage, parser.getRes());
+    announcer->addCallback<pair<int, int>, errstr &>((int)Cmds::delMessage, pair<int, int>(idChat, numberMsg), callback);
+    client->write(query.encode());
+}
+
 void AppNet::setHandlers() {
     auto self = shared_from_this();
     handlers.reserve((int)Cmds::test); // test - последняя по номеру команда
@@ -203,6 +213,7 @@ void AppNet::setHandlers() {
         }
     };
     handlers[(int)Cmds::registration] = f1;
+
     auto f2 = [self](int cmd, errstr & err, const string & body) {
         MyAccount acc;
         acc.decode(body);
@@ -217,6 +228,7 @@ void AppNet::setHandlers() {
         }
     };
     handlers[(int)Cmds::auth] = f2;
+
     auto f3 = [self](int cmd, errstr & err, const string & body) {
         Parser parser;
         parser.setJson(body);
@@ -236,6 +248,7 @@ void AppNet::setHandlers() {
         }
     };
     handlers[(int)Cmds::getListChat] = f3;
+
     auto f4 = [self](int cmd, errstr & err, const string & body) {
         ChatRoom room;
         room.decode(body);
@@ -247,6 +260,7 @@ void AppNet::setHandlers() {
         }
     };
     handlers[(int)Cmds::getChatRoom] = f4;
+
     auto f5 = [self](int cmd, errstr & err, const string & body) {
         Message tmpMsg;
         tmpMsg.decode(body);
@@ -259,6 +273,7 @@ void AppNet::setHandlers() {
         }
     };
     handlers[(int)Cmds::sendMessage] = f5;
+
     auto f6 = [self](int cmd, errstr & err, const string & body) {
         Parser parser;
         parser.setJson(body);
@@ -279,12 +294,14 @@ void AppNet::setHandlers() {
         }
     };
     handlers[(int)Cmds::getMessages] = f6;
+
     auto f7 = [self](int cmd, errstr & err, const string & body) {
         ChatChange change;
         change.decode(body);
         self->announcer->notifyChat(change);
     };
     handlers[(int)Cmds::incomingMsgs] = f7;
+
     auto f8 = [self](int cmd, errstr & err, const string & body) {
         Message tmpMsg;
         tmpMsg.decode(body);
@@ -296,6 +313,7 @@ void AppNet::setHandlers() {
         }
     };
     handlers[(int)Cmds::getLastMsg] = f8;
+
     auto f9 = [self](int cmd, errstr & err, const string & body) {
         Parser parser;
         parser.setJson(body);
@@ -307,6 +325,7 @@ void AppNet::setHandlers() {
         }
     };
     handlers[(int)Cmds::addFrnd] = f9;
+
     auto f10 = [self](int cmd, errstr & err, const string & body) {
         Parser parser;
         parser.setJson(body);
@@ -320,7 +339,9 @@ void AppNet::setHandlers() {
         }
     };
     handlers[(int)Cmds::getListFrnd] = f10;
+
     handlers[(int)Cmds::delFrnd] = f9;
+
     auto f12 = [self](int cmd, errstr & err, const string & body) {
         MyAccount acc;
         acc.decode(body);
@@ -333,6 +354,7 @@ void AppNet::setHandlers() {
         }
     };
     handlers[(int)Cmds::getMe] = f12;
+
     auto f13 = [self](int cmd, errstr & err, const string & body) {
         UserInfo user;
         user.decode(body);
@@ -344,6 +366,7 @@ void AppNet::setHandlers() {
         }
     };
     handlers[(int)Cmds::getUser] = f13;
+
     auto f14 = [self](int cmd, errstr & err, const string & body) {
         ChatRoom room;
         room.decode(body);
@@ -355,6 +378,21 @@ void AppNet::setHandlers() {
         }
     };
     handlers[(int)Cmds::createChat] = f14;
+
+    auto f19 = [self](int cmd, errstr & err, const string & body) {
+        Parser parser;
+        parser.setJson(body);
+        auto chatId = parser.getInt(ChatInfo::nameId);
+        auto number = parser.getInt(Message::nameNumber);
+        auto context = pair<int, int>(chatId, number);
+        auto f = self->announcer->getCallback<pair<int, int>, errstr &>(cmd, context);
+        if (f) {
+            f.value()(err);
+        } else {
+            cout << "cmd " << cmd << " " << body << " не найден callback\n";
+        }
+    };
+    handlers[(int)Cmds::delMessage] = f19;
 }
 
 optional<MyAccount> AppNet::accFromCache() {
@@ -365,5 +403,3 @@ void AppNet::setClientDelegate(std::shared_ptr<AbstractClient> clientDelegate) {
     this->client = clientDelegate;
     clientStarted = false;
 }
-
-

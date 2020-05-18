@@ -33,16 +33,17 @@ public:
     void getMsgs(int idUser, int idChat, int start, int end, const std::function<void(std::vector<inf::Message> &, errstr &)> & callback);
     void getLastMsg(int idUser, int idChat, const std::function<void(inf::Message &, errstr &)> & callback);
     void addFrnd(int idUser, int idFrnd, const std::function<void(errstr &)> & callback);
+    void addFrndNick(int idUser, const std::string & nick, const std::function<void(errstr &)> & callback); //TODO
     void getListFrnd(int id, const std::function<void(std::vector<int> &, errstr &)> & callback);
     void delFrnd(int idUser, int idFrnd, const std::function<void(errstr &)> & callback);
     void getInfoMe(int id, const std::function<void(inf::MyAccount &, errstr &)> & callback);
     void getUser(int myId, int id, const std::function<void(inf::UserInfo &, errstr &)> & callback);
     void createChat(const inf::ChatRoom & room, const std::function<void(int, errstr &)> & callback);
-    void addAdminChat(int idChat, int idUser, const std::function<void(errstr &)> & callback){}//TODO
-    void dellChat(int idChat, const std::function<void(errstr &)> & callback){}//TODO
-    void dellMsg(int idChat, int numberMsg, const std::function<void(errstr &)> & callback){}//TODO
-    void changeMsg(const inf::Message & msg, const std::function<void(errstr &)> & callback){}//TODO
-    void saveAvatar(const std::string & path, const std::function<void(errstr &)> & callback){}//TODO
+    void addAdminChat(int myId, int idChat, int idUser, const std::function<void(errstr &)> & callback){}//TODO
+    void dellChat(int idUser, int idChat, const std::function<void(errstr &)> & callback){}//TODO
+    void dellMsg(int idUser, int idChat, int numberMsg, const std::function<void(errstr &)> & callback);
+    void changeMsg(int idUser, const inf::Message & msg, const std::function<void(errstr &)> & callback);
+    void saveAvatar(int idUser, const std::string & path, const std::function<void(errstr &)> & callback){}//TODO
     void changeMe(const inf::MyAccount & acc, const std::function<void(errstr &)> & callback){}//TODO
 private:
     explicit AppNet();
@@ -70,7 +71,7 @@ private:
         getUser, // 13
         createChat, // 14
         delChat, //15
-        saveAvatar, //16
+        addFrndNick, //16
         changeUser, //17
         changeMessage, //18
         delMessage, //19

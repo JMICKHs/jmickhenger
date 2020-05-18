@@ -11,7 +11,7 @@ void setInfoFromConfig(optional<string> & login, optional<string> & pas, optiona
 
 int main() {
     //пример авторизации и написания сообщений в определенный чат
-    
+
     auto net = AppNet::shared();
     net->runClient([](int ec){
         cout << "ошибка соеденеия номер - " << ec << endl;
@@ -23,31 +23,31 @@ int main() {
         cout << " Неправильный сonfig\n";
         return 0;
     }
-    net->auth(login.value(), pas.value(), [net](const MyAccount & acc, errstr& er){
+    net->auth(login.value(), pas.value(), [net, idChat](const MyAccount & acc, errstr& er){
         if(!er) {
             cout << acc.login << " авторизировался !\n";
+            if(!idChat) {
+                cout << " Неправильный сonfig\n";
+                return 0;
+            }
+            string text;
+            while(getline(cin, text)) {
+                Message msg;
+                msg.text = text;
+                net->sendMsg(msg, [net](errstr & er){
+                    if(!er) {
+                        cout << "сообщение доставлено!\n";
+                    } else {
+                        cout << "ошибка отправки сообщения: " << er.value() << endl;
+                        net->stopClient();
+                    }
+                });
+            }
         } else {
             cout << "ошибка авторизации: " << er.value() << endl;
             net->stopClient();
         }
     });
-    if(!idChat) {
-        cout << " Неправильный сonfig\n";
-        return 0;
-    }
-    string text;
-    while(getline(cin, text)) {
-        Message msg;
-        msg.text = text;
-        net->sendMsg(msg, [net](errstr & er){
-            if(!er) {
-                cout << "сообщение доставлено!\n";
-            } else {
-                cout << "ошибка отправки сообщения: " << er.value() << endl;
-                net->stopClient();
-            }
-        });
-    }
     net->stopClient();
     return 0;
 }

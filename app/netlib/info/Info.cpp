@@ -39,6 +39,7 @@ void inf::MyAccount::decode(const string &json) {
     login = parser->getStr(nameLogin);
     password = parser->getStr(namePassword);
     pathToAvatar = parser->getStr(namePathImage);
+    friends = parser->getArrInt(nameFriends);
     chats = parser->getArrInt(nameChats);
 }
 
