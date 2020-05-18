@@ -24,7 +24,7 @@ public:
     explicit CreateGroupWidget(QWidget *parent = nullptr);
     ~CreateGroupWidget();
     void setWidget(WidgetType type);
-
+    std::shared_ptr<FriendsModel> getFriendsModel();
 public slots:
     void on_pushButton_clicked();
     void on_closeContactsButton_clicked();
@@ -35,10 +35,13 @@ public slots:
     void on_pushButton_2_clicked();
     void on_addFriend(int id1);
     void on_addFriendButton_clicked();
+    void getListFriend();
+    void updateOnAddFfriend();
 
 signals:
     void text_changed(const QString&);
     void groupCreated(const inf::ChatRoom &);
+    void addFrinedSignal(int id);
 
 private:
     Ui::CreateGroupWidget *ui;
@@ -47,6 +50,7 @@ private:
     addFriendWidget *addFriend;
     FriendModelProxy *proxy;
     std::shared_ptr<FriendsModel> friendModel;
+
 };
 
 #endif // CREATEGROUPWIDGET_H

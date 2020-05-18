@@ -35,6 +35,7 @@ void GroupModel::addItem(Chat &item)
     int row = this->rowCount();
     beginInsertRows(QModelIndex(),row,row);
     items.emplace_back(item);
+
     endInsertRows();
 }
 
@@ -97,6 +98,9 @@ void GroupModel::addCallbacks()
                 return  chat.idChat == change.idChat;
             });
             self->items.erase(it);
+        }
+        if(change.action == "addMessage"){
+            emit self->sendNewMessages(change.messages);
         }
     };
     unknownChatRoomAdd = [self = shared_from_this()](inf::ChatRoom &room, std::optional<std::string>&err){

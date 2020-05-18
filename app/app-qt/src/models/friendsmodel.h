@@ -13,6 +13,7 @@ Q_DECLARE_METATYPE(UserInf)
 
 class FriendsModel : public QAbstractListModel, public std::enable_shared_from_this<FriendsModel>
 {
+    Q_OBJECT
 public:
     FriendsModel();
     void setData(std::vector<int> &);
@@ -22,15 +23,18 @@ public:
     void addCallbacks();
     std::function<void(std::optional<std::string> &)>& getAddFriendCallback();
     std::function<void(std::vector<int> &,std::optional<std::string> &)>& getFrinedsCallback();
+    void Clear();
 public slots:
-    void getFriendsSlot();
+    void addFriendSlot(int id);
+signals:
+    void updateForNames();
 private:
     std::function<void(std::optional<std::string> &)> addFriendCallback;
     std::function<void(std::vector<int> &,std::optional<std::string> &)> friendsCallback;
     std::function<void(inf::UserInfo &user,std::optional<std::string>&)> userForFriend;
     std::vector<UserInf> items;
-    std::vector<int> ids;
     std::optional<std::string> errString;
+    int currId;
 };
 
 #endif // FRIENDSMODEL_H

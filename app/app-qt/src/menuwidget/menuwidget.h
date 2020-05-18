@@ -26,6 +26,8 @@ private:
     Ui::MenuWidget *ui;
     SetAvatarWidget *avatWidget;
     std::shared_ptr<CreateGroupWidget> friendsWidget;
+signals:
+    void getListFriendSignal();
 public slots:
     void setPosition();
     void setName(const QString &name);

@@ -8,9 +8,17 @@ FriendsModel::FriendsModel()
 }
 
 void FriendsModel::setData(std::vector<int> &_ids)
-{;
+{
+    items.clear();
     beginInsertRows(QModelIndex(),0,_ids.size() - 1);
-    ids = std::move(_ids);
+    for(size_t i = 0; i < _ids.size(); ++i){
+        UserInf inf;
+        inf.id = _ids[i];
+        items.push_back(inf);
+    }
+    for(size_t i = 0 ; i < _ids.size(); ++i){
+       AppNet::shared()->getUser(UserModel::instance()->getId(),_ids[i],userForFriend);
+    }
     endInsertRows();
 }
 
@@ -21,8 +29,6 @@ void FriendsModel::addFriend(int login)
     UserInf user;
     user.id = login;
     items.push_back(std::move(user));
-    AppNet::shared()->addFrnd(UserModel::instance()->getId(),user.id,addFriendCallback);
-    AppNet::shared()->getUser(UserModel::instance()->getId(),user.id,userForFriend);
     endInsertRows();
 }
 
@@ -50,7 +56,12 @@ QVariant FriendsModel::data(const QModelIndex &index, int role) const
 void FriendsModel::addCallbacks()
 {
     addFriendCallback = [self = shared_from_this()](std::optional<std::string> &err){
-        self->errString = err;
+        if(err == std::nullopt){
+            self->addFriend(self->currId);
+            AppNet::shared()->getUser(UserModel::instance()->getId(),self->currId,self->userForFriend);
+        }
+        else
+            self->errString = err;
     };
     friendsCallback = [self = shared_from_this()](std::vector<int> &ids,std::optional<std::string> &err){
         if(err == std::nullopt){
@@ -73,6 +84,7 @@ void FriendsModel::addCallbacks()
         else{
             self->errString = err;
         }
+        self->emit updateForNames();
     };
 }
 std::function<void(std::optional<std::string> &)>& FriendsModel::getAddFriendCallback()
@@ -83,4 +95,15 @@ std::function<void(std::optional<std::string> &)>& FriendsModel::getAddFriendCal
 std::function<void (std::vector<int> &, std::optional<std::string> &)> &FriendsModel::getFrinedsCallback()
 {
     return friendsCallback;
+}
+
+void FriendsModel::Clear()
+{
+    items.clear();
+}
+
+void FriendsModel::addFriendSlot(int id)
+{
+    currId = id;
+    AppNet::shared()->addFrnd(UserModel::instance()->getId(),currId,addFriendCallback);
 }

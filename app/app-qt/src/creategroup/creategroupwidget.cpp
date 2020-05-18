@@ -2,7 +2,7 @@
 #include "ui_creategroupwidget.h"
 #include <app-qt/src/delegates/friendsdelegate.h>
 #include <QDebug>
-
+#include "netlib/AppNetwork.h"
 CreateGroupWidget::CreateGroupWidget(QWidget *parent) :
     QStackedWidget(parent),
     ui(new Ui::CreateGroupWidget)
@@ -36,6 +36,9 @@ CreateGroupWidget::CreateGroupWidget(QWidget *parent) :
     ui->createGroupView->setItemDelegate(new friendsDelegate);
     ui->friendsView->setItemDelegate(new friendsDelegate);
     ui->createGroupView->setSelectionMode(QAbstractItemView::MultiSelection);
+    connect(this,&CreateGroupWidget::addFrinedSignal,friendModel.get(),&FriendsModel::addFriendSlot);
+    connect(friendModel.get(),&FriendsModel::updateForNames,this,&CreateGroupWidget::updateOnAddFfriend);
+
 }
 
 CreateGroupWidget::~CreateGroupWidget()
@@ -51,6 +54,11 @@ void CreateGroupWidget::setWidget(WidgetType type)
         setCurrentWidget(contactsWidget);
     else
         setCurrentWidget(createWidget);
+}
+
+std::shared_ptr<FriendsModel> CreateGroupWidget::getFriendsModel()
+{
+    return  friendModel;
 }
 
 void CreateGroupWidget::on_pushButton_clicked()
@@ -85,6 +93,8 @@ void CreateGroupWidget::on_pushButton_2_clicked()
         for(auto& indexData : indexList){
             usrIds.push_back(indexData.data().value<UserInf>().id);
         }
+        usrIds.push_back(UserModel::instance()->getId());
+        item.idAdmins.push_back(UserModel::instance()->getId());
         item.idUsers = std::move(usrIds);
         item.name = ui->lineEdit->text().toStdString();
         emit groupCreated(item);
@@ -94,12 +104,22 @@ void CreateGroupWidget::on_pushButton_2_clicked()
 
 void CreateGroupWidget::on_addFriend(int id1)
 {
-    friendModel->addFriend(id1);
+    emit addFrinedSignal(id1);
 }
 
 void CreateGroupWidget::on_addFriendButton_clicked()
 {
     addFriend->show();
     addFriend->move(pos().x() + size().width()/(4),
-               pos().y() + size().height()/(4));
+                    pos().y() + size().height()/(4));
+}
+
+void CreateGroupWidget::getListFriend()
+{
+    AppNet::shared()->getListFrnd(UserModel::instance()->getId(),friendModel->getFrinedsCallback());
+}
+
+void CreateGroupWidget::updateOnAddFfriend()
+{
+    ui->friendsView->doItemsLayout();
 }

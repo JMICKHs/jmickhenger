@@ -36,6 +36,7 @@ private slots:
 
 public slots:
     void showMainWidgetSlot();
+    void stopAnimation();
 
 signals:
    void openMainWidget();

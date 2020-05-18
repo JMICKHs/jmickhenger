@@ -50,6 +50,8 @@ void UserModel::setCallBacks()
         }
         else
             self->errString = err;
+        emit self->stopAnimationSignal();
+
     };
     authCallback = [self = instance()](Account& newAcc,std::optional<std::string>& err){
         if(err == std::nullopt){
@@ -58,7 +60,13 @@ void UserModel::setCallBacks()
         }
         else
             self->errString = err;
+        emit self->stopAnimationSignal();
     };
+}
+
+void UserModel::setAvatar(const QString &avatar)
+{
+    myAcc.pathToAvatar = avatar.toStdString();
 }
 
 Account UserModel::getAcc() const

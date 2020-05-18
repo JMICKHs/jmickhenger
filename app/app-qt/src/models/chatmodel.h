@@ -64,6 +64,7 @@ signals:
     void messageCreateByUser(const Msg &_message);
 public slots:
     void createMessage(const Msg &_message);
+    void newMessages(std::vector<MessageItem> &msgs);
 
 };
 

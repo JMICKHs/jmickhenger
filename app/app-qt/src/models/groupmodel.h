@@ -59,6 +59,7 @@ private:
 
 signals:
     void sendChatRoom(const inf::ChatRoom &inf);
+    void sendNewMessages(std::vector<MessageItem> &msgs);
 public slots:
     void messageCreateByUser(const Msg &msg);
     void createChatByUser(const inf::ChatRoom &room);

@@ -1,7 +1,8 @@
-<!DOCTYPE RCC><RCC version="1.0">
+<RCC>
     <qresource prefix="/imges">
         <file>check.jpg</file>
         <file>img518924.png</file>
         <file>standartAvatar.jpg</file>
+        <file>ZKZg.gif</file>
     </qresource>
 </RCC>

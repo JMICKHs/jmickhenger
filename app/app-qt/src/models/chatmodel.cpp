@@ -43,6 +43,22 @@ void ChatModel::createMessage(const Msg &_message)
     emit this->dataChanged(QModelIndex(),QModelIndex());
 }
 
+void ChatModel::newMessages(std::vector<MessageItem> &msgs)
+{
+    int row = this->rowCount();
+    auto iniqIds = getUniqueIds(msgs);
+    beginInsertRows(QModelIndex(),row,row + msgs.size() - 1);
+    for(auto &obj : msgs){
+        qDebug() << QString::fromStdString(obj.text);
+        items.emplace_back(Msg(obj));
+    }
+    for(auto &obj : iniqIds){
+        AppNet::shared()->getUser(UserModel::instance()->getId(),obj,userInfForMessage);
+    }
+    endInsertRows();
+}
+
+
 void ChatModel::addCallbacks()
 {
     chatCallback = [self = shared_from_this()](std::vector<MessageItem>& msgs,std::optional<std::string>& err){

@@ -17,6 +17,7 @@ public:
     std::function<void(Account&,std::optional<std::string>&)> &getAuthCallback() ;
     std::function<void(int,std::optional<std::string>&)> &getRegistrationCallback();
     void setCallBacks();
+    void setAvatar(const QString &avatar);
     Account getAcc() const;
     int getId() const;
     void setId(int id);
@@ -39,6 +40,7 @@ private:
 signals:
     void showMainWidget();
     void nickNameChanged(const QString&);
+    void stopAnimationSignal();
 };
 
 #endif // USETMODEL_H

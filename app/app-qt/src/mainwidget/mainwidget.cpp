@@ -71,6 +71,7 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(chatModel.get(),&ChatModel::messageCreateByUser,groupModel.get(),&GroupModel::messageCreateByUser);
     connect(groupModel.get(),&GroupModel::sendChatRoom,this,&MainWidget::setGroupInfoSlot);
     connect(this,&MainWidget::sendAvatar,menuWidget,&MenuWidget::on_image_change);
+    connect(groupModel.get(),&GroupModel::sendNewMessages,chatModel.get(),&ChatModel::newMessages);
     this->setLayout(ui->MainLayout);
 }
 

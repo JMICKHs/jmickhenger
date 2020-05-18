@@ -33,6 +33,7 @@ MenuWidget::MenuWidget(QWidget *parent)
     avatWidget = new SetAvatarWidget(parent);
     friendsWidget = std::shared_ptr<CreateGroupWidget>(new CreateGroupWidget(parent));
     connect(avatWidget,&SetAvatarWidget::avatarChangeSignal,this,&MenuWidget::on_image_change);
+    connect(this,&MenuWidget::getListFriendSignal,friendsWidget.get(),&CreateGroupWidget::getListFriend);
 }
 
 MenuWidget::~MenuWidget()
@@ -65,12 +66,16 @@ void MenuWidget::on_createGroupButton_clicked()
 {
     friendsWidget->setWidget(WidgetType::CREATE_GROUP);
     friendsWidget->show();
+    friendsWidget->getFriendsModel()->Clear();
+    emit getListFriendSignal();
 }
 
 void MenuWidget::on_contactsButton_clicked()
 {
     friendsWidget->setWidget(WidgetType::CONTACTS);
     friendsWidget->show();
+    friendsWidget->getFriendsModel()->Clear();
+    emit getListFriendSignal();
 }
 
 void MenuWidget::on_image_change(const QString &str)
