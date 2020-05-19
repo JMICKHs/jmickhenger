@@ -71,6 +71,7 @@ void ChatModel::addCallbacks()
         }
     };
     sendMsgCallback = [self](std::optional<std::string>& err){
+
         if(err != std::nullopt){
             self->errString = err;
         }
@@ -149,12 +150,16 @@ void ChatModel::DeleteMessage(int pos)
 
 void ChatModel::getMessagesInChat(Msg lastMsg)
 {
-    int count = lastMsg.number / 50;
-    int lastMsgs = lastMsg.number % 50;
+    if(lastMsg.text == ""){
+        AppNet::shared()->getMsgs(UserModel::instance()->getId(),lastMsg.chatId,1,1,chatCallback);
+        return;
+    }
+    int count = lastMsg.number / 20;
+    int lastMsgs = lastMsg.number % 20;
     int curr = 0;
     for(size_t i = 0; i < count; ++i){
-        AppNet::shared()->getMsgs(UserModel::instance()->getId(),lastMsg.chatId,curr+1,curr + 50,chatCallback);
-        curr += 50;
+        AppNet::shared()->getMsgs(UserModel::instance()->getId(),lastMsg.chatId,curr+1,curr + 20,chatCallback);
+        curr += 20;
     }
     if(count == 0)
         AppNet::shared()->getMsgs(UserModel::instance()->getId(),lastMsg.chatId,1,lastMsgs,chatCallback);

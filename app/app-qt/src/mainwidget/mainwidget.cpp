@@ -10,6 +10,7 @@ MainWidget::MainWidget(QWidget *parent) :
     ui(new Ui::MainWidget)
 {
     qRegisterMetaType<inf::ChatRoom>();
+
     ui->setupUi(this);
 
     menuWidget = new MenuWidget(this);
@@ -60,6 +61,7 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->chatList->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->chatList->setSelectionMode(QAbstractItemView::NoSelection);
     ui->chatList->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
 
     connect(menuWidget->getCreateWidget(),&CreateGroupWidget::groupCreated,groupModel.get(),&GroupModel::createChatByUser);
     connect(ui->chatList,&ChatView::customContextMenuRequested,this,&MainWidget::showContextMenu);
@@ -118,8 +120,15 @@ void MainWidget::sendMessageFromInput()
     message.text = text.toStdString();
     message.nickname = QString::fromStdString(UserModel::instance()->getAcc().login);
     message.idOwner = UserModel::instance()->getId();
+    message.avatar = QString::fromStdString(UserModel::instance()->getAcc().avatar);
+
     long int ttime;
     ttime = time(NULL);
+    char buffer [100];
+    tm* timeinfo = localtime(&ttime);
+    strftime(buffer,100,"%H-%M",timeinfo);
+    message.time = QString::fromStdString(std::string(buffer));
+    message.type = MessageType::SELF_MESSAGE_IN_PROGRESS;
     message.timesend  = ttime;
 
     chatModel->createMessage(message);

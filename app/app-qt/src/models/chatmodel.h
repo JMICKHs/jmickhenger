@@ -14,6 +14,7 @@ enum class MessageType{
     OTHER_MESSAGE
 };
 
+
 class Msg : public MessageItem
 {
 public:
@@ -33,6 +34,7 @@ public:
 };
 
 Q_DECLARE_METATYPE(Msg)
+Q_DECLARE_METATYPE(std::vector<MessageItem>);
 class ChatModel : public QAbstractListModel,public std::enable_shared_from_this<ChatModel>
 {
     Q_OBJECT

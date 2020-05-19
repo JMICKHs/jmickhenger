@@ -133,7 +133,7 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
               QBrush check(checkScaled);
               painter->setRenderHint(QPainter::Antialiasing);
               painter->setBrush(check);
-              painter->translate(QPointF(rect.width()-20,rect.y() + 10));
+              painter->translate(QPointF(rect.width()-30,rect.y() + 10));
               painter->fillRect(checkScaled.rect(),Qt::transparent);
               painter->drawPixmap(checkScaled.rect(),checkScaled);
          }
@@ -142,7 +142,7 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
               QBrush check(checkScaled);
               painter->setRenderHint(QPainter::Antialiasing);
               painter->setBrush(check);
-              painter->translate(QPointF(rect.width()-20,rect.y() + 10));
+              painter->translate(QPointF(rect.width()-30,rect.y() + 10));
               painter->fillRect(checkScaled.rect(),Qt::transparent);
               painter->drawPixmap(checkScaled.rect(),checkScaled);
          }
