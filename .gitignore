@@ -4,6 +4,8 @@ cmake-build-debug
 */.idea
 .DS_Store
 */.DS_Store
+app/netlib/sqllite-src/sqlite3.c
+app/netlib/sqllite-src/sqlite3.h
 *~
 *.autosave
 *.a
