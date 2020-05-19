@@ -13,6 +13,7 @@ string getAuthNameForServer(const string & nickname) {
 
 AppNet::AppNet() {
     announcer = std::make_unique<Announcer>();
+    cache = Cache::shared();
     client = Client::shared();
 }
 
@@ -171,6 +172,12 @@ void AppNet::getInfoMe(int id, const function<void(MyAccount &, errstr &)> &call
 }
 
 void AppNet::getUser(int myId, int idUser, const function<void(UserInfo &, errstr &)> &callback) {
+    auto tmpUser = cache->getUser(idUser);
+    if(tmpUser) {
+        errstr err = nullopt;
+        callback(tmpUser.value(), err);
+        return;
+    }
     Parser parser;
     parser.addInt(myId, MyAccount::nameId);
     parser.addInt(idUser, UserInfo::nameId);
@@ -201,6 +208,9 @@ void AppNet::setHandlers() {
     auto f1 = [self](int cmd, errstr & err, const string & body) {
         MyAccount acc;
         acc.decode(body);
+        if(!err) {
+            self->cache->save(acc);
+        }
         auto f = self->announcer->getCallback<string, int, errstr &>(cmd, acc.login);
         if(!err) {
             self->client->write(getIdNameForServer(acc.id));
@@ -216,6 +226,9 @@ void AppNet::setHandlers() {
     auto f2 = [self](int cmd, errstr & err, const string & body) {
         MyAccount acc;
         acc.decode(body);
+        if(!err) {
+            self->cache->save(acc);
+        }
         auto f = self->announcer->getCallback<string, inf::MyAccount &, errstr &>(cmd, acc.login);
         if(!err) {
             self->client->write(getIdNameForServer(acc.id));
@@ -345,6 +358,9 @@ void AppNet::setHandlers() {
     auto f12 = [self](int cmd, errstr & err, const string & body) {
         MyAccount acc;
         acc.decode(body);
+        if(!err) {
+            self->cache->save(acc);
+        }
         int id = acc.id;
         auto f = self->announcer->getCallback<int, MyAccount &, errstr &>(cmd, id);
         if (f) {
@@ -358,6 +374,9 @@ void AppNet::setHandlers() {
     auto f13 = [self](int cmd, errstr & err, const string & body) {
         UserInfo user;
         user.decode(body);
+        if(!err) {
+            self->cache->save(user);
+        }
         auto f = self->announcer->getCallback<int, UserInfo &, errstr &>(cmd, user.id);
         if (f) {
             f.value()(user, err);
@@ -396,7 +415,7 @@ void AppNet::setHandlers() {
 }
 
 optional<MyAccount> AppNet::accFromCache() {
-    return nullopt;
+    return cache->getMyAccount();
 }
 
 void AppNet::setClientDelegate(std::shared_ptr<AbstractClient> clientDelegate) {

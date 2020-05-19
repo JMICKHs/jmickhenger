@@ -268,11 +268,11 @@ TEST(testCodeble, test8) {
 
 
 TEST(testCache, test1) {
-    Cache cache;
+    auto cache = Cache::shared();
     int id = 9;
     UserInfo info(id, "testLogin", "3aavatar.jpg");
-    cache.save(info);
-    auto user = cache.getUser(id);
+    cache->save(info);
+    auto user = cache->getUser(id);
     ASSERT_EQ((bool)user, true);
     if(user) {
         ASSERT_EQ(user.value().id, info.id);
@@ -282,10 +282,10 @@ TEST(testCache, test1) {
 }
 
 TEST(testCache, test2) {
-    Cache cache;
+    auto cache = Cache::shared();
     MyAccount acc(6, "testNick", "3avatar.jpg", "12345", {5, 78}, {8, 9, 10, 11});
-    cache.save(acc);
-    auto test = cache.getMyAccount();
+    cache->save(acc);
+    auto test = cache->getMyAccount();
     ASSERT_EQ((bool)test, true);
     if(test) {
         ASSERT_EQ(test.value().id, acc.id);

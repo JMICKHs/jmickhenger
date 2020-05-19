@@ -17,6 +17,11 @@ string Cache::userPassword = "PASS";
 string Cache::tableUsers = "USERS";
 string Cache::tableAccount = "ACCOUNT";
 
+std::shared_ptr<Cache> Cache::shared() {
+    static shared_ptr<Cache> single(new Cache);
+    return single;
+}
+
 Cache::Cache() {
     rc = sqlite3_open(Cache::pathBd.data(), &db);
     if( rc != SQLITE_OK ) {

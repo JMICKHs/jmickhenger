@@ -7,8 +7,6 @@
 
 #import <iostream>
 #import <optional>
-#import <string>
-#import <memory>
 #import <map>
 
 #include "../sqllite-src/sqlite3.h"
@@ -24,16 +22,20 @@ public:
     virtual std::optional<inf::UserInfo> getUser(int idUser) = 0;
 };
 
-//сделать синглтон майерса и защиту от sql инъекций
-class Cache: AbstractCache {
+class Cache: public AbstractCache {
 public:
-    Cache();
+    static std::shared_ptr<Cache> shared();
+    Cache(const Cache & other) = delete;
+    Cache(Cache && other) = delete;
+    Cache & operator=(const Cache & other) = delete;
+    Cache & operator=(Cache && other) = delete;
     ~Cache();
     void save(const inf::MyAccount & me) override;
     std::optional<inf::MyAccount> getMyAccount() override;
     void save(const inf::UserInfo & user) override;
     std::optional<inf::UserInfo> getUser(int idUser) override;
 private:
+    Cache();
     sqlite3 * db;
     char * zErrMsg = nullptr;
     int rc;
