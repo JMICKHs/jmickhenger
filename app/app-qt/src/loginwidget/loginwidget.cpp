@@ -102,7 +102,7 @@ void LoginWidget::on_registrateButton_clicked()
     Account acc;
     acc.login = ui->loginRegInput->text().toStdString();
     acc.password = ui->fPassRegInput->text().toStdString();
-    acc.pathToAvatar = path.toStdString();
+    acc.avatar = path.toStdString();
     this->registration(acc);
 }
 

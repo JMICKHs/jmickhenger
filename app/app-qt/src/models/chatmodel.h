@@ -20,6 +20,7 @@ public:
     MessageType type;
     QString time;
     QString nickname;
+    QString avatar;
     Msg(MessageItem &item)
         :MessageItem(std::move(item)){
         type = MessageType::OTHER_MESSAGE;
@@ -52,6 +53,8 @@ public:
     void DeleteMessage(int pos);
     void getMessagesInChat(Msg lastMsg);
     void Clear();
+
+
 private:
     std::vector<Msg> items;
     bool newMessageOnBottom;

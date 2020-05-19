@@ -1,9 +1,6 @@
 #include "usermodel.h"
 #include <memory>
 #include <QDebug>
-UserModel::UserModel()
-{
-}
 
 void UserModel::setData(Account &acc)
 {
@@ -32,18 +29,19 @@ std::function<void (int, std::optional<std::string> &)> &UserModel::getRegistrat
 
 void UserModel::setCallBacks()
 {
+    auto self = instance();
     errString = std::nullopt;
-    saveAvatarCallback = [self = instance()](bool state,std::optional<std::string>& err){
+    saveAvatarCallback = [self](bool state,std::optional<std::string>& err){
         if(err == std::nullopt){
             self->errString = err;
         }
     };
-    changeMeCallback = [self = instance()](bool state,std::optional<std::string>& err){
+    changeMeCallback = [self](bool state,std::optional<std::string>& err){
         if(err == std::nullopt){
             self->errString = err;
         }
     };
-    registrationCallback = [self = instance()](int id,std::optional<std::string>& err){
+    registrationCallback = [self](int id,std::optional<std::string>& err){
         if(err == std::nullopt){
             self->myAcc.id = id;
             emit self->showMainWidget();
@@ -53,7 +51,7 @@ void UserModel::setCallBacks()
         emit self->stopAnimationSignal();
 
     };
-    authCallback = [self = instance()](Account& newAcc,std::optional<std::string>& err){
+    authCallback = [self](Account& newAcc,std::optional<std::string>& err){
         if(err == std::nullopt){
             self->setData(newAcc);
             emit self->showMainWidget();
@@ -66,7 +64,7 @@ void UserModel::setCallBacks()
 
 void UserModel::setAvatar(const QString &avatar)
 {
-    myAcc.pathToAvatar = avatar.toStdString();
+    myAcc.avatar = avatar.toStdString();
 }
 
 Account UserModel::getAcc() const
@@ -89,3 +87,4 @@ void UserModel::setPassword(const std::string &password)
 {
     myAcc.password = password;
 }
+

@@ -57,7 +57,8 @@ void GroupModel::setData(std::vector<ChatItem> &chats)
 
 void GroupModel::addCallbacks()
 {
-    chatCallback = [self = shared_from_this()](std::vector<ChatItem> &chats, std::optional<std::string> &err){
+    auto self = shared_from_this();
+    chatCallback = [self](std::vector<ChatItem> &chats, std::optional<std::string> &err){
         if(err == std::nullopt){
             self->setData(chats);
         }
@@ -65,7 +66,7 @@ void GroupModel::addCallbacks()
             self->errString = err;
         }
     };
-    lastMsgCallback = [self = shared_from_this()](MessageItem & msg, std::optional<std::string> & err){
+    lastMsgCallback = [self](MessageItem & msg, std::optional<std::string> & err){
         if(err == std::nullopt){
             auto it = std::find_if(self->items.begin(),self->items.end(),[msg](const Chat &chat){
                 return  chat.idChat == msg.chatId;
@@ -76,26 +77,23 @@ void GroupModel::addCallbacks()
         else
             self->errString = err;
     };
-    createChatCallback = [self = shared_from_this()](int id,std::optional<std::string> &err){
-        qDebug() << "here in callback";
+    createChatCallback = [self](int id,std::optional<std::string> &err){
         if(err == std::nullopt){
             self->items[self->items.size()-1].idChat = id;
-            AppNet::shared()->setObserverChat(id,self->chatChangeCallback);
             AppNet::shared()->getLastMsg(UserModel::instance()->getId(),id,self->lastMsgCallback);
+            AppNet::shared()->setObserverChat(id,self->chatChangeCallback);
+            emit self->updateItems();
         }
         else
             self->errString = err;
 
     };
 
-    delChatCallback = [self = shared_from_this()](bool state, std::optional<std::string> &err){
+    delChatCallback = [self](bool state, std::optional<std::string> &err){
         if(err != std::nullopt)
               self->errString = err;
     };
-    unknownChatChangeCallback = [self = shared_from_this()](inf::ChatChange &change){
-        AppNet::shared()->getChatRoom(UserModel::instance()->getId(),change.idChat,self->unknownChatRoomAdd);
-    };
-    chatChangeCallback = [self = shared_from_this()](inf::ChatChange &change){
+    chatChangeCallback = [self](inf::ChatChange &change){
         if(change.action == "changeChat"){
 
         }
@@ -109,11 +107,18 @@ void GroupModel::addCallbacks()
             emit self->sendNewMessages(change.messages);
         }
     };
-    unknownChatRoomAdd = [self = shared_from_this()](inf::ChatRoom &room, std::optional<std::string>&err){
-        if(err == std::nullopt)
-            self->unknownChatCreate(room);
+    newUnknownChatCallback = [self](inf::ChatRoom &room, std::optional<std::string>&){
+        Chat item;
+        item.idChat = room.idChat;
+        item.name = room.name;
+        self->addItem(item);
+        AppNet::shared()->getLastMsg(UserModel::instance()->getId(),room.idChat,self->getLastMsgCallback());
+        AppNet::shared()->setObserverChat(room.idChat,self->chatChangeCallback);
     };
-    chatRoom = [self = shared_from_this()](inf::ChatRoom &room, std::optional<std::string>&err){
+    unknownChatRoomAdd = [self](Change& change){
+        AppNet::shared()->getChatRoom(UserModel::instance()->getId(),change.idChat,self->newUnknownChatCallback);
+    };
+    chatRoom = [self](inf::ChatRoom &room, std::optional<std::string>&err){
           if(err == std::nullopt){
               emit self->sendChatRoom(room);
           }
@@ -156,6 +161,11 @@ std::function<void (Change &)> &GroupModel::getUnknownChatChangeCallback()
     return unknownChatChangeCallback;
 }
 
+std::function<void (Change &)> &GroupModel::getUnknownChatRoomAdd()
+{
+    return unknownChatRoomAdd;
+}
+
 std::function<void (inf::ChatRoom &, std::optional<std::string> &)> &GroupModel::getChatRoom()
 {
     return chatRoom;
@@ -182,7 +192,6 @@ void GroupModel::createChatByUser(const inf::ChatRoom &room)
     beginInsertRows(QModelIndex(),row,row);
     items.emplace_back(chat);
     endInsertRows();
-    qDebug() <<"here";
     AppNet::shared()->createChat(room,createChatCallback);
 }
 

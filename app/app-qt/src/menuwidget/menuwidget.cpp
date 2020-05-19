@@ -10,7 +10,7 @@ MenuWidget::MenuWidget(QWidget *parent)
     this->setLayout(ui->mainLayout);
     this->setFrameShadow(QFrame::Raised);
     this->setMinimumWidth(260);
-   // this->setWindowFlags(Qt::Popup);
+    this->setWindowFlags(Qt::Popup);
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);
@@ -32,6 +32,7 @@ MenuWidget::MenuWidget(QWidget *parent)
 
     avatWidget = new SetAvatarWidget(parent);
     friendsWidget = std::shared_ptr<CreateGroupWidget>(new CreateGroupWidget(parent));
+    connect(friendsWidget.get(),&CreateGroupWidget::closeMenu,this,&MenuWidget::close);
     connect(avatWidget,&SetAvatarWidget::avatarChangeSignal,this,&MenuWidget::on_image_change);
     connect(this,&MenuWidget::getListFriendSignal,friendsWidget.get(),&CreateGroupWidget::getListFriend);
 }

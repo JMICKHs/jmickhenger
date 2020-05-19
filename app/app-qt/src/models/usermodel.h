@@ -3,9 +3,13 @@
 
 #include <netlib/info/Info.h>
 #include <functional>
+#include <QPixmap>
 #include <QObject>
 
 using Account = inf::MyAccount;
+using UserInf = inf::UserInfo;
+
+Q_DECLARE_METATYPE(UserInf)
 
 class UserModel : public QObject
 {
@@ -29,7 +33,8 @@ public:
     }
 
 private:
-    UserModel();
+    UserModel() = default;
+    QSize avatarScale{45,45};
     std::optional<std::string> errString;
     Account myAcc;
     std::function<void(bool,std::optional<std::string>&)> saveAvatarCallback;

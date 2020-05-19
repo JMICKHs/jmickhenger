@@ -20,7 +20,7 @@ CreateGroupWidget::CreateGroupWidget(QWidget *parent) :
     friendModel = std::make_shared<FriendsModel>();
     friendModel->addCallbacks();
 
-   // this->setWindowFlags(Qt::Popup);
+    this->setWindowFlags(Qt::Popup);
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);
@@ -98,7 +98,8 @@ void CreateGroupWidget::on_pushButton_2_clicked()
         item.idUsers = std::move(usrIds);
         item.name = ui->lineEdit->text().toStdString();
         emit groupCreated(item);
-        close();
+        this->close();
+        emit closeMenu();
     }
 }
 

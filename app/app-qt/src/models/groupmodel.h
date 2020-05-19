@@ -41,6 +41,7 @@ public:
     std::function<void(bool,std::optional<std::string>&)> &getDelChatCallback() ;
     std::function<void(Change&)> &getChatChangeCallback() ;
     std::function<void(Change&)>& getUnknownChatChangeCallback();
+    std::function<void(Change&)>& getUnknownChatRoomAdd();
     std::function<void(inf::ChatRoom &,std::optional<std::string>&)>& getChatRoom();
 
     std::vector<Chat> getItems();
@@ -51,12 +52,14 @@ private:
 
     std::function<void(std::vector<ChatItem> &, std::optional<std::string> &)> chatCallback;
     std::function<void(MessageItem &, std::optional<std::string> &)>  lastMsgCallback;
+    std::function<void(MessageItem &, std::optional<std::string> &)>  lastMsgAndGetChat;
     std::function<void(int,std::optional<std::string>&)> createChatCallback;
     std::function<void(bool,std::optional<std::string>&)> delChatCallback;
     std::function<void(Change&)> chatChangeCallback;
     std::function<void(Change&)> unknownChatChangeCallback;
     std::function<void(inf::ChatRoom &, std::optional<std::string>&)> chatRoom;
-    std::function<void(inf::ChatRoom &, std::optional<std::string>&)> unknownChatRoomAdd;
+    std::function<void(inf::ChatRoom &, std::optional<std::string>&)> newUnknownChatCallback;
+    std::function<void(Change&)> unknownChatRoomAdd;
 
 
 signals:

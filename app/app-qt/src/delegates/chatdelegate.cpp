@@ -45,7 +45,7 @@ bool ChatDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const Q
 void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Msg item = index.model()->data(index).value<Msg>();
-    qDebug() << QString::fromStdString(item.text);
+    ChatModel *model = (ChatModel*)index.model();
     QStyleOptionViewItem myOpt = option;
     myOpt.displayAlignment = Qt::AlignLeft;
     painter->save();
@@ -68,14 +68,20 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
     QRect ButtonRect = myOpt.rect;
     ButtonRect.setTopLeft(QPoint(offset.x(),0) + ButtonRect.topLeft());
 
-    QPixmap scaled = avatar->scaled(avatarScale, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
-    QBrush brush(scaled);
-    painter->setRenderHint(QPainter::Antialiasing);
-    painter->setBrush(brush);
-    painter->translate(QPointF(ButtonRect.x(),ButtonRect.y()));
-    painter->drawRoundedRect(QRect(QPoint(offset),avatarSize), avatarRadius, avatarRadius);
+    if(item.avatar != ""){
+        QString path = ":/imges/" + item.avatar;
+        QPixmap pix(path);
+        QPixmap pix1 = pix.scaled(avatarSize, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 
-    painter->restore();
+        QPixmap scaled = avatar->scaled(avatarScale, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+        QBrush brush(scaled);
+        painter->setRenderHint(QPainter::Antialiasing);
+        painter->setBrush(brush);
+        painter->translate(QPointF(ButtonRect.x(),ButtonRect.y()));
+        painter->drawRoundedRect(QRect(QPoint(offset),avatarSize), avatarRadius, avatarRadius);
+
+        painter->restore();
+    }
     painter->save();
     QRect NameRect = myOpt.rect;
     NameRect.setHeight(baseTextHeight);

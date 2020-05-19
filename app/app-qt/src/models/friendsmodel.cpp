@@ -55,7 +55,8 @@ QVariant FriendsModel::data(const QModelIndex &index, int role) const
 
 void FriendsModel::addCallbacks()
 {
-    addFriendCallback = [self = shared_from_this()](std::optional<std::string> &err){
+    auto self = shared_from_this();
+    addFriendCallback = [self](std::optional<std::string> &err){
         if(err == std::nullopt){
             self->addFriend(self->currId);
             AppNet::shared()->getUser(UserModel::instance()->getId(),self->currId,self->userForFriend);
@@ -63,7 +64,7 @@ void FriendsModel::addCallbacks()
         else
             self->errString = err;
     };
-    friendsCallback = [self = shared_from_this()](std::vector<int> &ids,std::optional<std::string> &err){
+    friendsCallback = [self](std::vector<int> &ids,std::optional<std::string> &err){
         if(err == std::nullopt){
             self->setData(ids);
         }
@@ -71,14 +72,15 @@ void FriendsModel::addCallbacks()
             self->errString = err;
         }
     };
-    userForFriend = [self = shared_from_this()](inf::UserInfo &user,std::optional<std::string>& err){
+    userForFriend = [self](inf::UserInfo &user,std::optional<std::string>& err){
         if(err == std::nullopt){
             auto it = std::find_if(self->items.begin(),self->items.end(),[user](const UserInf &inf){
                 return inf.id == user.id;
             });
             if(it != self->items.end()){
                 it.base()->login = user.login;
-                it.base()->pathToAvatar = user.pathToAvatar;
+                it.base()->avatar = user.avatar;
+
             }
              self->emit updateForNames();
         }

@@ -479,7 +479,7 @@ color:white;</string>
        <widget class="QPushButton" name="returnButton">
         <property name="minimumSize">
          <size>
-          <width>50</width>
+          <width>30</width>
           <height>30</height>
          </size>
         </property>
@@ -490,7 +490,7 @@ color:white;</string>
          </size>
         </property>
         <property name="styleSheet">
-         <string notr="true">background: transparent;
+         <string notr="true">
 
 border-image: url(&quot;/home/kostikan/jmickhenger/app/img/ret.png&quot;);
 </string>
@@ -516,7 +516,7 @@ border-image: url(&quot;/home/kostikan/jmickhenger/app/img/ret.png&quot;);
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>270</width>
+          <width>350</width>
           <height>40</height>
          </size>
         </property>

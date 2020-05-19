@@ -74,6 +74,7 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(groupModel.get(),&GroupModel::sendNewMessages,chatModel.get(),&ChatModel::newMessages);
     connect(groupModel.get(),&GroupModel::updateItems,ui->groupList,&GroupListView::doItemsLayout);
     connect(chatModel.get(),&ChatModel::updateItems,ui->chatList,&ChatView::doItemsLayout);
+    AppNet::shared()->setObserverUnknownChat(groupModel->getUnknownChatRoomAdd());
     this->setLayout(ui->MainLayout);
 }
 
@@ -148,7 +149,7 @@ void MainWidget::after_Login_slot()
     auto net = AppNet::shared();
     net->getListChat(ac.id,groupModel->getChatCallBack());
     menuWidget->setName(QString::fromStdString(ac.login));
-    emit sendAvatar(QString::fromStdString(ac.pathToAvatar));
+    emit sendAvatar(QString::fromStdString(ac.avatar));
     connect(UserModel::instance(),&UserModel::nickNameChanged,menuWidget,&MenuWidget::on_nickname_rename);
 }
 

@@ -61,7 +61,8 @@ void ChatModel::newMessages(std::vector<MessageItem> &msgs)
 
 void ChatModel::addCallbacks()
 {
-    chatCallback = [self = shared_from_this()](std::vector<MessageItem>& msgs,std::optional<std::string>& err){
+    auto self = shared_from_this();
+    chatCallback = [self](std::vector<MessageItem>& msgs,std::optional<std::string>& err){
         if(err == std::nullopt){
             self->setData(msgs);
         }
@@ -69,28 +70,30 @@ void ChatModel::addCallbacks()
             self->errString = err;
         }
     };
-    sendMsgCallback = [self = shared_from_this()](std::optional<std::string>& err){
+    sendMsgCallback = [self](std::optional<std::string>& err){
         if(err != std::nullopt){
             self->errString = err;
         }
     };
-    changeMsgCallback = [self = shared_from_this()](std::optional<std::string>& err){
+    changeMsgCallback = [self](std::optional<std::string>& err){
         if(err != std::nullopt){
             self->errString = err;
         }
     };
-    delMsgCallback = [self = shared_from_this()](std::optional<std::string>& err){
+    delMsgCallback = [self](std::optional<std::string>& err){
         if(err != std::nullopt){
             self->errString = err;
         }
     };
-    userInfForMessage = [self = shared_from_this()](inf::UserInfo &info,std::optional<std::string>&err){
+    userInfForMessage = [self](inf::UserInfo &info,std::optional<std::string>&err){
         if(err == std::nullopt){
             std::for_each(self->items.begin(),self->items.end(),[info](Msg& msg){
                  if(msg.idOwner == info.id){
                      msg.nickname = QString::fromStdString(info.login);
+                     msg.avatar = QString::fromStdString(info.avatar);
                  }
             });
+
             emit self->updateItems();
         }
     };
@@ -165,6 +168,7 @@ void ChatModel::Clear()
     items.clear();
     endResetModel();
 }
+
 
 std::vector<int> ChatModel::getUniqueIds(const std::vector<MessageItem> &vec)
 {

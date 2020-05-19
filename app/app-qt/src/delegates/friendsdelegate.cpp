@@ -27,11 +27,12 @@ void friendsDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
     int width = sizeHint(option,index).width();
 
     QFontMetrics font(f);
-    QPixmap scaled = avatar->scaled(groupIconSize,
-                                       Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+    QString path = ":/imges/" + QString::fromStdString(item.avatar);
+    QPixmap pix(path);
+    QPixmap pix1 = pix.scaled(groupIconSize, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 
     painter->save();
-    QBrush brush(scaled);
+    QBrush brush(pix1);
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setBrush(brush);
     painter->translate(QPointF(rect.topLeft() + offset));

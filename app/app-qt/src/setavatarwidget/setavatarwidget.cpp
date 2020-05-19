@@ -15,9 +15,17 @@ SetAvatarWidget::SetAvatarWidget(QWidget *parent) :
     this->setPalette(Pal);
     this->setLayout(ui->horizontalLayout);
     avatars.emplace_back(baseAvatars::AVATAR1,"standartAvatar.jpg");
-    avatars.emplace_back(baseAvatars::AVATAR2,"img518924.png");
+    avatars.emplace_back(baseAvatars::AVATAR2,"avatar2.jpg");
+    avatars.emplace_back(baseAvatars::AVATAR3,"avatar3.jpg");
+    avatars.emplace_back(baseAvatars::AVATAR4,"avatar4.jpg");
+    avatars.emplace_back(baseAvatars::AVATAR5,"avatar5.jpg");
+    avatars.emplace_back(baseAvatars::AVATAR6,"avatar6.jpg");
     ui->comboForAvatars->addItem("avatar1");
     ui->comboForAvatars->addItem("avatar2");
+    ui->comboForAvatars->addItem("avatar3");
+    ui->comboForAvatars->addItem("avatar4");
+    ui->comboForAvatars->addItem("avatar5");
+    ui->comboForAvatars->addItem("avatar6");
     ui->avatar->setFixedSize(300,300);
     QString path = ":/imges/" + avatars[0].second;
     QPixmap pix1(path);

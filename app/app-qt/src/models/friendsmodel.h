@@ -6,10 +6,7 @@
 #include <memory>
 
 #include <netlib/info/Info.h>
-
-using UserInf = inf::UserInfo;
-
-Q_DECLARE_METATYPE(UserInf)
+#include "app-qt/src/models/usermodel.h"
 
 class FriendsModel : public QAbstractListModel, public std::enable_shared_from_this<FriendsModel>
 {

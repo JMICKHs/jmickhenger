@@ -42,6 +42,7 @@ signals:
     void text_changed(const QString&);
     void groupCreated(const inf::ChatRoom &);
     void addFrinedSignal(int id);
+    void closeMenu();
 
 private:
     Ui::CreateGroupWidget *ui;
