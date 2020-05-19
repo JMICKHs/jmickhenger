@@ -5,10 +5,10 @@
 #ifndef NETLIB_PARSER_H
 #define NETLIB_PARSER_H
 
-#include <string>
+#import <string>
 
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
+#import <boost/property_tree/ptree.hpp>
+#import <boost/property_tree/json_parser.hpp>
 
 
 class AbstractParser {
@@ -35,6 +35,7 @@ public:
 class Parser: public AbstractParser {
 private:
     boost::property_tree::ptree root;
+    static const std::string emptyArr;
 public:
     Parser(): root() {}
     void addBool(bool value, const std::string & name) override;

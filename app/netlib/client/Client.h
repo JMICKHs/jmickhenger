@@ -5,16 +5,16 @@
 #ifndef NETLIB_CLIENT_H
 #define NETLIB_CLIENT_H
 
-#include <iostream>
-#include <functional>
-#include <queue>
+#import <iostream>
+#import <functional>
+#import <queue>
 
-#include <memory>
-#include <optional>
-#include <thread>
+#import <memory>
+#import <optional>
+#import <thread>
 
-#include <boost/asio.hpp>
-#include <boost/bind.hpp>
+#import <boost/asio.hpp>
+#import <boost/bind.hpp>
 
 class AbstractClient {
 public:

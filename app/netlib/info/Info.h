@@ -5,8 +5,8 @@
 #ifndef NETLIB_INFO_H
 #define NETLIB_INFO_H
 
-#include <string>
-#include <memory>
+#import <string>
+#import <memory>
 
 #include "../parser/Parser.h"
 

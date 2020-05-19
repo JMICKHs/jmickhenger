@@ -1,6 +1,6 @@
-#include <fstream>
-#include <ctime>
-#include <sstream>
+#import <fstream>
+#import <ctime>
+#import <sstream>
 
 #include "netlib/AppNetwork.h"
 
@@ -11,7 +11,6 @@ void setInfoFromConfig(optional<string> & login, optional<string> & pas, optiona
 
 int main() {
     //пример авторизации и написания сообщений в определенный чат
-
     auto net = AppNet::shared();
     net->runClient([](int ec){
         cout << "ошибка соеденеия номер - " << ec << endl;

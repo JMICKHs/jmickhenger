@@ -206,7 +206,7 @@ void inf::ChatChange::decode(const string &json) {
 
 const string inf::ChatChange::nameId = "idChat";
 const string inf::ChatChange::nameCmd = "cmd";
-const string inf::ChatChange::nameMsg = "messages";
+const string inf::ChatChange::nameMsg = "msgs";
 
 inf::Reply::Reply() : err(), status(-1), cmd(-1), body() {}
 

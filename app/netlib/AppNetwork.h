@@ -5,7 +5,7 @@
 #ifndef NETLIB_APPNETWORK_H
 #define NETLIB_APPNETWORK_H
 
-#include <unordered_map>
+#import <unordered_map>
 
 #include "announcer/Announcer.h"
 #include "client/Client.h"
@@ -17,6 +17,8 @@ class AppNet: public std::enable_shared_from_this<AppNet> {
 public:
     AppNet(const AppNet &other) = delete;
     AppNet(AppNet &&other) = delete;
+    AppNet& operator=(const AppNet &other) = delete;
+    AppNet& operator=(AppNet &&other) = delete;
     static std::shared_ptr<AppNet> shared();
     void runClient(const std::function<void(int)> & errHandler);
     void stopClient();

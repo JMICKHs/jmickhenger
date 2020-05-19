@@ -296,6 +296,7 @@ void AppNet::setHandlers() {
     handlers[(int)Cmds::getMessages] = f6;
 
     auto f7 = [self](int cmd, errstr & err, const string & body) {
+        if(err) { return; }
         ChatChange change;
         change.decode(body);
         self->announcer->notifyChat(change);
