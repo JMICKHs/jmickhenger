@@ -11,7 +11,7 @@ Codeble::Codeble() {
 }
 
 inf::MyAccount::MyAccount()
-        : id(-1), login("NIL"), pathToAvatar("NIL"), password("NIL"), chats(), friends() {}
+        : id(-1), login("NIL"), avatar("NIL"), password("NIL"), chats(), friends() {}
 
 inf::MyAccount::MyAccount(int id,
                           const string &nickname,
@@ -19,14 +19,14 @@ inf::MyAccount::MyAccount(int id,
                           const string &pass,
                           const vector<int> & chats,
                           const vector<int> & friends)
-        : id(id), login(nickname), pathToAvatar(image), password(pass), chats(chats), friends(friends) {}
+        : id(id), login(nickname), avatar(image), password(pass), chats(chats), friends(friends) {}
 
 string inf::MyAccount::encode() const {
     parser->clear();
     parser->addInt(id, nameId);
     parser->addStr(login, nameLogin);
     parser->addStr(password, namePassword);
-    parser->addStr(pathToAvatar, namePathImage);
+    parser->addStr(avatar, nameAvatar);
     parser->addArrInt(chats, nameChats);
     parser->addArrInt(friends, nameFriends);
 
@@ -38,29 +38,29 @@ void inf::MyAccount::decode(const string &json) {
     id = parser->getInt(nameId);
     login = parser->getStr(nameLogin);
     password = parser->getStr(namePassword);
-    pathToAvatar = parser->getStr(namePathImage);
+    avatar = parser->getStr(nameAvatar);
     friends = parser->getArrInt(nameFriends);
     chats = parser->getArrInt(nameChats);
 }
 
 const string inf::MyAccount::nameId = "myId";
 const string inf::MyAccount::nameLogin = "login";
-const string inf::MyAccount::namePathImage = "pathImage";
+const string inf::MyAccount::nameAvatar = "pathImage";
 const string inf::MyAccount::namePassword = "password";
 const string inf::MyAccount::nameChats = "chats";
 const string inf::MyAccount::nameFriends = "friends";
 
 
-inf::UserInfo::UserInfo() : id(-1), login(), pathToAvatar(){}
+inf::UserInfo::UserInfo() : id(-1), login(), avatar(){}
 
 inf::UserInfo::UserInfo(int id, const string & login, const string & image)
-    : id(id), login(login), pathToAvatar(image) {}
+    : id(id), login(login), avatar(image) {}
 
 string inf::UserInfo::encode() const {
     parser->clear();
     parser->addInt(id, nameId);
     parser->addStr(login, nameLogin);
-    parser->addStr(pathToAvatar, namePathImage);
+    parser->addStr(avatar, nameAvatar);
 
     return parser->getRes();
 }
@@ -69,12 +69,12 @@ void inf::UserInfo::decode(const string &json) {
     parser->setJson(json);
     id = parser->getInt(nameId);
     login = parser->getStr(nameLogin);
-    pathToAvatar = parser->getStr(namePathImage);
+    avatar = parser->getStr(nameAvatar);
 }
 
 const string inf::UserInfo::nameId = "idUser";
 const string inf::UserInfo::nameLogin = "login";
-const string inf::UserInfo::namePathImage = "pathImage";
+const string inf::UserInfo::nameAvatar = "pathImage";
 const string inf::UserInfo::nameListFrnd = "frnds";
 
 inf::Message::Message()

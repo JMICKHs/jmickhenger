@@ -167,7 +167,7 @@ TEST(testCodeble, test4) {
     UserInfo info; info.decode(json);
     ASSERT_EQ(info.id, 4);
     ASSERT_EQ(info.login, "testUser");
-    ASSERT_EQ(info.pathToAvatar, "3avatar.jpg");
+    ASSERT_EQ(info.avatar, "3avatar.jpg");
 }
 
 TEST(testCodeble, test5) {
@@ -277,7 +277,7 @@ TEST(testCache, test1) {
     if(user) {
         ASSERT_EQ(user.value().id, info.id);
         ASSERT_EQ(user.value().login, info.login);
-        ASSERT_EQ(user.value().pathToAvatar, info.pathToAvatar);
+        ASSERT_EQ(user.value().avatar, info.avatar);
     }
 }
 
@@ -290,7 +290,7 @@ TEST(testCache, test2) {
     if(test) {
         ASSERT_EQ(test.value().id, acc.id);
         ASSERT_EQ(test.value().login, acc.login);
-        ASSERT_EQ(test.value().pathToAvatar, acc.pathToAvatar);
+        ASSERT_EQ(test.value().avatar, acc.avatar);
         ASSERT_EQ(test.value().password, acc.password);
     }
 }

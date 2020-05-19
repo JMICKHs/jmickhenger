@@ -57,9 +57,9 @@ void Cache::save(const MyAccount & me) {
         save(me);
     } else {
         request = "INSERT INTO " + tableAccount + " (" + userId + ","
-                + userName + "," + userAvatar + "," + userPassword + ")" +
-                "VALUES (" + to_string(me.id) + ", '" + me.login +
-                "' , '" + me.pathToAvatar +"', '" + me.password + "');";
+                  + userName + "," + userAvatar + "," + userPassword + ")" +
+                  "VALUES (" + to_string(me.id) + ", '" + me.login +
+                  "' , '" + me.avatar + "', '" + me.password + "');";
         rc = sqlite3_exec(db, request.data(), nullptr, nullptr, &zErrMsg);
     }
 }
@@ -67,7 +67,7 @@ void Cache::save(const MyAccount & me) {
 void Cache::save(const inf::UserInfo & user) {
     removeUser(user.id);
     string request = "INSERT INTO " + tableUsers + " (" + userId + "," + userName + "," + userAvatar + ")" +
-            "VALUES (" + to_string(user.id) + ", '" + user.login + "' , '" + user.pathToAvatar + "');";
+                     "VALUES (" + to_string(user.id) + ", '" + user.login + "' , '" + user.avatar + "');";
     rc = sqlite3_exec(db, request.data(), nullptr, nullptr, &zErrMsg);
     if( rc != SQLITE_OK ) {
         createUsers();
@@ -106,13 +106,13 @@ int Cache::callbackUser(void *data, int argc, char **argv, char **azColName) {
         } else if (userName == azColName[i]) {
             user.login = argv[i];
         } else if (userAvatar == azColName[i]) {
-            user.pathToAvatar = argv[i];
+            user.avatar = argv[i];
             users[user.id] = user;
         } else if (userPassword == azColName[i]) {
             MyAccount tmpAcc;
             tmpAcc.id = user.id;
             tmpAcc.login = user.login;
-            tmpAcc.pathToAvatar = user.pathToAvatar;
+            tmpAcc.avatar = user.avatar;
             tmpAcc.password = argv[i];
             acc = move(tmpAcc);
         }

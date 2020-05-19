@@ -31,7 +31,7 @@ namespace inf {
                 const std::vector<int> & friends);
         int id;
         std::string login;
-        std::string pathToAvatar;
+        std::string avatar;
         std::string password;
         std::vector<int> chats;
         std::vector<int> friends;
@@ -39,7 +39,7 @@ namespace inf {
         void decode(const std::string & json) override;
         static const std::string nameId;
         static const std::string nameLogin;
-        static const std::string namePathImage;
+        static const std::string nameAvatar;
         static const std::string namePassword;
         static const std::string nameChats;
         static const std::string nameFriends;
@@ -51,12 +51,12 @@ namespace inf {
         UserInfo(int id, const std::string & login, const std::string & image);
         int id;
         std::string login;
-        std::string pathToAvatar;
+        std::string avatar;
         std::string encode() const override;
         void decode(const std::string & json) override;
         static const std::string nameId;
         static const std::string nameLogin;
-        static const std::string namePathImage;
+        static const std::string nameAvatar;
         static const std::string nameListFrnd;
     };
 
