@@ -52,7 +52,7 @@ private:
     void readHandler(const std::string & str);
     void setHandlers();
     std::unique_ptr<Announcer> announcer;
-    std::unique_ptr<AbstractCache> cache; //TODO
+    std::shared_ptr<AbstractCache> cache; //TODO
     std::shared_ptr<AbstractClient> client;
     std::unordered_map<int, std::function<void(int, errstr &, const std::string &)>> handlers;
     // почему unoredered? в среднем работает за O(1) и мы не меняем в нём данные, поэтому худшего случая не будет

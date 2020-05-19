@@ -13,7 +13,6 @@ string getAuthNameForServer(const string & nickname) {
 
 AppNet::AppNet() {
     announcer = std::make_unique<Announcer>();
-    cache = std::make_unique<Cache>();
     client = Client::shared();
 }
 

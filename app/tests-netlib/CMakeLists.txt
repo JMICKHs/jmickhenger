@@ -3,6 +3,7 @@ include_directories("${PROJECT_SOURCE_DIR}/netlib")
 file(GLOB netLib
         "${PROJECT_SOURCE_DIR}/netlib/*.cpp"
         "${PROJECT_SOURCE_DIR}/netlib/*/*.cpp"
+        "${PROJECT_SOURCE_DIR}/netlib/*/*.c"
         "${PROJECT_SOURCE_DIR}/netlib/*.h"
         "${PROJECT_SOURCE_DIR}/netlib/*/*.h")
 
