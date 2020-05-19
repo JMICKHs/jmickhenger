@@ -1,5 +1,6 @@
 #include "friendsmodel.h"
 #include "netlib/AppNetwork.h"
+#include <QDebug>
 #include "app-qt/src/models/usermodel.h"
 
 FriendsModel::FriendsModel()
@@ -9,7 +10,6 @@ FriendsModel::FriendsModel()
 
 void FriendsModel::setData(std::vector<int> &_ids)
 {
-    items.clear();
     beginInsertRows(QModelIndex(),0,_ids.size() - 1);
     for(size_t i = 0; i < _ids.size(); ++i){
         UserInf inf;
@@ -80,11 +80,12 @@ void FriendsModel::addCallbacks()
                 it.base()->login = user.login;
                 it.base()->pathToAvatar = user.pathToAvatar;
             }
+             self->emit updateForNames();
         }
         else{
             self->errString = err;
         }
-        self->emit updateForNames();
+
     };
 }
 std::function<void(std::optional<std::string> &)>& FriendsModel::getAddFriendCallback()
@@ -99,7 +100,9 @@ std::function<void (std::vector<int> &, std::optional<std::string> &)> &FriendsM
 
 void FriendsModel::Clear()
 {
+    this->beginResetModel();
     items.clear();
+    this->endResetModel();
 }
 
 void FriendsModel::addFriendSlot(int id)

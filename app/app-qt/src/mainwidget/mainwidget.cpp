@@ -2,14 +2,14 @@
 #include "app-qt/src/models/chatmodel.h"
 #include "app-qt/src/chatinput/chatinput.h"
 #include "netlib/AppNetwork.h"
-
+#include "netlib/info/Info.h"
 #include <QDebug>
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MainWidget)
 {
-
+    qRegisterMetaType<inf::ChatRoom>();
     ui->setupUi(this);
 
     menuWidget = new MenuWidget(this);
@@ -72,6 +72,8 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(groupModel.get(),&GroupModel::sendChatRoom,this,&MainWidget::setGroupInfoSlot);
     connect(this,&MainWidget::sendAvatar,menuWidget,&MenuWidget::on_image_change);
     connect(groupModel.get(),&GroupModel::sendNewMessages,chatModel.get(),&ChatModel::newMessages);
+    connect(groupModel.get(),&GroupModel::updateItems,ui->groupList,&GroupListView::doItemsLayout);
+    connect(chatModel.get(),&ChatModel::updateItems,ui->chatList,&ChatView::doItemsLayout);
     this->setLayout(ui->MainLayout);
 }
 
@@ -133,8 +135,8 @@ void MainWidget::on_groupList_clicked(const QModelIndex &index)
     ui->label->setText(QString::fromStdString(index.model()->data(index).value<Chat>().name));
     auto net = AppNet::shared();
     Chat chat = index.model()->data(index).value<Chat>();
-    net->getMsgs(UserModel::instance()->getId(),chat.idChat,0,50,chatModel->getChatCallback());
-    net->getChatRoom(UserModel::instance()->getId(),chat.idChat,groupModel->getChatRoom());
+    chatModel->getMessagesInChat(chat.lastMessage);
+    groupModel->chatInfoSet(chat.idChat);
     ui->chatList->doItemsLayout();
 }
 
@@ -169,10 +171,10 @@ void MainWidget::showContextMenu(const QPoint &pos)
     msgMenu->popup(ui->chatList->viewport()->mapToGlobal(pos));
 }
 
-void MainWidget::setGroupInfoSlot(const ChatRoom &room)
+void MainWidget::setGroupInfoSlot(const inf::ChatRoom &room)
 {
     QString info = QString::number(room.idUsers.size());
-    if(info <= 2)
+    if(room.idUsers.size() <= 2)
         info += "  участника";
     else
         info += "  участников";

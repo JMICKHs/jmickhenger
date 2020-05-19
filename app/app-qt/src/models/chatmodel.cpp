@@ -91,6 +91,7 @@ void ChatModel::addCallbacks()
                      msg.nickname = QString::fromStdString(info.login);
                  }
             });
+            emit self->updateItems();
         }
     };
 }
@@ -141,6 +142,28 @@ void ChatModel::DeleteMessage(int pos)
 {
     if(pos >= 0 && pos < items.size())
         items.erase(items.begin() + pos);
+}
+
+void ChatModel::getMessagesInChat(Msg lastMsg)
+{
+    int count = lastMsg.number / 50;
+    int lastMsgs = lastMsg.number % 50;
+    int curr = 0;
+    for(size_t i = 0; i < count; ++i){
+        AppNet::shared()->getMsgs(UserModel::instance()->getId(),lastMsg.chatId,curr+1,curr + 50,chatCallback);
+        curr += 50;
+    }
+    if(count == 0)
+        AppNet::shared()->getMsgs(UserModel::instance()->getId(),lastMsg.chatId,1,lastMsgs,chatCallback);
+    else
+        AppNet::shared()->getMsgs(UserModel::instance()->getId(),lastMsg.chatId,curr+1,curr + lastMsgs,chatCallback);
+}
+
+void ChatModel::Clear()
+{
+    beginResetModel();
+    items.clear();
+    endResetModel();
 }
 
 std::vector<int> ChatModel::getUniqueIds(const std::vector<MessageItem> &vec)

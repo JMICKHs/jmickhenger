@@ -20,7 +20,7 @@ CreateGroupWidget::CreateGroupWidget(QWidget *parent) :
     friendModel = std::make_shared<FriendsModel>();
     friendModel->addCallbacks();
 
-    this->setWindowFlags(Qt::Popup);
+   // this->setWindowFlags(Qt::Popup);
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);
@@ -122,4 +122,5 @@ void CreateGroupWidget::getListFriend()
 void CreateGroupWidget::updateOnAddFfriend()
 {
     ui->friendsView->doItemsLayout();
+    ui->createGroupView->doItemsLayout();
 }

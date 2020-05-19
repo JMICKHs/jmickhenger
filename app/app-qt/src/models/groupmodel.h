@@ -21,6 +21,7 @@ public:
 };
 
 Q_DECLARE_METATYPE(Chat)
+Q_DECLARE_METATYPE(inf::ChatRoom)
 
 class GroupModel : public QAbstractListModel,public std::enable_shared_from_this<GroupModel>
 {
@@ -32,6 +33,7 @@ public:
     void addItem(Chat &item);
     void setData(std::vector<ChatItem> &);
     void addCallbacks();
+    void chatInfoSet(int id);
 
     std::function<void(std::vector<ChatItem> &, std::optional<std::string> &)> &getChatCallBack() ;
     std::function<void(MessageItem &, std::optional<std::string> &)> &getLastMsgCallback() ;
@@ -60,6 +62,7 @@ private:
 signals:
     void sendChatRoom(const inf::ChatRoom &inf);
     void sendNewMessages(std::vector<MessageItem> &msgs);
+    void updateItems();
 public slots:
     void messageCreateByUser(const Msg &msg);
     void createChatByUser(const inf::ChatRoom &room);

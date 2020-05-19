@@ -10,7 +10,7 @@ MenuWidget::MenuWidget(QWidget *parent)
     this->setLayout(ui->mainLayout);
     this->setFrameShadow(QFrame::Raised);
     this->setMinimumWidth(260);
-    this->setWindowFlags(Qt::Popup);
+   // this->setWindowFlags(Qt::Popup);
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);

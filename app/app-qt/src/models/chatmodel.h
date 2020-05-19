@@ -50,6 +50,8 @@ public:
 
     void slotEditMessage();
     void DeleteMessage(int pos);
+    void getMessagesInChat(Msg lastMsg);
+    void Clear();
 private:
     std::vector<Msg> items;
     bool newMessageOnBottom;
@@ -62,6 +64,7 @@ private:
     std::vector<int> getUniqueIds(const std::vector<MessageItem> &vec);
 signals:
     void messageCreateByUser(const Msg &_message);
+    void updateItems();
 public slots:
     void createMessage(const Msg &_message);
     void newMessages(std::vector<MessageItem> &msgs);
