@@ -60,11 +60,11 @@ private:
     std::function<void(inf::ChatRoom &, std::optional<std::string>&)> chatRoom;
     std::function<void(inf::ChatRoom &, std::optional<std::string>&)> newUnknownChatCallback;
     std::function<void(Change&)> unknownChatRoomAdd;
-
+    std::function<void(inf::UserInfo &,std::optional<std::string>&)> userInfForMessage;
 
 signals:
     void sendChatRoom(const inf::ChatRoom &inf);
-    void sendNewMessages(std::vector<MessageItem> &msgs);
+    void sendNewMessages(std::vector<MessageItem> msgs);
     void updateItems();
 public slots:
     void messageCreateByUser(const Msg &msg);

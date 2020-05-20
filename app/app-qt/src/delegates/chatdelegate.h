@@ -9,7 +9,7 @@ class ChatDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    explicit ChatDelegate(QObject *parent = 0);   
+    explicit ChatDelegate(QWidget *parent = 0);
     QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index ) const override;   
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option,  const QModelIndex &index) override;
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
@@ -26,8 +26,8 @@ private:
     int rightMessageOffset{80};
     int avatarRadius{100};
     float baseTextHeight{15};
-    QSize avatarSize{30,30};
-    QSize avatarScale{40,40};
+    QSize avatarSize{35,35};
+    QSize avatarScale{45,45};
 };
 
 

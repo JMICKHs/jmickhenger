@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>887</width>
-    <height>625</height>
+    <height>641</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -423,6 +423,9 @@ QFrame[frameShape=&quot;4&quot;]
        </spacer>
       </item>
       <item>
+       <widget class="ChatView" name="chatList"/>
+      </item>
+      <item>
        <widget class="Line" name="line_3">
         <property name="autoFillBackground">
          <bool>false</bool>
@@ -449,19 +452,6 @@ QFrame[frameShape=&quot;4&quot;]
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="ChatView" name="chatList">
-        <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
-        </property>
-        <property name="lineWidth">
-         <number>0</number>
-        </property>
-        <property name="sizeAdjustPolicy">
-         <enum>QAbstractScrollArea::AdjustToContents</enum>
         </property>
        </widget>
       </item>
@@ -646,11 +636,6 @@ QFrame[frameShape=&quot;4&quot;]
    <header>app-qt/src/custominputforms/custominputforms.h</header>
   </customwidget>
   <customwidget>
-   <class>ChatView</class>
-   <extends>QListView</extends>
-   <header>app-qt/src/views/chatview.h</header>
-  </customwidget>
-  <customwidget>
    <class>GroupListView</class>
    <extends>QListView</extends>
    <header>app-qt/src/views/grouplistview.h</header>
@@ -659,6 +644,11 @@ QFrame[frameShape=&quot;4&quot;]
    <class>ChatInput</class>
    <extends>QTextEdit</extends>
    <header>app-qt/src/chatinput/chatinput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ChatView</class>
+   <extends>QListView</extends>
+   <header>app-qt/src/views/chatview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

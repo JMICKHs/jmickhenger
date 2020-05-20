@@ -15,6 +15,7 @@
 #include <QAction>
 #include <QMenu>
 #include "ui_mainwidget.h"
+#include <QGraphicsProxyWidget>
 
 enum class Buttons{
     SEND_MESSAGE_BUTTON,
@@ -59,6 +60,7 @@ protected:
     MenuWidget *menuWidget;
     QMenu *msgMenu;
     ProxyModel *proxyModel;
+    ChatDelegate *chatDelegate;
 
 private slots:
     void on_groupList_clicked(const QModelIndex &index);

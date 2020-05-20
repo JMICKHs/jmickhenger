@@ -9,6 +9,7 @@
 #include <app-qt/src/creategroup/creategroupwidget.h>
 #include <app-qt/src/setavatarwidget/setavatarwidget.h>
 
+
 using namespace inf;
 namespace Ui {
 class MenuWidget;
@@ -26,6 +27,8 @@ private:
     Ui::MenuWidget *ui;
     SetAvatarWidget *avatWidget;
     std::shared_ptr<CreateGroupWidget> friendsWidget;
+
+
 signals:
     void getListFriendSignal();
 public slots:

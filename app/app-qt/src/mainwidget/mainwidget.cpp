@@ -3,6 +3,9 @@
 #include "app-qt/src/chatinput/chatinput.h"
 #include "netlib/AppNetwork.h"
 #include "netlib/info/Info.h"
+#include <QGraphicsScene>
+#include <QGraphicsView>
+
 #include <QDebug>
 
 MainWidget::MainWidget(QWidget *parent) :
@@ -10,7 +13,7 @@ MainWidget::MainWidget(QWidget *parent) :
     ui(new Ui::MainWidget)
 {
     qRegisterMetaType<inf::ChatRoom>();
-
+    qRegisterMetaType<std::vector<MessageItem>>();
     ui->setupUi(this);
 
     menuWidget = new MenuWidget(this);
@@ -44,7 +47,10 @@ MainWidget::MainWidget(QWidget *parent) :
     font.setBold(true);
     ui->label->setFont(font);
     ui->chatList->setModel(chatModel.get());
-    ui->chatList->setItemDelegate(new ChatDelegate);
+
+    chatDelegate = new ChatDelegate;
+
+    ui->chatList->setItemDelegate(chatDelegate);
     ui->chatList->setSelectionMode(QAbstractItemView::NoSelection);
     ui->chatList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -57,11 +63,12 @@ MainWidget::MainWidget(QWidget *parent) :
 
     msgMenu->addAction(editDevice);
     msgMenu->addAction(deleteDevice);
+
     ui->chatList->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->chatList->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->chatList->setSelectionMode(QAbstractItemView::NoSelection);
     ui->chatList->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
+    ui->chatList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     connect(menuWidget->getCreateWidget(),&CreateGroupWidget::groupCreated,groupModel.get(),&GroupModel::createChatByUser);
     connect(ui->chatList,&ChatView::customContextMenuRequested,this,&MainWidget::showContextMenu);
@@ -147,7 +154,7 @@ void MainWidget::on_groupList_clicked(const QModelIndex &index)
     Chat chat = index.model()->data(index).value<Chat>();
     chatModel->getMessagesInChat(chat.lastMessage);
     groupModel->chatInfoSet(chat.idChat);
-    ui->chatList->doItemsLayout();
+    emit ui->chatList->doItemsLayout();
 }
 
 
@@ -168,7 +175,7 @@ void MainWidget::removeMessageFromChat()
     if(msg.idOwner == UserModel::instance()->getId()){
         chatModel->DeleteMessage(ui->chatList->selectionModel()->currentIndex().row());
     }
-    ui->chatList->doItemsLayout();
+    emit ui->chatList->doItemsLayout();
 }
 
 void MainWidget::editMessageInChat()

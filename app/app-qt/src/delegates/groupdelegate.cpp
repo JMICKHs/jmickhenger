@@ -49,16 +49,21 @@ void GroupDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     painter->setPen(palette.text().color());
     painter->drawText(GroupNameRect, Qt::TextSingleLine,
                       font.elidedText(QString::fromStdString(item.name),Qt::ElideRight,width - textRigthOffset));
+    int nameWidth = 0;
+    if(item.lastMessage.text != ""){
+        QFontMetrics metr(f);
+        nameWidth = metr.horizontalAdvance(item.lastMessage.nickname);
+        nameWidth += 5;
+        QRect LastMessageNick = QRect(groupIconSize.width() + textLeftOffset,
+                                   GroupNameRect.y() + lastMessageTopOffset,nameWidth,baseTextHeigth);
 
-   //QRect LastMessageNick = QRect(groupIconSize.width() + textLeftOffset,
-    //                              GroupNameRect.y() + lastMessageTopOffset,width - textRigthOffset,baseTextHeigth);
-    //
-    //painter->setPen(QColor(76,148,224));
-    //painter->drawText(LastMessageNick, Qt::TextSingleLine,
-    //                  font.elidedText(item.lastMessage.nickname + ':',Qt::ElideRight,width - textRigthOffset));
-
+        painter->setPen(QColor(76,148,224));
+        painter->drawText(LastMessageNick, Qt::TextSingleLine,
+                      font.elidedText(item.lastMessage.nickname + ':',Qt::ElideRight,width - textRigthOffset));
+    }
+    qDebug() <<nameWidth;
     f.setBold(false);
-    QRect LastMessageRect = QRect(groupIconSize.width() + textLeftOffset + 5,
+    QRect LastMessageRect = QRect(groupIconSize.width() + textLeftOffset + 5 + nameWidth,
                                   GroupNameRect.y() + lastMessageTopOffset,width - textRigthOffset,baseTextHeigth);
     painter->setFont(f);
     painter->setPen(palette.text().color());

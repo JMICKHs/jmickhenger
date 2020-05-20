@@ -34,16 +34,19 @@ QVariant ChatModel::data(const QModelIndex &index, int role) const
 
 void ChatModel::createMessage(const Msg &_message)
 {
+     int row = this->rowCount();
+    beginInsertRows(QModelIndex(),row,row + items.size() - 1);
     if(_message.text != "")
     {
         items.push_back(_message);
         int row = this->rowCount();
-        this->insertRows(row,1);
     }
+    endInsertRows();
     emit this->dataChanged(QModelIndex(),QModelIndex());
+    emit updateItems();
 }
 
-void ChatModel::newMessages(std::vector<MessageItem> &msgs)
+void ChatModel::newMessages(std::vector<MessageItem> msgs)
 {
     int row = this->rowCount();
     auto iniqIds = getUniqueIds(msgs);

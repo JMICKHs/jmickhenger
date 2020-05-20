@@ -72,6 +72,7 @@ void GroupModel::addCallbacks()
                 return  chat.idChat == msg.chatId;
             });
             it.base()->lastMessage = msg;
+            AppNet::shared()->getUser(UserModel::instance()->getId(),msg.idOwner,self->userInfForMessage);
             emit self->updateItems();
         }
         else
@@ -105,6 +106,13 @@ void GroupModel::addCallbacks()
         }
         if(change.action == "addMessage"){
             emit self->sendNewMessages(change.messages);
+            auto it = std::find_if(self->items.begin(),self->items.end(),[change](Chat &chat){
+                return chat.idChat == change.idChat;
+            });
+            it.base()->lastMessage = change.messages[change.messages.size() -1];
+             AppNet::shared()->getUser(UserModel::instance()->getId(),
+                                       change.messages[change.messages.size() -1].idOwner,self->userInfForMessage);
+            emit self->updateItems();
         }
     };
     newUnknownChatCallback = [self](inf::ChatRoom &room, std::optional<std::string>&){
@@ -122,6 +130,18 @@ void GroupModel::addCallbacks()
           if(err == std::nullopt){
               emit self->sendChatRoom(room);
           }
+    };
+    userInfForMessage = [self](inf::UserInfo &info,std::optional<std::string>&err){
+        if(err == std::nullopt){
+            std::for_each(self->items.begin(),self->items.end(),[info](Chat &chat){
+                 if(chat.lastMessage.idOwner == info.id){
+                     chat.lastMessage.nickname = QString::fromStdString(info.login);
+                     chat.lastMessage.avatar = QString::fromStdString(info.avatar);
+                 }
+            });
+
+            emit self->updateItems();
+        }
     };
     std::function<void(Change&)> chatChangeCallback;
 }

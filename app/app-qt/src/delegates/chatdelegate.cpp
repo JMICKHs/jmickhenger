@@ -5,7 +5,7 @@
 #include <QFontMetrics>
 #include <QDebug>
 
-ChatDelegate::ChatDelegate(QObject *parent)
+ChatDelegate::ChatDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
 {
     avatar = new QPixmap("/home/kostikan/jmickhenger/app/img/standartAvatar.jpg");
@@ -45,7 +45,6 @@ bool ChatDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const Q
 void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Msg item = index.model()->data(index).value<Msg>();
-    ChatModel *model = (ChatModel*)index.model();
     QStyleOptionViewItem myOpt = option;
     myOpt.displayAlignment = Qt::AlignLeft;
     painter->save();
@@ -65,23 +64,21 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
     int width = sizeHint(option,index).width();
     QFontMetrics font(f);
 
-    QRect ButtonRect = myOpt.rect;
-    ButtonRect.setTopLeft(QPoint(offset.x(),0) + ButtonRect.topLeft());
-
     if(item.avatar != ""){
+
         QString path = ":/imges/" + item.avatar;
         QPixmap pix(path);
-        QPixmap pix1 = pix.scaled(avatarSize, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+        QPixmap pix1 = pix.scaled(avatarScale, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 
-        QPixmap scaled = avatar->scaled(avatarScale, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
-        QBrush brush(scaled);
+        QBrush brush(pix1);
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setBrush(brush);
-        painter->translate(QPointF(ButtonRect.x(),ButtonRect.y()));
+        painter->translate(QPointF(0,myOpt.rect.y()));
         painter->drawRoundedRect(QRect(QPoint(offset),avatarSize), avatarRadius, avatarRadius);
-
         painter->restore();
     }
+
+
     painter->save();
     QRect NameRect = myOpt.rect;
     NameRect.setHeight(baseTextHeight);
@@ -110,21 +107,22 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 
     painter->restore();
     painter->save();
-    QPen pen;
-    painter->setRenderHint(QPainter::Antialiasing);
-    pen.setWidth(1);
-    pen.setColor(Qt::white);
-    painter->setPen(pen);
-    painter->translate(QPointF(myOpt.widget->width() - 54,myOpt.widget->height() - 54));
-    painter->drawRoundedRect(5, 5, 40, 40, 100, 100);
-    pen.setColor(Qt::blue);
-    painter->setPen(pen);
-    painter->drawRoundedRect(5, 5, 40, 40, 100, 100);
-    painter->translate(QPointF(0,6));
-    painter->drawLine(16,13,25,25);
-    painter->translate(QPointF(25,25));
-    painter->drawLine(0,0, 10,-13);
-    painter->restore();
+
+//    QPen pen;
+//    painter->setRenderHint(QPainter::Antialiasing);
+//    pen.setWidth(1);
+//    pen.setColor(Qt::white);
+//    painter->setPen(pen);
+//    painter->translate(QPointF(myOpt.widget->width() - 54,myOpt.widget->height() - 54));
+//    painter->drawRoundedRect(5, 5, 40, 40, 100, 100);
+//    pen.setColor(Qt::blue);
+//    painter->setPen(pen);
+//    painter->drawRoundedRect(5, 5, 40, 40, 100, 100);
+//    painter->translate(QPointF(0,6));
+//    painter->drawLine(16,13,25,25);
+//    painter->translate(QPointF(25,25));
+//    painter->drawLine(0,0, 10,-13);
+//    painter->restore();
 
     painter->save();
      if(item.type != MessageType::OTHER_MESSAGE){
