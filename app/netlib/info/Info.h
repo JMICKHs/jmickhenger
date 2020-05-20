@@ -157,5 +157,4 @@ namespace inf {
     };
 }
 
-
 #endif //NETLIB_INFO_H

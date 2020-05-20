@@ -23,13 +23,13 @@ public:
     void runClient(const std::function<void(int)> & errHandler);
     void stopClient();
     bool check() {} //TODO
-    std::optional<inf::MyAccount> accFromCache(); //TODO
+    std::optional<inf::MyAccount> accFromCache();
     void setClientDelegate(std::shared_ptr<AbstractClient> client); //для мок клиента в тестировании
     void auth(const std::string & login, const std::string & pass, const std::function<void(inf::MyAccount &, errstr &)> & callback);
     void registration(const inf::MyAccount & acc, const std::function<void(int, errstr &)>& callback);
     void getListChat(int idUser, const std::function<void(std::vector<inf::ChatInfo> &, errstr &)> & callback);
     void getChatRoom(int idUser, int idChat, const std::function<void(inf::ChatRoom &, errstr &)> & callback);
-    void sendMsg(const inf::Message & msg, const std::function<void(errstr &)> & callback);
+    void sendMsg(const inf::Message & msg, const std::function<void(int number, errstr &)> & callback);
     void setObserverChat(int idChat, const std::function<void(inf::ChatChange &)>& callback);
     void setObserverUnknownChat(const std::function<void(inf::ChatChange &)>& callback);
     void getMsgs(int idUser, int idChat, int start, int end, const std::function<void(std::vector<inf::Message> &, errstr &)> & callback);

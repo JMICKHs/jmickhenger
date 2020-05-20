@@ -33,7 +33,7 @@ int main() {
             while(getline(cin, text)) {
                 Message msg;
                 msg.text = text;
-                net->sendMsg(msg, [net](errstr & er){
+                net->sendMsg(msg, [net](int n, errstr & er){
                     if(!er) {
                         cout << "сообщение доставлено!\n";
                     } else {

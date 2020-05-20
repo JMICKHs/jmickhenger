@@ -85,9 +85,9 @@ void AppNet::registration(const MyAccount &acc, const function<void(int, errstr 
     client->write(query.encode());
 }
 
-void AppNet::sendMsg(const Message & msg, const function<void(optional<string> &)> & callback) {
+void AppNet::sendMsg(const Message & msg, const function<void(int number, optional<string> &)> & callback) {
     Query query((int)Cmds::sendMessage, msg.encode());
-    announcer->addCallback<int, errstr &>((int)Cmds::sendMessage, msg.timesend, callback);
+    announcer->addCallback<int, int, errstr &>((int)Cmds::sendMessage, msg.timesend, callback);
     client->write(query.encode());
 }
 
@@ -277,9 +277,9 @@ void AppNet::setHandlers() {
         Message tmpMsg;
         tmpMsg.decode(body);
         int time = tmpMsg.timesend;
-        auto f = self->announcer->getCallback<int, optional<string> &>(cmd, time);
+        auto f = self->announcer->getCallback<int, int, optional<string> &>(cmd, time);
         if (f) {
-            f.value()(err);
+            f.value()(tmpMsg.number, err);
         } else {
             cout << "cmd " << cmd << " " << body << " не найден callback\n";
         }
