@@ -73,7 +73,7 @@ void AppNet::auth(const string &login, const string &pass, const function<void(M
     Parser parser;
     parser.addStr(login, MyAccount::nameLogin);
     parser.addStr(pass, MyAccount::namePassword);
-    Query query((int)Cmds::auth, parser.getRes());
+    Query query((int)Cmds::auth, parser.getJson());
     announcer->addCallback<string, inf::MyAccount &, errstr &>((int)Cmds::auth, login, callback);
     client->write(query.encode());
 }
@@ -94,7 +94,7 @@ void AppNet::sendMsg(const Message & msg, const function<void(int number, option
 void AppNet::getListChat(int idUser, const function<void(vector<ChatInfo> &, errstr &)> &callback) {
     Parser parser;
     parser.addInt(idUser, MyAccount::nameId);
-    Query query((int)Cmds::getListChat, parser.getRes());
+    Query query((int)Cmds::getListChat, parser.getJson());
     announcer->addCallback<int, vector<ChatInfo> &, errstr &>((int)Cmds::getListChat, idUser, callback);
     client->write(query.encode());
 }
@@ -103,7 +103,7 @@ void AppNet::getChatRoom(int idUser, int idChat, const function<void(ChatRoom &,
     Parser parser;
     parser.addInt(idUser, MyAccount::nameId);
     parser.addInt(idChat, ChatInfo::nameId);
-    Query query((int)Cmds::getChatRoom, parser.getRes());
+    Query query((int)Cmds::getChatRoom, parser.getJson());
     announcer->addCallback<int, ChatRoom &, errstr &>((int)Cmds::getChatRoom, idChat, callback);
     client->write(query.encode());
 }
@@ -122,7 +122,7 @@ void AppNet::getMsgs(int idUser, int idChat, int start, int end, const function<
     parser.addInt(idChat, ChatRoom::nameId);
     parser.addInt(start, ChatRoom::nameStart);
     parser.addInt(end, ChatRoom::nameEnd);
-    Query query((int)Cmds::getMessages, parser.getRes());
+    Query query((int)Cmds::getMessages, parser.getJson());
     announcer->addCallback<int, vector<Message> &, errstr &>((int)Cmds::getMessages, idChat, callback);
     client->write(query.encode());
 }
@@ -131,7 +131,7 @@ void AppNet::getLastMsg(int idUser, int idChat, const function<void(Message &, e
     Parser parser;
     parser.addInt(idUser, MyAccount::nameId);
     parser.addInt(idChat, ChatRoom::nameId);
-    Query query((int)Cmds::getLastMsg, parser.getRes());
+    Query query((int)Cmds::getLastMsg, parser.getJson());
     announcer->addCallback<int, Message &, errstr &>((int)Cmds::getLastMsg, idChat, callback);
     client->write(query.encode());
 }
@@ -141,7 +141,7 @@ void AppNet::addFrnd(int idUser, int idFrnd, const function<void(errstr &)> &cal
     Parser parser;
     parser.addInt(idUser, MyAccount::nameId);
     parser.addInt(idFrnd, UserInfo::nameId);
-    Query query((int)Cmds::addFrnd, parser.getRes());
+    Query query((int)Cmds::addFrnd, parser.getJson());
     announcer->addCallback<int, errstr &>((int)Cmds::addFrnd, idFrnd, callback);
     client->write(query.encode());
 }
@@ -149,7 +149,7 @@ void AppNet::addFrnd(int idUser, int idFrnd, const function<void(errstr &)> &cal
 void AppNet::getListFrnd(int id, const function<void(vector<int> &, errstr &)> &callback) {
     Parser parser;
     parser.addInt(id, MyAccount::nameId);
-    Query query((int)Cmds::getListFrnd, parser.getRes());
+    Query query((int)Cmds::getListFrnd, parser.getJson());
     announcer->addCallback<int, vector<int> & , errstr &>((int)Cmds::getListFrnd, id, callback);
     client->write(query.encode());
 }
@@ -158,7 +158,7 @@ void AppNet::delFrnd(int idUser, int idFrnd, const function<void(errstr &)> &cal
     Parser parser;
     parser.addInt(idUser, MyAccount::nameId);
     parser.addInt(idFrnd, UserInfo::nameId);
-    Query query((int)Cmds::delFrnd, parser.getRes());
+    Query query((int)Cmds::delFrnd, parser.getJson());
     announcer->addCallback<int, errstr &>((int)Cmds::delFrnd, idFrnd, callback);
     client->write(query.encode());
 }
@@ -166,7 +166,7 @@ void AppNet::delFrnd(int idUser, int idFrnd, const function<void(errstr &)> &cal
 void AppNet::getInfoMe(int id, const function<void(MyAccount &, errstr &)> &callback) {
     Parser parser;
     parser.addInt(id, MyAccount::nameId);
-    Query query((int)Cmds::getMe, parser.getRes());
+    Query query((int)Cmds::getMe, parser.getJson());
     announcer->addCallback<int, MyAccount &, errstr &>((int)Cmds::getMe, id, callback);
     client->write(query.encode());
 }
@@ -181,7 +181,7 @@ void AppNet::getUser(int myId, int idUser, const function<void(UserInfo &, errst
     Parser parser;
     parser.addInt(myId, MyAccount::nameId);
     parser.addInt(idUser, UserInfo::nameId);
-    Query query((int)Cmds::getUser, parser.getRes());
+    Query query((int)Cmds::getUser, parser.getJson());
     announcer->addCallback<int, UserInfo &, errstr &>((int)Cmds::getUser, idUser, callback);
     client->write(query.encode());
 }
@@ -197,7 +197,7 @@ void AppNet::dellMsg(int idUser, int idChat, int numberMsg, const std::function<
     parser.addInt(idUser, MyAccount::nameId);
     parser.addInt(idChat, ChatInfo::nameId);
     parser.addInt(numberMsg, Message::nameNumber);
-    Query query((int)Cmds::delMessage, parser.getRes());
+    Query query((int)Cmds::delMessage, parser.getJson());
     announcer->addCallback<pair<int, int>, errstr &>((int)Cmds::delMessage, pair<int, int>(idChat, numberMsg), callback);
     client->write(query.encode());
 }

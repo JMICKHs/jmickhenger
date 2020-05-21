@@ -270,7 +270,7 @@ TEST(testCodeble, test8) {
 TEST(testCache, test1) {
     auto cache = Cache::shared();
     int id = 9;
-    UserInfo info(id, "testLogin", "3aavatar.jpg");
+    UserInfo info(id, "testLogin", "3aavatarchik.jpg");
     cache->save(info);
     auto user = cache->getUser(id);
     ASSERT_EQ((bool)user, true);
@@ -319,7 +319,7 @@ TEST(testAppNet, test1) {
     auto net = AppNet::shared();
     net->setClientDelegate(client);
     net->runClient([](int ec){});
-    net->sendMsg(msg, [](errstr &) {
+    net->sendMsg(msg, [](int n, errstr &) {
 
     });
     net->stopClient();

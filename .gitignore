@@ -8,6 +8,7 @@ app/netlib/sqllite-src/sqlite3.c
 app/netlib/sqllite-src/sqlite3.h
 app/netlib/configs/clientConfig
 app/netlib/configs/testUserConfig
+app/netlib/configs/*.*
 *~
 *.autosave
 *.a
@@ -27,7 +28,6 @@ app/netlib/configs/testUserConfig
 core
 !core/
 tags
-.DS_Store
 .directory
 *.debug
 Makefile*

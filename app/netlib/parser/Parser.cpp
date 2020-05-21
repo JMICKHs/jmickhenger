@@ -49,7 +49,7 @@ void Parser::clear() {
     root.clear();
 }
 
-string Parser::getRes() {
+string Parser::getJson() {
     stringstream result;
     bptree::write_json(result, root);
     string resStr = result.str();

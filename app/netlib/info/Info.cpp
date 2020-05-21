@@ -30,7 +30,7 @@ string inf::MyAccount::encode() const {
     parser->addArrInt(chats, nameChats);
     parser->addArrInt(friends, nameFriends);
 
-    return parser->getRes();
+    return parser->getJson();
 }
 
 void inf::MyAccount::decode(const string &json) {
@@ -62,7 +62,7 @@ string inf::UserInfo::encode() const {
     parser->addStr(login, nameLogin);
     parser->addStr(avatar, nameAvatar);
 
-    return parser->getRes();
+    return parser->getJson();
 }
 
 void inf::UserInfo::decode(const string &json) {
@@ -92,7 +92,7 @@ string inf::Message::encode() const {
     parser->addInt(timesend, nameTime);
     parser->addBool(checked, nameCheck);
 
-    return parser->getRes();
+    return parser->getJson();
 }
 
 void inf::Message::decode(const string & json) {
@@ -124,7 +124,7 @@ string inf::ChatInfo::encode() const {
     parser->addInt(idChat, nameId);
     parser->addStr(name, nameChat);
 
-    return parser->getRes();
+    return parser->getJson();
 }
 
 void inf::ChatInfo::decode(const string & json) {
@@ -156,7 +156,7 @@ string inf::ChatRoom::encode() const {
     parser->addArrInt(idUsers, nameUsers);
     parser->addArrInt(idAdmins, nameAdmins);
 
-    return parser->getRes();
+    return parser->getJson();
 }
 
 void inf::ChatRoom::decode(const string & json) {
@@ -190,7 +190,7 @@ string inf::ChatChange::encode() const {
     }
     parser->addArrCustom(tmp, nameMsg);
 
-    return parser->getRes();
+    return parser->getJson();
 }
 
 void inf::ChatChange::decode(const string &json) {
@@ -220,7 +220,7 @@ string inf::Reply::encode() const {
     parser->addInt(cmd, nameCmd);
     parser->addCustom(body, nameBody);
 
-    return parser->getRes();
+    return parser->getJson();
 }
 
 void inf::Reply::decode(const string &json) {
@@ -246,7 +246,7 @@ string inf::Query::encode() const {
     parser->clear();
     parser->addInt(cmd, nameCmd);
     parser->addCustom(body, nameBody);
-    return parser->getRes();
+    return parser->getJson();
 }
 
 void inf::Query::decode(const string &json) {

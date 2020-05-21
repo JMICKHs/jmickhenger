@@ -19,7 +19,7 @@ public:
     virtual void addArrInt(const std::vector<int> & vec, const std::string & name) = 0;
     virtual void addArrStr(const std::vector<std::string> & vec, const std::string & name) = 0;
     virtual void clear() = 0;
-    virtual std::string getRes() = 0;
+    virtual std::string getJson() = 0;
     virtual void setJson(const std::string & jsonData) = 0;
     virtual bool getBool(const std::string & name) = 0;
     virtual int getInt(const std::string & name) = 0;
@@ -44,7 +44,7 @@ public:
     void addArrInt(const std::vector<int> & vec, const std::string & name) override;
     void addArrStr(const std::vector<std::string> & vec, const std::string & name) override;
     void clear() override;
-    std::string getRes() override;
+    std::string getJson() override;
     void setJson(const std::string & jsonData) override;
     bool getBool(const std::string & name) override;
     int getInt(const std::string & name) override;

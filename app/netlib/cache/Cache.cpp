@@ -28,6 +28,7 @@ Cache::Cache() {
         cerr << "SQL error: \n" << zErrMsg;
         sqlite3_free(zErrMsg);
     }
+    clearTable(tableUsers);
 }
 
 Cache::~Cache() {
