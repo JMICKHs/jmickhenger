@@ -43,7 +43,7 @@ void GroupModel::setData(std::vector<ChatItem> &chats)
 {
     items.clear();
     int row = this->rowCount();
-    beginInsertRows(QModelIndex(),row,chats.size() - 1);
+    beginInsertRows(QModelIndex(),row,row + chats.size() - 1);
     for(auto &obj : chats){
         items.emplace_back(obj);
     }
@@ -104,8 +104,15 @@ void GroupModel::addCallbacks()
             });
             self->items.erase(it);
         }
+        if(change.action == "delChat"){
+            auto it = std::find_if(self->items.begin(), self->items.end(),[change](const Chat &chat){
+                return  chat.idChat == change.idChat;
+            });
+            self->items.erase(it);
+        }
         if(change.action == "addMessage"){
-            emit self->sendNewMessages(change.messages);
+            if(change.idChat == self->currChatId)
+                emit self->sendNewMessages(change.messages);
             auto it = std::find_if(self->items.begin(),self->items.end(),[change](Chat &chat){
                 return chat.idChat == change.idChat;
             });
@@ -113,6 +120,9 @@ void GroupModel::addCallbacks()
              AppNet::shared()->getUser(UserModel::instance()->getId(),
                                        change.messages[change.messages.size() -1].idOwner,self->userInfForMessage);
             emit self->updateItems();
+        }
+        if(change.action == "delMessage"){
+
         }
     };
     newUnknownChatCallback = [self](inf::ChatRoom &room, std::optional<std::string>&){

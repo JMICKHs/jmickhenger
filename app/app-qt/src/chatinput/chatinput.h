@@ -11,6 +11,9 @@ class ChatInput : public QPlainTextEdit
 public:
     ChatInput(QWidget *parent = nullptr);
     void keyPressEvent(QKeyEvent *e) override;
+    void dragEnterEvent(QDragEnterEvent *e) override;
+    QPixmap image;
+    bool created{false};
 private:
 signals:
     void sendMessageOnEnter();

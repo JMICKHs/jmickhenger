@@ -45,6 +45,7 @@ public:
     std::function<void(inf::ChatRoom &,std::optional<std::string>&)>& getChatRoom();
 
     std::vector<Chat> getItems();
+    int currChatId;
 
 private:
     std::optional<std::string> errString;

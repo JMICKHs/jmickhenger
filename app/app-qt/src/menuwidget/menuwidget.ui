@@ -19,7 +19,7 @@
      <x>0</x>
      <y>1</y>
      <width>258</width>
-     <height>516</height>
+     <height>573</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="mainLayout">
@@ -233,6 +233,19 @@ QFrame[frameShape=&quot;4&quot;]
         </property>
         <property name="flat">
          <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="CustomButton" name="exitButton">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>60</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Выйти</string>
         </property>
        </widget>
       </item>

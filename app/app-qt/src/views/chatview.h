@@ -16,8 +16,11 @@ public:
 
 private:
     QImage *background;
+    int currHeight{0};
 public slots:
     void scrollWhileDataChandeg();
+signals:
+    void insertRow(int);
 
 };
 

@@ -22,15 +22,16 @@ public:
     QString time;
     QString nickname;
     QString avatar;
+    std::shared_ptr<QPixmap> image;
     Msg(MessageItem &item)
-        :MessageItem(std::move(item)){
+        :MessageItem(std::move(item)),image(nullptr){
         type = MessageType::OTHER_MESSAGE;
         char buffer [100];
         tm* timeinfo = localtime(&item.timesend);
         strftime(buffer,100,"%H-%M",timeinfo);
         time = QString::fromStdString(std::string(buffer));
     }
-    Msg(){type = MessageType::SELF_MESSAGE_IN_PROGRESS;}
+    Msg():image(nullptr){type = MessageType::SELF_MESSAGE_IN_PROGRESS;}
 };
 
 Q_DECLARE_METATYPE(Msg)
@@ -49,6 +50,7 @@ public:
     std::function<void(std::optional<std::string>&)> &getSendMsgCallback() ;
     std::function<void(std::optional<std::string>&)> &getChangeMsgCallback() ;
     std::function<void(std::optional<std::string>&)> &getDelMsgCallback() ;
+    std::function<void(MessageItem &, std::optional<std::string> &)> &getLastMsgAndGet();
     std::vector<Msg> getItems();
 
     void slotEditMessage();
@@ -66,12 +68,13 @@ private:
     std::function<void(std::optional<std::string>&)> changeMsgCallback;
     std::function<void(std::optional<std::string>&)> delMsgCallback;
     std::function<void(inf::UserInfo &info,std::optional<std::string>&)> userInfForMessage;
+    std::function<void(MessageItem &, std::optional<std::string> &)> lastMsgAndGet;
     std::vector<int> getUniqueIds(const std::vector<MessageItem> &vec);
 signals:
     void messageCreateByUser(const Msg &_message);
     void updateItems();
 public slots:
-    void createMessage(const Msg &_message);
+    void createMessage(Msg &_message,std::optional<QPixmap> &img);
     void newMessages(std::vector<MessageItem> msgs);
 
 };

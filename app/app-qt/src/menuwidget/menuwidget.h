@@ -28,9 +28,9 @@ private:
     SetAvatarWidget *avatWidget;
     std::shared_ptr<CreateGroupWidget> friendsWidget;
 
-
 signals:
     void getListFriendSignal();
+    void closeAndExit();
 public slots:
     void setPosition();
     void setName(const QString &name);
@@ -40,6 +40,7 @@ private slots:
     void on_createGroupButton_clicked();
     void on_contactsButton_clicked();
     void on_pushButton_clicked();
+    void on_exitButton_clicked();
 };
 
 #endif // MENUWIDGET_H

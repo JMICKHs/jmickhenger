@@ -1,5 +1,6 @@
 #include "menuwidget.h"
 #include "ui_menuwidget.h"
+#include "netlib/AppNetwork.h"
 #include <QDebug>
 
 MenuWidget::MenuWidget(QWidget *parent)
@@ -15,7 +16,6 @@ MenuWidget::MenuWidget(QWidget *parent)
     Pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);
     this->setPalette(Pal);
-
 
     ui->pushButton->setFixedSize(70,70);
     ui->pushButton->setFlat(true);
@@ -99,4 +99,11 @@ void MenuWidget::on_pushButton_clicked()
     avatWidget->show();
     avatWidget->move(parentWidget()->pos().x() + parentWidget()->size().width()/(4),
                parentWidget()->pos().y() + parentWidget()->size().height()/(4));
+}
+
+
+
+void MenuWidget::on_exitButton_clicked()
+{
+    emit closeAndExit();
 }

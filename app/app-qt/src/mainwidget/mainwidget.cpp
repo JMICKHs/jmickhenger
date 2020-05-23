@@ -48,12 +48,8 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->label->setFont(font);
     ui->chatList->setModel(chatModel.get());
 
-    chatDelegate = new ChatDelegate;
-
+    chatDelegate = new ChatDelegate(this);
     ui->chatList->setItemDelegate(chatDelegate);
-    ui->chatList->setSelectionMode(QAbstractItemView::NoSelection);
-    ui->chatList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
 
     QAction * editDevice = new QAction("Редактировать", this);
     QAction * deleteDevice = new QAction("Удалить", this);
@@ -64,10 +60,10 @@ MainWidget::MainWidget(QWidget *parent) :
     msgMenu->addAction(editDevice);
     msgMenu->addAction(deleteDevice);
 
+    ui->chatList->setWindowFlag(Qt::FramelessWindowHint);
     ui->chatList->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->chatList->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->chatList->setSelectionMode(QAbstractItemView::NoSelection);
-    ui->chatList->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->chatList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     connect(menuWidget->getCreateWidget(),&CreateGroupWidget::groupCreated,groupModel.get(),&GroupModel::createChatByUser);
@@ -83,8 +79,11 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(groupModel.get(),&GroupModel::sendNewMessages,chatModel.get(),&ChatModel::newMessages);
     connect(groupModel.get(),&GroupModel::updateItems,ui->groupList,&GroupListView::doItemsLayout);
     connect(chatModel.get(),&ChatModel::updateItems,ui->chatList,&ChatView::doItemsLayout);
+    connect(ui->chatList,&ChatView::insertRow,this,&MainWidget::resizeSpacer);
     AppNet::shared()->setObserverUnknownChat(groupModel->getUnknownChatRoomAdd());
     this->setLayout(ui->MainLayout);
+
+    spacerHeight = ui->offsetSpacer->maximumSize().height();
 }
 
 MainWidget::~MainWidget()
@@ -109,6 +108,11 @@ void MainWidget::wheelEvent(QWheelEvent *event)
     ui->chatList->doItemsLayout();
 }
 
+MenuWidget *MainWidget::getMenu()
+{
+    return menuWidget;
+}
+
 void MainWidget::menuClicked()
 {
     menuWidget->move(QPoint(geometry().x(),geometry().y()));
@@ -120,7 +124,7 @@ void MainWidget::sendMessageFromInput()
 
     Msg message;
     QString text = ui->messageInput->toPlainText().trimmed();
-    if(text.size() > 1024 || text == "")
+    if(text.size() > 1024 || (text == "" && ui->messageInput->created))
         return;
     removeDoubleEnter(text);
     message.chatId = ui->groupList->selectionModel()->currentIndex().data().value<Chat>().idChat;
@@ -138,7 +142,12 @@ void MainWidget::sendMessageFromInput()
     message.type = MessageType::SELF_MESSAGE_IN_PROGRESS;
     message.timesend  = ttime;
 
-    chatModel->createMessage(message);
+    std::optional<QPixmap> map;
+    if(ui->messageInput->created){
+        map.emplace(ui->messageInput->image);
+        ui->messageInput->created = false;
+    }
+    chatModel->createMessage(message,map);
     emit chatModel->messageCreateByUser(message);
     ui->messageInput->clear();
     auto net = AppNet::shared();
@@ -150,8 +159,11 @@ void MainWidget::sendMessageFromInput()
 void MainWidget::on_groupList_clicked(const QModelIndex &index)
 {
     ui->label->setText(QString::fromStdString(index.model()->data(index).value<Chat>().name));
-    auto net = AppNet::shared();
+    ui->offsetSpacer->changeSize(0,spacerHeight,QSizePolicy::Fixed,QSizePolicy::Fixed);
     Chat chat = index.model()->data(index).value<Chat>();
+    if(groupModel->currChatId == chat.idChat)
+        return;
+    groupModel->currChatId = chat.idChat;
     chatModel->getMessagesInChat(chat.lastMessage);
     groupModel->chatInfoSet(chat.idChat);
     emit ui->chatList->doItemsLayout();
@@ -162,8 +174,7 @@ void MainWidget::after_Login_slot()
 {
     this->show();
     Account ac = UserModel::instance()->getAcc();
-    auto net = AppNet::shared();
-    net->getListChat(ac.id,groupModel->getChatCallBack());
+    AppNet::shared()->getListChat(ac.id,groupModel->getChatCallBack());
     menuWidget->setName(QString::fromStdString(ac.login));
     emit sendAvatar(QString::fromStdString(ac.avatar));
     connect(UserModel::instance(),&UserModel::nickNameChanged,menuWidget,&MenuWidget::on_nickname_rename);
@@ -172,9 +183,8 @@ void MainWidget::after_Login_slot()
 void MainWidget::removeMessageFromChat()
 {
     Msg msg = ui->chatList->selectionModel()->currentIndex().data().value<Msg>();
-    if(msg.idOwner == UserModel::instance()->getId()){
-        chatModel->DeleteMessage(ui->chatList->selectionModel()->currentIndex().row());
-    }
+    chatModel->DeleteMessage(ui->chatList->selectionModel()->currentIndex().row());
+    AppNet::shared()->dellMsg(UserModel::instance()->getId(),msg.chatId,msg.number,chatModel->getDelMsgCallback());
     emit ui->chatList->doItemsLayout();
 }
 
@@ -191,12 +201,22 @@ void MainWidget::showContextMenu(const QPoint &pos)
 void MainWidget::setGroupInfoSlot(const inf::ChatRoom &room)
 {
     QString info = QString::number(room.idUsers.size());
-    if(room.idUsers.size() <= 2)
+    if(room.idUsers.size() < 5)
         info += "  участника";
     else
         info += "  участников";
 
     ui->label_2->setText(info);
+}
+
+void MainWidget::resizeSpacer(int height)
+{
+
+    if( ui->offsetSpacer->maximumSize().height() - height <=0){
+        ui->offsetSpacer->changeSize(0,0,QSizePolicy::Fixed,QSizePolicy::Fixed);
+        return;
+    }
+    ui->offsetSpacer->changeSize(0,ui->offsetSpacer->maximumSize().height() - height,QSizePolicy::Fixed,QSizePolicy::Fixed);
 }
 
 void MainWidget::removeDoubleEnter(QString &str){
@@ -220,4 +240,3 @@ void MainWidget::removeDoubleEnter(QString &str){
         }
     }
 }
-

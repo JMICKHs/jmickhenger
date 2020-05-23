@@ -23,6 +23,7 @@ public:
     explicit LoginWidget(QWidget *parent = nullptr);
     void login(const QString &log,const QString &password);
     void registration(const Account &acc);
+    bool stopDoubleTapOnRegistrateOrLogin{false};
     ~LoginWidget();
 
 private slots:
@@ -37,10 +38,9 @@ private slots:
 public slots:
     void showMainWidgetSlot();
     void stopAnimation();
-
+    void upProtectedFlag(bool);
 signals:
    void openMainWidget();
-
 private:
     Ui::LoginWidget *ui;
     QWidget *log;

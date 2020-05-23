@@ -17,6 +17,7 @@ ChatView::ChatView(QWidget *parent)
 
 void ChatView::resizeEvent(QResizeEvent *event)
 {
+
     this->doItemsLayout();
     this->update();
 }
@@ -25,12 +26,18 @@ void ChatView::rowsInserted(const QModelIndex &parent, int start, int end)
 {
     this->scrollToBottom();
     QListView::rowsInserted(parent,start,end);
+
+    for(int i = start; i < end; ++i){
+        currHeight += this->sizeHintForIndex(this->model()->index(i,0,parent)).height();
+    }
+    emit insertRow(currHeight);
+    currHeight = 0;
+    QListView::scrollToBottom();
 }
 
 void ChatView::mousePressEvent(QMouseEvent *event)
 {
     QRegion scrollDownReg(this->size().width() - 50,this->size().height() - 50,40,40,QRegion::Ellipse);
-    qDebug() <<scrollDownReg.boundingRect().x()<< " " <<scrollDownReg.boundingRect().y();
     if (event->button() == Qt::LeftButton)
     {
          if( scrollDownReg.contains(event->pos())) {

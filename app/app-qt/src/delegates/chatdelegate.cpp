@@ -4,6 +4,7 @@
 #include <QMouseEvent>
 #include <QFontMetrics>
 #include <QDebug>
+#include <QTextEdit>
 
 ChatDelegate::ChatDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
@@ -11,6 +12,11 @@ ChatDelegate::ChatDelegate(QWidget *parent)
     avatar = new QPixmap("/home/kostikan/jmickhenger/app/img/standartAvatar.jpg");
     check = new QPixmap("/home/kostikan/jmickhenger/app/img/check.png");
     uncheck = new QPixmap("/home/kostikan/jmickhenger/app/img/unchecked.png");
+    showPicture.move(parent->pos().x() + parent->size().width()/(4),
+                     parent->pos().y() + parent->size().height()/(4));
+    showPicture.setWindowFlag(Qt::Popup);
+    showPicture.resize(900,600);
+
 }
 
 QSize ChatDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -22,6 +28,9 @@ QSize ChatDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelInd
     MessageRect.setWidth(option.widget->width() - 80);
     QFontMetrics fMetrics(option.font);
     int height = fMetrics.boundingRect(QRect(0,0,option.widget->width() - 240,0),Qt::TextWordWrap,QString::fromStdString(item.text)).height();
+    if(item.image != nullptr){
+        height += 200;
+    }
     if(height <= 45)
         return QSize(option.widget->width(),baseItemHeight);
     else {
@@ -31,14 +40,47 @@ QSize ChatDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelInd
 
 bool ChatDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
+    Msg item = index.model()->data(index).value<Msg>();
+    QRect NameRect = option.rect;
+    NameRect.setHeight(baseTextHeight);
+    NameRect.setX(avatarSize.width() + textOffset);
+    NameRect.setWidth(option.widget->width() - rightMessageOffset);
+
+    QRect MessageRect =option.rect;
+    MessageRect.setY(MessageRect.y() + mainMessageTopOffset);
+    MessageRect.setX(avatarSize.width() + textOffset);
+    MessageRect.setWidth(option.widget->width() - rightMessageOffset);
+    QFontMetrics fMetrics(option.font);
+    int height = fMetrics.boundingRect(QRect(0,0,option.widget->width() - 240,0),Qt::TextWordWrap,QString::fromStdString(item.text)).height();
+   // QPixmap map = item.image->scaled(200,200,Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+
+    QRect pictureRect = QRect(QPoint(avatarSize.width() + textOffset,MessageRect.y()+height),QSize(200,200));
+
     QMouseEvent *mouse_event = static_cast<QMouseEvent*>(event);
     QRect ButtonRect = option.rect;
     ButtonRect.setWidth(45);
     if (mouse_event->button() == Qt::LeftButton)
     {
          if(ButtonRect.contains(mouse_event->pos())) {
-             qDebug() << "kek";
+             qDebug() << "ButtonRect";
          }
+         if(NameRect.contains(mouse_event->pos())){
+             qDebug() <<" Namerect";
+             QWidget* editor = this->createEditor(nullptr,option,index);     
+             editor->setGeometry(NameRect);
+             this->setEditorData(editor,index);
+             this->updateEditorGeometry(editor,option,index);
+        }
+         if(pictureRect.contains(mouse_event->pos()) && item.image != nullptr){
+            qDebug() <<"PictureRect";
+            QPixmap pix1 = item.image->scaled(600,600,Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+            showPicture.resize(pix1.size());
+            QPalette palette;
+            palette.setBrush(showPicture.backgroundRole(), QBrush(pix1));
+            showPicture.setPalette(palette);
+            showPicture.setAutoFillBackground(true);
+            showPicture.show();
+        }
     }
 }
 
@@ -46,6 +88,7 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 {
     Msg item = index.model()->data(index).value<Msg>();
     QStyleOptionViewItem myOpt = option;
+    myOpt.displayAlignment=Qt::AlignVCenter;
     myOpt.displayAlignment = Qt::AlignLeft;
     painter->save();
     painter->setClipping(true);
@@ -75,9 +118,8 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
         painter->setBrush(brush);
         painter->translate(QPointF(0,myOpt.rect.y()));
         painter->drawRoundedRect(QRect(QPoint(offset),avatarSize), avatarRadius, avatarRadius);
-        painter->restore();
     }
-
+    painter->restore();
 
     painter->save();
     QRect NameRect = myOpt.rect;
@@ -107,24 +149,21 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 
     painter->restore();
     painter->save();
+    if(item.image != nullptr){
 
-//    QPen pen;
-//    painter->setRenderHint(QPainter::Antialiasing);
-//    pen.setWidth(1);
-//    pen.setColor(Qt::white);
-//    painter->setPen(pen);
-//    painter->translate(QPointF(myOpt.widget->width() - 54,myOpt.widget->height() - 54));
-//    painter->drawRoundedRect(5, 5, 40, 40, 100, 100);
-//    pen.setColor(Qt::blue);
-//    painter->setPen(pen);
-//    painter->drawRoundedRect(5, 5, 40, 40, 100, 100);
-//    painter->translate(QPointF(0,6));
-//    painter->drawLine(16,13,25,25);
-//    painter->translate(QPointF(25,25));
-//    painter->drawLine(0,0, 10,-13);
-//    painter->restore();
+        QFontMetrics fMetrics(option.font);
+        int height = fMetrics.boundingRect(QRect(0,0,option.widget->width() - 240,0),Qt::TextWordWrap,QString::fromStdString(item.text)).height();
 
+        QPixmap map = item.image->scaled(200,200,Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+        QBrush brush(map);
+        painter->setRenderHint(QPainter::Antialiasing);
+        painter->setBrush(brush);
+        painter->translate(QPoint(avatarSize.width() + textOffset,MessageRect.y()+height));
+        painter->drawRect(QRect(QPoint(0,0),map.size()));
+    }
+    painter->restore();
     painter->save();
+
      if(item.type != MessageType::OTHER_MESSAGE){
          if(item.type == MessageType::SELF_MESSAGE_IN_PROGRESS){
               QPixmap checkScaled = uncheck->scaled(15, 15, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
@@ -149,3 +188,23 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 }
 
 
+void ChatDelegate::setEditorData(QWidget* editor, const QModelIndex &index) const{
+     QTextEdit* le= qobject_cast<QTextEdit*>(editor);
+    if(le){
+         QString text = index.model()->data(index).value<Msg>().nickname;
+                le->setText(text);
+        }
+
+}
+
+QWidget *ChatDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    QString text = QString::fromStdString(index.model()->data(index).value<Msg>().text);
+    QTextEdit* editor = new QTextEdit(text,parent);
+    return editor;
+}
+
+void ChatDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    editor->setGeometry(option.rect);
+}

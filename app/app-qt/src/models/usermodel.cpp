@@ -27,6 +27,11 @@ std::function<void (int, std::optional<std::string> &)> &UserModel::getRegistrat
     return registrationCallback;
 }
 
+std::function<void (Account &, std::optional<std::string> &)> &UserModel::getAuthWithCacheCallback()
+{
+    return authWithCacheCallback;
+}
+
 void UserModel::setCallBacks()
 {
     auto self = instance();
@@ -49,6 +54,7 @@ void UserModel::setCallBacks()
         else
             self->errString = err;
         emit self->stopAnimationSignal();
+        emit self->upFlag(false);
 
     };
     authCallback = [self](Account& newAcc,std::optional<std::string>& err){
@@ -59,12 +65,26 @@ void UserModel::setCallBacks()
         else
             self->errString = err;
         emit self->stopAnimationSignal();
+        emit self->upFlag(false);
+    };
+    authWithCacheCallback = [self](Account& newAcc,std::optional<std::string>& err){
+        if(err == std::nullopt){
+            self->setData(newAcc);
+            emit self->showMainWidget();
+        }
+        else
+            self->errString = err;
     };
 }
 
 void UserModel::setAvatar(const QString &avatar)
 {
     myAcc.avatar = avatar.toStdString();
+}
+
+void UserModel::setAcc(Account &acc)
+{
+    myAcc = std::move(acc);
 }
 
 Account UserModel::getAcc() const

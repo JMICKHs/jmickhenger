@@ -20,8 +20,10 @@ public:
     std::function<void(bool,std::optional<std::string>&)> &getChangeMeCallback()  ;
     std::function<void(Account&,std::optional<std::string>&)> &getAuthCallback() ;
     std::function<void(int,std::optional<std::string>&)> &getRegistrationCallback();
+    std::function<void(Account&,std::optional<std::string>&)>& getAuthWithCacheCallback();
     void setCallBacks();
     void setAvatar(const QString &avatar);
+    void setAcc(Account &acc);
     Account getAcc() const;
     int getId() const;
     void setId(int id);
@@ -41,11 +43,13 @@ private:
     std::function<void(bool,std::optional<std::string>&)> changeMeCallback;
     std::function<void(Account&,std::optional<std::string>&)> authCallback;
     std::function<void(int,std::optional<std::string>&)> registrationCallback;
+    std::function<void(Account&,std::optional<std::string>&)> authWithCacheCallback;
 
 signals:
     void showMainWidget();
     void nickNameChanged(const QString&);
     void stopAnimationSignal();
+    void upFlag(bool);
 };
 
 #endif // USETMODEL_H

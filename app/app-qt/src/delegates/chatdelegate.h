@@ -14,15 +14,19 @@ public:
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option,  const QModelIndex &index) override;
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
                   const QModelIndex &index) const override;
+    void setEditorData(QWidget* editor, const QModelIndex &index) const override;
+    QWidget* createEditor(QWidget* parent,const QStyleOptionViewItem &option,const QModelIndex &index) const override;
+    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 private:
+    QWidget showPicture;
     QPixmap *avatar;
     QPixmap *check;
     QPixmap *uncheck;
     QPoint offset{5,5};
     int textOffset{15};
     int mainMessageTopOffset{15};
-    int baseItemHeight{55};
+    int baseItemHeight{50};
     int rightMessageOffset{80};
     int avatarRadius{100};
     float baseTextHeight{15};

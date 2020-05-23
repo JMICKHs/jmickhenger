@@ -31,13 +31,14 @@ void GroupDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     QPixmap scaled = groupIcon->scaled(groupIconSize,
                                        Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 
-    painter->save();
     QBrush brush(scaled);
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setBrush(brush);
     painter->translate(QPointF(rect.topLeft() + offset));
     painter->drawRoundedRect(QRect(QPoint(0,0), groupIconSize), groupIconRadius, groupIconRadius);
     painter->restore();
+
+    painter->save();
 
     QRect GroupNameRect = myOpt.rect;
     GroupNameRect.setY(GroupNameRect.y() + textTopOffset);
@@ -61,7 +62,7 @@ void GroupDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
         painter->drawText(LastMessageNick, Qt::TextSingleLine,
                       font.elidedText(item.lastMessage.nickname + ':',Qt::ElideRight,width - textRigthOffset));
     }
-    qDebug() <<nameWidth;
+
     f.setBold(false);
     QRect LastMessageRect = QRect(groupIconSize.width() + textLeftOffset + 5 + nameWidth,
                                   GroupNameRect.y() + lastMessageTopOffset,width - textRigthOffset,baseTextHeigth);

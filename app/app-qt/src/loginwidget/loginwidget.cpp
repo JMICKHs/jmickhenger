@@ -27,8 +27,6 @@ LoginWidget::LoginWidget(QWidget *parent) :
     Pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);
     this->setPalette(Pal);
-    auto net = AppNet::shared();
-    net->runClient([](int){});
 
     ui->avatarButton->setFlat(true);
     ui->avatarButton->setFixedSize(70,70);
@@ -54,6 +52,7 @@ LoginWidget::LoginWidget(QWidget *parent) :
     ui->loadAnimation->setMovie(movie);
     ui->loadAnimation_2->setMovie(movie);
     connect(UserModel::instance(),&UserModel::stopAnimationSignal,this,&LoginWidget::stopAnimation);
+    connect(UserModel::instance(),&UserModel::upFlag,this,&LoginWidget::upProtectedFlag);
 }
 
 void LoginWidget::login(const QString &log, const QString &password)
@@ -61,6 +60,9 @@ void LoginWidget::login(const QString &log, const QString &password)
     auto net = AppNet::shared();
     qDebug() <<"log";
     net->auth(log.toStdString(),password.toStdString(),UserModel::instance()->getAuthCallback());
+    stopDoubleTapOnRegistrateOrLogin = true;
+    ui->loginInput->clear();
+    ui->passwordInput->clear();
 }
 
 void LoginWidget::registration(const Account &acc)
@@ -71,6 +73,10 @@ void LoginWidget::registration(const Account &acc)
     UserModel::instance()->setPassword(acc.password);
     UserModel::instance()->setAvatar(path);
     net->registration(acc,UserModel::instance()->getRegistrationCallback());
+    stopDoubleTapOnRegistrateOrLogin = true;
+    ui->loginRegInput->clear();
+    ui->fPassRegInput->clear();
+    ui->sPassRegInput->clear();
 }
 
 LoginWidget::~LoginWidget()
@@ -80,9 +86,13 @@ LoginWidget::~LoginWidget()
 
 void LoginWidget::on_loginButton_clicked()
 {
+    if(stopDoubleTapOnRegistrateOrLogin){
+        return;
+    }
     ui->loadAnimation->show();
     ui->loadAnimation->movie()->start();
     login(ui->loginInput->text(),ui->passwordInput->text());
+
 }
 
 void LoginWidget::on_RegistrationButton_clicked()
@@ -97,6 +107,9 @@ void LoginWidget::on_returnButton_clicked()
 
 void LoginWidget::on_registrateButton_clicked()
 {
+    if(stopDoubleTapOnRegistrateOrLogin){
+        return;
+    }
     ui->loadAnimation_2->show();
     ui->loadAnimation_2->movie()->start();
     Account acc;
@@ -137,6 +150,11 @@ void LoginWidget::stopAnimation()
      ui->loadAnimation_2->movie()->stop();
      ui->loadAnimation->hide();
      ui->loadAnimation_2->hide();
+}
+
+void LoginWidget::upProtectedFlag(bool flag)
+{
+    stopDoubleTapOnRegistrateOrLogin = flag;
 }
 
 

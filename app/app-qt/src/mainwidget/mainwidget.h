@@ -37,6 +37,7 @@ public:
     void resizeEvent(QResizeEvent *event) override;
     void moveEvent(QMoveEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
+    MenuWidget* getMenu();
 
 public slots:
     void menuClicked();
@@ -46,6 +47,7 @@ public slots:
     void editMessageInChat();
     void showContextMenu(const QPoint &pos);
     void setGroupInfoSlot(const inf::ChatRoom &room);
+    void resizeSpacer(int height);
 
 signals:
     void sendMessageFromInput_s(const Message &message);
@@ -61,6 +63,7 @@ protected:
     QMenu *msgMenu;
     ProxyModel *proxyModel;
     ChatDelegate *chatDelegate;
+    int spacerHeight;
 
 private slots:
     void on_groupList_clicked(const QModelIndex &index);
