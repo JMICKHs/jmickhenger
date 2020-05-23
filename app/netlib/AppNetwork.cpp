@@ -1,4 +1,5 @@
 #include "AppNetwork.h"
+#include <ctime>
 
 using namespace std;
 using namespace inf;
@@ -9,6 +10,10 @@ string getIdNameForServer(int id) {
 
 string getAuthNameForServer(const string & nickname) {
     return "auth: " + nickname;
+}
+
+string getTestForServer() {
+    return "test: " + to_string(time(nullptr));
 }
 
 AppNet::AppNet() {
@@ -199,6 +204,39 @@ void AppNet::dellMsg(int idUser, int idChat, int numberMsg, const std::function<
     parser.addInt(numberMsg, Message::nameNumber);
     Query query((int)Cmds::delMessage, parser.getJson());
     announcer->addCallback<pair<int, int>, errstr &>((int)Cmds::delMessage, pair<int, int>(idChat, numberMsg), callback);
+    client->write(query.encode());
+}
+
+void AppNet::addFrndNick(int idUser, const std::string &nick, const std::function<void(errstr &)> &callback) {
+    Parser parser;
+    parser.addInt(idUser, MyAccount::nameId);
+    parser.addStr(nick, UserInfo::nameLogin);
+    Query query((int)Cmds::addFrndNick, parser.getJson());
+    announcer->addCallback<string, errstr&>((int)Cmds::addFrndNick, nick, callback);
+    client->write(query.encode());
+}
+
+void AppNet::dellChat(int idUser, int idChat, const std::function<void(errstr &)> &callback) {
+    Parser parser;
+    parser.addInt(idUser, MyAccount::nameId);
+    parser.addInt(idChat, ChatInfo::nameId);
+    Query query((int)Cmds::delChat, parser.getJson());
+    announcer->addCallback<int, errstr&>((int)Cmds::delChat, idChat, callback);
+    client->write(query.encode());
+}
+
+void AppNet::readChat(int idUser, int idChat, const std::function<void(errstr &)> &callback) {
+    Parser parser;
+    parser.addInt(idUser, MyAccount::nameId);
+    parser.addInt(idChat, ChatInfo::nameId);
+    Query query((int)Cmds::readChat, parser.getJson());
+    announcer->addCallback<int, errstr&>((int)Cmds::readChat, idChat, callback);
+    client->write(query.encode());
+}
+
+void AppNet::changeMsg(int idUser, const inf::Message &msg, const std::function<void(errstr &)> &callback) {
+    Query query((int)Cmds::changeMessage, msg.encode());
+    announcer->addCallback< pair<int, int>, errstr&>((int)Cmds::readChat, pair<int, int>(msg.number, msg.chatId), callback);
     client->write(query.encode());
 }
 
@@ -398,6 +436,41 @@ void AppNet::setHandlers() {
     };
     handlers[(int)Cmds::createChat] = f14;
 
+    auto f15 = [self](int cmd, errstr & err, const string & body) {
+        Parser parser; parser.setJson(body);
+        auto f = self->announcer->getCallback<int, errstr&>(cmd, parser.getInt(ChatInfo::nameId));
+        if (f) {
+            f.value()(err);
+        } else {
+            cout << "cmd " << cmd << " " << body << " не найден callback\n";
+        }
+    };
+    handlers[(int)Cmds::delChat] = f15;
+
+    auto f16 = [self](int cmd, errstr & err, const string & body) {
+        Parser parser;
+        parser.setJson(body);
+        auto frndNick = parser.getStr(UserInfo::nameLogin);
+        auto f = self->announcer->getCallback<string, errstr&>(cmd, frndNick);
+        if (f) {
+            f.value()(err);
+        } else {
+            cout << "cmd " << cmd << " " << body << " не найден callback\n";
+        }
+    };
+    handlers[(int)Cmds::delChat] = f16;
+
+    auto f18 = [self](int cmd, errstr & err, const string & body) {
+        Message msg;
+        auto f = self->announcer->getCallback< pair<int, int>, errstr&>((int)Cmds::readChat, pair<int, int>(msg.number, msg.chatId));
+        if (f) {
+            f.value()(err);
+        } else {
+            cout << "cmd " << cmd << " " << body << " не найден callback\n";
+        }
+    };
+    handlers[(int)Cmds::changeMessage] = f18;
+
     auto f19 = [self](int cmd, errstr & err, const string & body) {
         Parser parser;
         parser.setJson(body);
@@ -412,6 +485,18 @@ void AppNet::setHandlers() {
         }
     };
     handlers[(int)Cmds::delMessage] = f19;
+
+    auto f21 = [self](int cmd, errstr & err, const string & body) {
+        Parser parser;
+        parser.setJson(body);
+        auto f = self->announcer->getCallback<int, errstr&>(cmd, parser.getInt(ChatInfo::nameId));
+        if (f) {
+            f.value()(err);
+        } else {
+            cout << "cmd " << cmd << " " << body << " не найден callback\n";
+        }
+    };
+    handlers[(int)Cmds::readChat] = f21;
 }
 
 optional<MyAccount> AppNet::accFromCache() {
@@ -421,4 +506,12 @@ optional<MyAccount> AppNet::accFromCache() {
 void AppNet::setClientDelegate(std::shared_ptr<AbstractClient> clientDelegate) {
     this->client = clientDelegate;
     clientStarted = false;
+}
+
+void AppNet::clearCache() {
+    cache->clear();
+}
+
+void AppNet::check() {
+    client->write(getTestForServer());
 }

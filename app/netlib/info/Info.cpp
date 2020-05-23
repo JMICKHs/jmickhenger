@@ -78,10 +78,10 @@ const string inf::UserInfo::nameAvatar = "pathImage";
 const string inf::UserInfo::nameListFrnd = "frnds";
 
 inf::Message::Message()
-    : chatId(-1), number(-1), text(), idOwner(-1), timesend(), checked(false) {}
+    : chatId(-1), number(-1), text(), idOwner(-1), timesend() {}
 
-inf::Message::Message(int id, int n, const string &text, int owner, time_t send, bool check)
-    : chatId(id), number(n), text(text), idOwner(owner), timesend(send), checked(check){}
+inf::Message::Message(int id, int n, const string &text, int owner, time_t send)
+    : chatId(id), number(n), text(text), idOwner(owner), timesend(send){}
 
 string inf::Message::encode() const {
     parser->clear();
@@ -90,7 +90,6 @@ string inf::Message::encode() const {
     parser->addStr(text, nameText);
     parser->addInt(idOwner, nameOwner);
     parser->addInt(timesend, nameTime);
-    parser->addBool(checked, nameCheck);
 
     return parser->getJson();
 }
@@ -102,7 +101,6 @@ void inf::Message::decode(const string & json) {
     text = parser->getStr(nameText);
     idOwner = parser->getInt(nameOwner);
     timesend = parser->getInt(nameTime);
-    checked = parser->getBool(nameCheck);
 }
 
 const string inf::Message::nameId = "idChat";
@@ -110,20 +108,19 @@ const string inf::Message::nameNumber = "number";
 const string inf::Message::nameText = "text";
 const string inf::Message::nameOwner = "owner";
 const string inf::Message::nameTime = "time";
-const string inf::Message::nameCheck = "checked";
 const string inf::Message::nameArr = "msgs";
 
 inf::ChatInfo::ChatInfo()
-    : idChat(-1), name() {}
+    : idChat(-1), name(), checked(false) {}
 
-inf::ChatInfo::ChatInfo(int id, const string &name)
-    : idChat(id), name(name) {}
+inf::ChatInfo::ChatInfo(int id, const string &name, bool check)
+    : idChat(id), name(name), checked(check) {}
 
 string inf::ChatInfo::encode() const {
     parser->clear();
     parser->addInt(idChat, nameId);
     parser->addStr(name, nameChat);
-
+    parser->addBool(checked, nameCheck);
     return parser->getJson();
 }
 
@@ -131,11 +128,13 @@ void inf::ChatInfo::decode(const string & json) {
     parser->setJson(json);
     idChat = parser->getInt(nameId);
     name = parser->getStr(nameChat);
+    checked = parser->getBool(nameCheck);
 }
 
 const string inf::ChatInfo::nameId = "idChat";
 const string inf::ChatInfo::nameChat = "name";
 const string inf::ChatInfo::nameChatList = "chatList";
+const string inf::ChatInfo::nameCheck = "checked";
 
 bool inf::ChatInfo::operator==(const inf::ChatInfo &other) const {
     if(idChat == other.idChat && name == other.name) {

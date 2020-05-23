@@ -22,8 +22,9 @@ public:
     static std::shared_ptr<AppNet> shared();
     void runClient(const std::function<void(int)> & errHandler);
     void stopClient();
-    bool check() {} //TODO
+    void check(); // errHandler словит ошибку, если связи нет;
     std::optional<inf::MyAccount> accFromCache();
+    void clearCache();
     void setClientDelegate(std::shared_ptr<AbstractClient> client); //для мок клиента в тестировании
     void auth(const std::string & login, const std::string & pass, const std::function<void(inf::MyAccount &, errstr &)> & callback);
     void registration(const inf::MyAccount & acc, const std::function<void(int, errstr &)>& callback);
@@ -35,17 +36,18 @@ public:
     void getMsgs(int idUser, int idChat, int start, int end, const std::function<void(std::vector<inf::Message> &, errstr &)> & callback);
     void getLastMsg(int idUser, int idChat, const std::function<void(inf::Message &, errstr &)> & callback);
     void addFrnd(int idUser, int idFrnd, const std::function<void(errstr &)> & callback);
-    void addFrndNick(int idUser, const std::string & nick, const std::function<void(errstr &)> & callback); //TODO
+    void addFrndNick(int idUser, const std::string & nick, const std::function<void(errstr &)> & callback);
     void getListFrnd(int id, const std::function<void(std::vector<int> &, errstr &)> & callback);
     void delFrnd(int idUser, int idFrnd, const std::function<void(errstr &)> & callback);
     void getInfoMe(int id, const std::function<void(inf::MyAccount &, errstr &)> & callback);
     void getUser(int myId, int id, const std::function<void(inf::UserInfo &, errstr &)> & callback);
     void createChat(const inf::ChatRoom & room, const std::function<void(int, errstr &)> & callback);
+    void dellChat(int idUser, int idChat, const std::function<void(errstr &)> & callback);
     void addAdminChat(int myId, int idChat, int idUser, const std::function<void(errstr &)> & callback){}//TODO
-    void dellChat(int idUser, int idChat, const std::function<void(errstr &)> & callback){}//TODO
     void dellMsg(int idUser, int idChat, int numberMsg, const std::function<void(errstr &)> & callback);
     void changeMsg(int idUser, const inf::Message & msg, const std::function<void(errstr &)> & callback);
     void changeMe(const inf::MyAccount & acc, const std::function<void(errstr &)> & callback){}//TODO
+    void readChat(int idUser, int idChat, const std::function<void(errstr &)> & callback);
 private:
     explicit AppNet();
     void readHandler(const std::string & str);
@@ -77,7 +79,8 @@ private:
         changeMessage, //18
         delMessage, //19
         changeChat, //20
-        test, //21
+        readChat, //21
+        test, //22
     };
 };
 

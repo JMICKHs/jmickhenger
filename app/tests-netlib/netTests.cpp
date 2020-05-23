@@ -22,7 +22,7 @@ TEST(testAnnounser, test1) {
         ++c;
     };
     int idChat = 781;
-    inf::Message msg(781, 903, "i am 903 msg in 781 chat from user id 67", 67, time(nullptr), false);
+    inf::Message msg(781, 903, "i am 903 msg in 781 chat from user id 67", 67, time(nullptr));
     inf::ChatChange testChange(idChat, "newMsg", {msg});
     an.addChatCallback(idChat, testCallback);
     an.notifyChat(testChange);
@@ -36,7 +36,7 @@ TEST(testAnnounser, test2) {
         ++c;
     };
     int idChat = 781;
-    inf::Message msg(781, 903, "i am 903 msg in 781 chat from user id 67", 67, time(nullptr), false);
+    inf::Message msg(781, 903, "i am 903 msg in 781 chat from user id 67", 67, time(nullptr));
     inf::ChatChange testChange(idChat, "newMsg", {msg});
     an.addChatCallback(idChat, testCallback);
     int n = 78;
@@ -53,7 +53,7 @@ TEST(testAnnounser, test3) {
         ++c;
     };
     int idChat = 781;
-    inf::Message msg(781, 903, "i am 903 msg in 781 chat from user id 67", 67, time(nullptr), false);
+    inf::Message msg(781, 903, "i am 903 msg in 781 chat from user id 67", 67, time(nullptr));
     int idOtherChat = 98;
     inf::ChatChange testChange(idOtherChat, "newMsg", {msg});
     an.addChatCallback(idChat, testCallback);
@@ -102,11 +102,13 @@ TEST(testAnnounser, test5) {
 TEST(testCodeble, test1) {
     string json = "{\n"
                   "    \"idChat\": \"5\",\n"
-                  "    \"name\": \"testChat\"\n"
+                  "    \"name\": \"testChat\",\n"
+                  "    \"checked\": \"false\"\n"
                   "}";
     ChatInfo info; info.decode(json);
     ASSERT_EQ(info.idChat,5);
     ASSERT_EQ(info.name, "testChat");
+    ASSERT_EQ(info.checked, false);
 }
 
 TEST(testCodeble, test2) {
@@ -146,8 +148,7 @@ TEST(testCodeble, test3) {
                   "    \"number\": \"6\",\n"
                   "    \"text\": \"msg number 6 for 78 chat from 99 user\",\n"
                   "    \"owner\": \"99\",\n"
-                  "    \"time\": \"1589639870\",\n"
-                  "    \"checked\": \"false\"\n"
+                  "    \"time\": \"1589639870\"\n"
                   "}";
     Message msg; msg.decode(json);
     ASSERT_EQ(msg.chatId, 78);
@@ -155,7 +156,6 @@ TEST(testCodeble, test3) {
     ASSERT_EQ(msg.text, "msg number 6 for 78 chat from 99 user");
     ASSERT_EQ(msg.idOwner, 99);
     ASSERT_EQ(msg.timesend, 1589639870);
-    ASSERT_EQ(msg.checked, false);
 }
 
 TEST(testCodeble, test4) {
@@ -206,8 +206,7 @@ TEST(testCodeble, test6) {
                   "            \"number\": \"2\",\n"
                   "            \"text\": \"randomText\",\n"
                   "            \"owner\": \"999\",\n"
-                  "            \"time\": \"1589657915\",\n"
-                  "            \"checked\": \"false\"\n"
+                  "            \"time\": \"1589657915\"\n"
                   "        }\n"
                   "    ]\n"
                   "}";
@@ -215,7 +214,7 @@ TEST(testCodeble, test6) {
     ChatChange change; change.decode(json);
     ASSERT_EQ(change.idChat, 78);
     ASSERT_EQ(change.action, "newMsg");
-    Message testMsg(6, 2, "randomText", 999, time(nullptr), false);
+    Message testMsg(6, 2, "randomText", 999, time(nullptr));
     vector<Message> testMsgs = {testMsg};
     for(size_t i = 0; i < change.messages.size(); ++i) {
         ASSERT_EQ(testMsgs.at(i).text, change.messages.at(i).text);
@@ -233,11 +232,10 @@ TEST(testCodeble, test7) {
                   "        \"number\": \"2\",\n"
                   "        \"text\": \"randomText\",\n"
                   "        \"owner\": \"999\",\n"
-                  "        \"time\": \"1589658525\",\n"
-                  "        \"checked\": \"false\"\n"
+                  "        \"time\": \"1589658525\"\n"
                   "    }\n"
                   "}";
-    Message testMsg(6, 2, "randomText", 999, time(nullptr), false);
+    Message testMsg(6, 2, "randomText", 999, time(nullptr));
     Reply reply; reply.decode(json);
     ASSERT_EQ(reply.cmd, 5);
     ASSERT_EQ(reply.err, "");
@@ -255,8 +253,7 @@ TEST(testCodeble, test8) {
                   "        \"number\": \"2\",\n"
                   "        \"text\": \"randomText\",\n"
                   "        \"owner\": \"999\",\n"
-                  "        \"time\": \"1589659581\",\n"
-                  "        \"checked\": \"false\"\n"
+                  "        \"time\": \"1589659581\"\n"
                   "    }\n"
                   "}";
 
@@ -295,6 +292,14 @@ TEST(testCache, test2) {
     }
 }
 
+TEST(testCache, test3) {
+    auto cache = Cache::shared();
+    cache->clear();
+    auto test1 = cache->getUser(9);
+    auto test2 = cache->getMyAccount();
+    ASSERT_EQ((bool)test1, false);
+    ASSERT_EQ((bool)test2, false);
+}
 
 class MockClient: public AbstractClient {
 public:
@@ -310,7 +315,7 @@ public:
 TEST(testAppNet, test1) {
     // отправка сообщений
     auto client = shared_ptr<MockClient>(new MockClient);
-    Message msg(78, 7, "textMsg", 90, time(nullptr), false);
+    Message msg(78, 7, "textMsg", 90, time(nullptr));
     Query testQuery(5, msg.encode());
     EXPECT_CALL(*(client), run()).Times(1);
     EXPECT_CALL(*(client), setMsgHandler(_)).Times(1);

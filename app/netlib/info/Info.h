@@ -63,14 +63,12 @@ namespace inf {
     class Message : public Codeble {
     public:
         Message();
-        //ТУТ
-        Message(int id, int n, const std::string & text, int owner, time_t send, bool check);
+        Message(int id, int n, const std::string & text, int owner, time_t send);
         int chatId;
         int number;
         std::string text;
         int idOwner;
         time_t timesend;
-        bool checked;
         std::string encode() const override;
         void decode(const std::string & json) override;
         static const std::string nameId;
@@ -78,22 +76,23 @@ namespace inf {
         static const std::string nameText;
         static const std::string nameOwner;
         static const std::string nameTime;
-        static const std::string nameCheck;
         static const std::string nameArr;
     };
 
     class ChatInfo : public Codeble {
     public:
         ChatInfo();
-        ChatInfo(int id, const std::string & name);
+        ChatInfo(int id, const std::string & name, bool check);
         int idChat;
         std::string name;
+        bool checked;
         bool operator ==(const ChatInfo &other) const;
         std::string encode() const override;
         void decode(const std::string & json) override;
         static const std::string nameId;
         static const std::string nameChat;
         static const std::string nameChatList;
+        static const std::string nameCheck;
     };
 
     class ChatRoom : public Codeble {

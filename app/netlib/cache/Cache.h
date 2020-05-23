@@ -16,6 +16,7 @@
 
 class AbstractCache {
 public:
+    virtual void clear() = 0;
     virtual void save(const inf::MyAccount & acc) = 0;
     virtual void save(const inf::UserInfo & user) = 0;
     virtual std::optional<inf::MyAccount> getMyAccount() = 0;
@@ -30,6 +31,7 @@ public:
     Cache & operator=(const Cache & other) = delete;
     Cache & operator=(Cache && other) = delete;
     ~Cache();
+    void clear() override;
     void save(const inf::MyAccount & me) override;
     std::optional<inf::MyAccount> getMyAccount() override;
     void save(const inf::UserInfo & user) override;

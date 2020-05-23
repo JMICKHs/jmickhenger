@@ -147,12 +147,16 @@ void Cache::createUsers() {
 }
 
 void Cache::clearTable(const std::string &table) {
-    string sql = "DELETE from " + table + "; " +
-                "SELECT * from " + table;
-    rc = sqlite3_exec(db, sql.data(), nullptr, nullptr, &zErrMsg);
+    string request = "DROP TABLE " + table;
+    rc = sqlite3_exec(db, request.data(), nullptr, nullptr, &zErrMsg);
     if( rc != SQLITE_OK ) {
         cerr << "SQL error: \n" << zErrMsg;
         sqlite3_free(zErrMsg);
     }
+}
+
+void Cache::clear() {
+    clearTable(tableUsers);
+    clearTable(tableAccount);
 }
 
