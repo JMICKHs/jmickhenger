@@ -43,7 +43,7 @@ void inf::MyAccount::decode(const string &json) {
     chats = parser->getArrInt(nameChats);
 }
 
-const string inf::MyAccount::nameId = "myId";
+const string inf::MyAccount::nameId = "_id";
 const string inf::MyAccount::nameLogin = "login";
 const string inf::MyAccount::nameAvatar = "pathImage";
 const string inf::MyAccount::namePassword = "password";

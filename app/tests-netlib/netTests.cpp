@@ -111,7 +111,7 @@ TEST(testCodeble, test1) {
 
 TEST(testCodeble, test2) {
     string json = "{\n"
-                  "    \"myId\": \"78\",\n"
+                  "    \"_id\": \"78\",\n"
                   "    \"login\": \"testUser\",\n"
                   "    \"password\": \"12345\",\n"
                   "    \"pathImage\": \"3\",\n"
