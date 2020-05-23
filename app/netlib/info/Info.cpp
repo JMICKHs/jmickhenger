@@ -111,16 +111,15 @@ const string inf::Message::nameTime = "time";
 const string inf::Message::nameArr = "msgs";
 
 inf::ChatInfo::ChatInfo()
-    : idChat(-1), name(), checked(false) {}
+    : idChat(-1), name() {}
 
-inf::ChatInfo::ChatInfo(int id, const string &name, bool check)
-    : idChat(id), name(name), checked(check) {}
+inf::ChatInfo::ChatInfo(int id, const string &name)
+    : idChat(id), name(name) {}
 
 string inf::ChatInfo::encode() const {
     parser->clear();
     parser->addInt(idChat, nameId);
     parser->addStr(name, nameChat);
-    parser->addBool(checked, nameCheck);
     return parser->getJson();
 }
 
@@ -128,13 +127,11 @@ void inf::ChatInfo::decode(const string & json) {
     parser->setJson(json);
     idChat = parser->getInt(nameId);
     name = parser->getStr(nameChat);
-    checked = parser->getBool(nameCheck);
 }
 
 const string inf::ChatInfo::nameId = "idChat";
 const string inf::ChatInfo::nameChat = "name";
 const string inf::ChatInfo::nameChatList = "chatList";
-const string inf::ChatInfo::nameCheck = "checked";
 
 bool inf::ChatInfo::operator==(const inf::ChatInfo &other) const {
     if(idChat == other.idChat && name == other.name) {
@@ -143,9 +140,9 @@ bool inf::ChatInfo::operator==(const inf::ChatInfo &other) const {
     return false;
 }
 
-inf::ChatRoom::ChatRoom() : idChat(-1) {}
+inf::ChatRoom::ChatRoom() : idChat(-1), checked(false) {}
 
-inf::ChatRoom::ChatRoom(int id, const string &name, const vector<int> & users, const vector<int> & admins)
+inf::ChatRoom::ChatRoom(int id, const string &name, bool check, const vector<int> & users, const vector<int> & admins)
     : idChat(id), name(name), idUsers(users), idAdmins(admins){}
 
 string inf::ChatRoom::encode() const {
@@ -154,7 +151,7 @@ string inf::ChatRoom::encode() const {
     parser->addStr(name, nameChat);
     parser->addArrInt(idUsers, nameUsers);
     parser->addArrInt(idAdmins, nameAdmins);
-
+    parser->addBool(checked, nameCheck);
     return parser->getJson();
 }
 
@@ -164,10 +161,12 @@ void inf::ChatRoom::decode(const string & json) {
     name = parser->getStr(nameChat);
     idUsers = parser->getArrInt(nameUsers);
     idAdmins = parser->getArrInt(nameAdmins);
+    checked = parser->getBool(nameCheck);
 }
 
 const string inf::ChatRoom::nameId = "idChat";
 const string inf::ChatRoom::nameChat = "name";
+const string inf::ChatRoom::nameCheck = "checked";
 const string inf::ChatRoom::nameUsers = "users";
 const string inf::ChatRoom::nameAdmins = "admins";
 const string inf::ChatRoom::nameStart = "start";

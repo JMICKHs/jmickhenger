@@ -82,25 +82,24 @@ namespace inf {
     class ChatInfo : public Codeble {
     public:
         ChatInfo();
-        ChatInfo(int id, const std::string & name, bool check);
+        ChatInfo(int id, const std::string & name);
         int idChat;
         std::string name;
-        bool checked;
         bool operator ==(const ChatInfo &other) const;
         std::string encode() const override;
         void decode(const std::string & json) override;
         static const std::string nameId;
         static const std::string nameChat;
         static const std::string nameChatList;
-        static const std::string nameCheck;
     };
 
     class ChatRoom : public Codeble {
     public:
         ChatRoom();
-        ChatRoom(int id, const std::string & name, const std::vector<int> & users, const std::vector<int> & admins);
+        ChatRoom(int id, const std::string & name, bool check, const std::vector<int> & users, const std::vector<int> & admins);
         int idChat;
         std::string name;
+        bool checked;
         std::vector<int> idUsers;
         std::vector<int> idAdmins;
         std::string encode() const override;
@@ -111,6 +110,7 @@ namespace inf {
         static const std::string nameAdmins;
         static const std::string nameStart;
         static const std::string nameEnd;
+        static const std::string nameCheck;
     };
 
     class ChatChange : public Codeble {

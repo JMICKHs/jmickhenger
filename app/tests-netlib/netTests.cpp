@@ -102,13 +102,11 @@ TEST(testAnnounser, test5) {
 TEST(testCodeble, test1) {
     string json = "{\n"
                   "    \"idChat\": \"5\",\n"
-                  "    \"name\": \"testChat\",\n"
-                  "    \"checked\": \"false\"\n"
+                  "    \"name\": \"testChat\"\n"
                   "}";
     ChatInfo info; info.decode(json);
     ASSERT_EQ(info.idChat,5);
     ASSERT_EQ(info.name, "testChat");
-    ASSERT_EQ(info.checked, false);
 }
 
 TEST(testCodeble, test2) {
@@ -174,6 +172,7 @@ TEST(testCodeble, test5) {
     string json = "{\n"
                   "    \"idChat\": \"6\",\n"
                   "    \"name\": \"testName\",\n"
+                  "    \"checked\": \"true\",\n"
                   "    \"users\": [\n"
                   "        \"5\",\n"
                   "        \"19\",\n"
@@ -186,6 +185,7 @@ TEST(testCodeble, test5) {
     ChatRoom room; room.decode(json);
     ASSERT_EQ(room.idChat, 6);
     ASSERT_EQ(room.name, "testName");
+    ASSERT_EQ(room.checked, true);
     vector<int> testUsers = {5, 19, 90};
     for(size_t i = 0; i < room.idUsers.size(); ++i) {
         ASSERT_EQ(testUsers.at(i), room.idUsers.at(i));

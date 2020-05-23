@@ -150,7 +150,6 @@ void Cache::clearTable(const std::string &table) {
     string request = "DROP TABLE " + table;
     rc = sqlite3_exec(db, request.data(), nullptr, nullptr, &zErrMsg);
     if( rc != SQLITE_OK ) {
-        cerr << "SQL error: \n" << zErrMsg;
         sqlite3_free(zErrMsg);
     }
 }
