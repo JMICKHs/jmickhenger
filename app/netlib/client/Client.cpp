@@ -2,6 +2,7 @@
 
 #import <fstream>
 #import <cassert>
+#import <sstream>
 
 using boost::asio::ip::tcp;
 namespace ba = boost::asio;
@@ -96,16 +97,11 @@ void Client::connect(tcp::resolver::iterator &it) {
 }
 
 void Client::loopRead() {
-    memset(readMsg.data(), '\0', maxMsg);
-    auto buf = ba::buffer(readMsg);
-    auto condition = boost::bind(&Client::readCondition, shared_from_this(), _1, _2);
     auto handler = [self = shared_from_this()](boost::system::error_code err, size_t length) {
         if (!err) {
-            string msg; msg.reserve(length);
-            int i = 0;
-            while(i < length && (self->readMsg[i] != '\r' || self->readMsg[i + 1] != '\n')) {
-                msg.push_back(self->readMsg[i++]);
-            }
+            std::ostringstream out;
+            out << &(self->bufRead);
+            string msg = out.str();
             if(self->msgHandler) {
                 self->msgHandler.value()(msg);
             } else {
@@ -121,13 +117,7 @@ void Client::loopRead() {
             }
         }
     };
-    ba::async_read(sock, buf, condition, handler);
-}
-
-bool Client::readCondition(const boost::system::error_code &err, size_t length) {
-    if (err) return false;
-    bool key = readMsg[length - 2] == '\r' && readMsg[length - 1] == '\n'; // в конце \r\n
-    return key;
+    ba::async_read_until(sock, bufRead, "\r\n", handler);
 }
 
 void Client::writeFromQue() {

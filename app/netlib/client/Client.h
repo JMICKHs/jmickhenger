@@ -41,18 +41,16 @@ private:
     explicit Client();
     void connect(boost::asio::ip::tcp::resolver::iterator & it);
     void loopRead();
-    bool readCondition(const boost::system::error_code & err, size_t length);
     void writeFromQue();
 private:
     std::thread t;
     static boost::asio::io_service service;
     boost::asio::ip::tcp::socket sock;
     boost::asio::ip::tcp::resolver::iterator eit;
-    enum { maxMsg = 2048 };
-    std::array<char, maxMsg> readMsg;
     std::queue<std::string> writeMsgQue;
     std::optional<std::function<void(const std::string &)>> msgHandler;
     std::optional<std::function<void(int)>> errHandler;
+    boost::asio::streambuf bufRead;
 };
 
 
