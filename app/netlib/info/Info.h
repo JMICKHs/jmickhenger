@@ -63,12 +63,14 @@ namespace inf {
     class Message : public Codeble {
     public:
         Message();
-        Message(int id, int n, const std::string & text, int owner, time_t send);
+        Message(int id, int n, const std::string & text, const std::string & img, int owner, time_t send, bool chck);
         int chatId;
         int number;
         std::string text;
+        std::string image;
         int idOwner;
         time_t timesend;
+        bool checked;
         std::string encode() const override;
         void decode(const std::string & json) override;
         static const std::string nameId;
@@ -77,6 +79,8 @@ namespace inf {
         static const std::string nameOwner;
         static const std::string nameTime;
         static const std::string nameArr;
+        static const std::string nameCheck;
+        static const std::string nameImage;
     };
 
     class ChatInfo : public Codeble {
@@ -96,10 +100,9 @@ namespace inf {
     class ChatRoom : public Codeble {
     public:
         ChatRoom();
-        ChatRoom(int id, const std::string & name, bool check, const std::vector<int> & users, const std::vector<int> & admins);
+        ChatRoom(int id, const std::string & name, const std::vector<int> & users, const std::vector<int> & admins);
         int idChat;
         std::string name;
-        bool checked;
         std::vector<int> idUsers;
         std::vector<int> idAdmins;
         std::string encode() const override;
@@ -110,7 +113,6 @@ namespace inf {
         static const std::string nameAdmins;
         static const std::string nameStart;
         static const std::string nameEnd;
-        static const std::string nameCheck;
     };
 
     class ChatChange : public Codeble {

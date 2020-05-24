@@ -45,6 +45,7 @@ private:
 private:
     std::thread t;
     static boost::asio::io_service service;
+    static std::string endMsg;
     boost::asio::ip::tcp::socket sock;
     boost::asio::ip::tcp::resolver::iterator eit;
     std::queue<std::string> writeMsgQue;

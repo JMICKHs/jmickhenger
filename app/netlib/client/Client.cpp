@@ -9,6 +9,7 @@ namespace ba = boost::asio;
 using namespace std;
 
 ba::io_service Client::service = ba::io_service();
+std::string Client::endMsg = "\r\n";
 
 optional<pair<string, string>> getHostFromConfig() {
     static string fileConfig = "../netlib/configs/clientConfig";
@@ -54,7 +55,7 @@ void Client::run() {
 void Client::write(const string &msg) {
     auto handler = [self = shared_from_this(), msg]() {
         bool key = !self->writeMsgQue.empty();
-        self->writeMsgQue.push(msg + "\r\n");
+        self->writeMsgQue.push(msg + endMsg);
         if (!key) {
             self->writeFromQue();
         }
@@ -105,7 +106,7 @@ void Client::loopRead() {
             if(self->msgHandler) {
                 self->msgHandler.value()(msg);
             } else {
-                cout << "not handler str \n";
+                cout << "not handler str\n";
             }
             self->loopRead();
         } else {
@@ -117,7 +118,7 @@ void Client::loopRead() {
             }
         }
     };
-    ba::async_read_until(sock, bufRead, "\r\n", handler);
+    ba::async_read_until(sock, bufRead, endMsg, handler);
 }
 
 void Client::writeFromQue() {
