@@ -53,6 +53,15 @@ LoginWidget::LoginWidget(QWidget *parent) :
     ui->loadAnimation_2->setMovie(movie);
     connect(UserModel::instance(),&UserModel::stopAnimationSignal,this,&LoginWidget::stopAnimation);
     connect(UserModel::instance(),&UserModel::upFlag,this,&LoginWidget::upProtectedFlag);
+
+    ui->labelInfoLogin->setStyleSheet("color: rgb(200, 0, 0)");
+    ui->infoRegister->setStyleSheet("color: rgb(200, 0, 0)");
+    ui->labelInfoLogin->setWordWrap(true);
+    ui->infoRegister->setWordWrap(true);
+    ui->labelInfoLogin->setAlignment(Qt::AlignHCenter);
+    ui->infoRegister->setAlignment(Qt::AlignHCenter);
+    connect(UserModel::instance(),&UserModel::setLogInfo,this,&LoginWidget::changeLogInfo);
+    connect(UserModel::instance(),&UserModel::setRegInfo,this,&LoginWidget::changeRegInfo);
 }
 
 void LoginWidget::login(const QString &log, const QString &password)
@@ -97,7 +106,8 @@ void LoginWidget::on_loginButton_clicked()
 
 void LoginWidget::on_RegistrationButton_clicked()
 {
-    this->setCurrentWidget(reg);
+     ui->labelInfoLogin->clear();
+     this->setCurrentWidget(reg);
 }
 
 void LoginWidget::on_returnButton_clicked()
@@ -107,6 +117,7 @@ void LoginWidget::on_returnButton_clicked()
 
 void LoginWidget::on_registrateButton_clicked()
 {
+    ui->infoRegister->clear();
     if(stopDoubleTapOnRegistrateOrLogin){
         return;
     }
@@ -155,6 +166,20 @@ void LoginWidget::stopAnimation()
 void LoginWidget::upProtectedFlag(bool flag)
 {
     stopDoubleTapOnRegistrateOrLogin = flag;
+}
+
+void LoginWidget::changeRegInfo(const QString &str)
+{
+    ui->infoRegister->setText(str);
+    ui->infoRegister->adjustSize();
+    ui->infoRegister->show();
+}
+
+void LoginWidget::changeLogInfo(const QString &str)
+{
+    ui->labelInfoLogin->setText(str);
+    ui->labelInfoLogin->adjustSize();
+    ui->labelInfoLogin->show();
 }
 
 

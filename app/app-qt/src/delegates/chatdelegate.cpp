@@ -4,7 +4,10 @@
 #include <QMouseEvent>
 #include <QFontMetrics>
 #include <QDebug>
+#include <QTextLine>
 #include <QTextEdit>
+#include <QLabel>
+#include <QLineEdit>
 
 ChatDelegate::ChatDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
@@ -28,7 +31,7 @@ QSize ChatDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelInd
     MessageRect.setWidth(option.widget->width() - 80);
     QFontMetrics fMetrics(option.font);
     int height = fMetrics.boundingRect(QRect(0,0,option.widget->width() - 240,0),Qt::TextWordWrap,QString::fromStdString(item.text)).height();
-    if(item.image != nullptr){
+    if(item.img != nullptr){
         height += 200;
     }
     if(height <= 45)
@@ -59,21 +62,23 @@ bool ChatDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const Q
     QMouseEvent *mouse_event = static_cast<QMouseEvent*>(event);
     QRect ButtonRect = option.rect;
     ButtonRect.setWidth(45);
-    if (mouse_event->button() == Qt::LeftButton)
+    if (option.rect.contains(mouse_event->pos()))
     {
          if(ButtonRect.contains(mouse_event->pos())) {
              qDebug() << "ButtonRect";
          }
          if(NameRect.contains(mouse_event->pos())){
              qDebug() <<" Namerect";
-             QWidget* editor = this->createEditor(nullptr,option,index);     
-             editor->setGeometry(NameRect);
-             this->setEditorData(editor,index);
-             this->updateEditorGeometry(editor,option,index);
+
+             //QLabel* editor = qobject_cast<QLabel*>(this->createEditor(nullptr,option,index));
+             //editor->setTextInteractionFlags(Qt::TextSelectableByMouse);
+             //editor->setCursor(Qt::IBeamCursor);
+             //editor->setText(item.nickname);
+             //editor->repaint(NameRect);
         }
-         if(pictureRect.contains(mouse_event->pos()) && item.image != nullptr){
+         if(pictureRect.contains(mouse_event->pos()) && item.img != nullptr){
             qDebug() <<"PictureRect";
-            QPixmap pix1 = item.image->scaled(600,600,Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+            QPixmap pix1 = item.img->scaled(600,600,Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
             showPicture.resize(pix1.size());
             QPalette palette;
             palette.setBrush(showPicture.backgroundRole(), QBrush(pix1));
@@ -82,6 +87,7 @@ bool ChatDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const Q
             showPicture.show();
         }
     }
+    return  QAbstractItemDelegate::editorEvent(event,model,option,index);
 }
 
 void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -149,12 +155,12 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 
     painter->restore();
     painter->save();
-    if(item.image != nullptr){
+    if(item.img != nullptr){
 
         QFontMetrics fMetrics(option.font);
         int height = fMetrics.boundingRect(QRect(0,0,option.widget->width() - 240,0),Qt::TextWordWrap,QString::fromStdString(item.text)).height();
 
-        QPixmap map = item.image->scaled(200,200,Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+        QPixmap map = item.img->scaled(200,200,Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
         QBrush brush(map);
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setBrush(brush);
@@ -189,7 +195,9 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 
 
 void ChatDelegate::setEditorData(QWidget* editor, const QModelIndex &index) const{
-     QTextEdit* le= qobject_cast<QTextEdit*>(editor);
+    qDebug() <<"setData";
+    QStyledItemDelegate::setEditorData(editor,index);
+     QLabel* le= qobject_cast<QLabel*>(editor);
     if(le){
          QString text = index.model()->data(index).value<Msg>().nickname;
                 le->setText(text);
@@ -199,12 +207,16 @@ void ChatDelegate::setEditorData(QWidget* editor, const QModelIndex &index) cons
 
 QWidget *ChatDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    qDebug() <<"createEDitor";
+    QStyledItemDelegate::createEditor(parent,option,index);
     QString text = QString::fromStdString(index.model()->data(index).value<Msg>().text);
-    QTextEdit* editor = new QTextEdit(text,parent);
+    QLabel* editor = new QLabel(text,parent);
     return editor;
 }
 
 void ChatDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    qDebug() <<"updateGeometry";
+    QStyledItemDelegate::updateEditorGeometry(editor,option,index);
     editor->setGeometry(option.rect);
 }

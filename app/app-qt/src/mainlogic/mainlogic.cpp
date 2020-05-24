@@ -15,7 +15,6 @@ void MainLogic::runApp()
     auto acc = appNet->accFromCache();
     appNet->runClient([](int){});
     if(acc){
-
         appNet->auth(acc->login,acc->password,UserModel::instance()->getAuthWithCacheCallback());
     }
     else{

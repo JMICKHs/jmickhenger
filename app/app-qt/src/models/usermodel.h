@@ -50,6 +50,8 @@ signals:
     void nickNameChanged(const QString&);
     void stopAnimationSignal();
     void upFlag(bool);
+    void setLogInfo(const QString &str);
+    void setRegInfo(const QString &str);
 };
 
 #endif // USETMODEL_H

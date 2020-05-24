@@ -50,6 +50,18 @@ void friendsDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
     painter->drawText(GroupNameRect, Qt::TextSingleLine,
                       font.elidedText(QString::fromStdString(item.login),Qt::ElideRight,width - textRigthOffset));
 
+
+    QRect IdRect = myOpt.rect;
+    IdRect.setY(IdRect.y() + textTopOffset);
+    IdRect.setX(groupIconSize.width() + textLeftOffset);
+    QFontMetrics fMetrics(option.font);
+    int wid = fMetrics.horizontalAdvance(QString::fromStdString(item.login));
+    IdRect.setX(groupIconSize.width() + textLeftOffset + wid);
+
+    painter->setPen(QColor(120, 120, 120));
+    QString log = "#" + QString::number(item.id);
+    painter->drawText(IdRect,Qt::TextSingleLine,log);
+
     painter->setPen(palette.mid().color());
     if(rect.y() != 0)
         painter->drawLine(GroupNameRect.x(),rect.y(),rect.width(),rect.y());

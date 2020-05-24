@@ -80,7 +80,6 @@ void FriendsModel::addCallbacks()
             if(it != self->items.end()){
                 it.base()->login = user.login;
                 it.base()->avatar = user.avatar;
-
             }
              self->emit updateForNames();
         }

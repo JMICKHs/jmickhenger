@@ -5,6 +5,7 @@
 #include "netlib/info/Info.h"
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QtWebView/QtWebView>
 
 #include <QDebug>
 
@@ -15,7 +16,7 @@ MainWidget::MainWidget(QWidget *parent) :
     qRegisterMetaType<inf::ChatRoom>();
     qRegisterMetaType<std::vector<MessageItem>>();
     ui->setupUi(this);
-
+    this->setFocusPolicy(Qt::StrongFocus);
     menuWidget = new MenuWidget(this);
     msgMenu = new QMenu(this);
     chatModel = std::make_shared<ChatModel>();
@@ -81,6 +82,7 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(chatModel.get(),&ChatModel::updateItems,ui->chatList,&ChatView::doItemsLayout);
     connect(ui->chatList,&ChatView::insertRow,this,&MainWidget::resizeSpacer);
     AppNet::shared()->setObserverUnknownChat(groupModel->getUnknownChatRoomAdd());
+    connect(groupModel.get(),&GroupModel::messageChecked,chatModel.get(),&ChatModel::msgsChecked);
     this->setLayout(ui->MainLayout);
 
     spacerHeight = ui->offsetSpacer->maximumSize().height();
@@ -108,6 +110,19 @@ void MainWidget::wheelEvent(QWheelEvent *event)
     ui->chatList->doItemsLayout();
 }
 
+void MainWidget::focusInEvent(QFocusEvent *event)
+{
+    qDebug() << "focusIn";
+
+    if(ui->groupList->selectionModel()->hasSelection()){
+        Msg msg = groupModel->getLastMsg(groupModel->currChatId);
+        if(msg.idOwner == UserModel::instance()->getId()){
+                 AppNet::shared()->readChat(UserModel::instance()->getId(),groupModel->currChatId,[](std::optional<std::string> &err){
+            });
+        }
+    }
+}
+
 MenuWidget *MainWidget::getMenu()
 {
     return menuWidget;
@@ -121,7 +136,6 @@ void MainWidget::menuClicked()
 
 void MainWidget::sendMessageFromInput()
 {
-
     Msg message;
     QString text = ui->messageInput->toPlainText().trimmed();
     if(text.size() > 1024 || (text == "" && ui->messageInput->created))
@@ -142,11 +156,22 @@ void MainWidget::sendMessageFromInput()
     message.type = MessageType::SELF_MESSAGE_IN_PROGRESS;
     message.timesend  = ttime;
 
+    QString str = "";
     std::optional<QPixmap> map;
     if(ui->messageInput->created){
         map.emplace(ui->messageInput->image);
         ui->messageInput->created = false;
+        QByteArray bytes;
+        QBuffer buffer(&bytes);
+        buffer.open(QIODevice::WriteOnly);
+        map.value().save(&buffer, "jpg");
+        str = QString(bytes.toBase64());
+        QByteArray buf2 = QByteArray::fromBase64(str.toLocal8Bit());
+        QPixmap mp;
+        mp.loadFromData(buf2);
+        map.value() = mp;
     }
+    message.image = str.toStdString();
     chatModel->createMessage(message,map);
     emit chatModel->messageCreateByUser(message);
     ui->messageInput->clear();
@@ -163,10 +188,9 @@ void MainWidget::on_groupList_clicked(const QModelIndex &index)
     Chat chat = index.model()->data(index).value<Chat>();
     if(groupModel->currChatId == chat.idChat)
         return;
-    groupModel->currChatId = chat.idChat;
-    chatModel->getMessagesInChat(chat.lastMessage);
     groupModel->chatInfoSet(chat.idChat);
-    emit ui->chatList->doItemsLayout();
+    groupModel->currChatId = chat.idChat;
+    AppNet::shared()->getLastMsg(UserModel::instance()->getId(),chat.idChat,chatModel->getLastMsgAndGet());
 }
 
 

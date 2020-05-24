@@ -1,7 +1,7 @@
 #ifndef ADDFRIENDWIDGET_H
 #define ADDFRIENDWIDGET_H
 
-#include <QWidget>
+#import <QWidget>
 
 namespace Ui {
 class addFriendWidget;

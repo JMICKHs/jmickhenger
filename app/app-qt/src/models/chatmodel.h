@@ -22,16 +22,16 @@ public:
     QString time;
     QString nickname;
     QString avatar;
-    std::shared_ptr<QPixmap> image;
+    std::shared_ptr<QPixmap> img;
     Msg(MessageItem &item)
-        :MessageItem(std::move(item)),image(nullptr){
+        :MessageItem(std::move(item)),img(nullptr){
         type = MessageType::OTHER_MESSAGE;
         char buffer [100];
         tm* timeinfo = localtime(&item.timesend);
         strftime(buffer,100,"%H-%M",timeinfo);
         time = QString::fromStdString(std::string(buffer));
     }
-    Msg():image(nullptr){type = MessageType::SELF_MESSAGE_IN_PROGRESS;}
+    Msg():img(nullptr){type = MessageType::SELF_MESSAGE_IN_PROGRESS;}
 };
 
 Q_DECLARE_METATYPE(Msg)
@@ -47,7 +47,7 @@ public:
 
     void setData(std::vector<MessageItem>& msgs);
     std::function<void(std::vector<MessageItem>&,std::optional<std::string>&)> &getChatCallback() ;
-    std::function<void(std::optional<std::string>&)> &getSendMsgCallback() ;
+    std::function<void(int,std::optional<std::string>&)> &getSendMsgCallback() ;
     std::function<void(std::optional<std::string>&)> &getChangeMsgCallback() ;
     std::function<void(std::optional<std::string>&)> &getDelMsgCallback() ;
     std::function<void(MessageItem &, std::optional<std::string> &)> &getLastMsgAndGet();
@@ -55,7 +55,6 @@ public:
 
     void slotEditMessage();
     void DeleteMessage(int pos);
-    void getMessagesInChat(Msg lastMsg);
     void Clear();
 
 
@@ -64,7 +63,7 @@ private:
     bool newMessageOnBottom;
     std::optional<std::string> errString;
     std::function<void(std::vector<MessageItem>&,std::optional<std::string>&)> chatCallback;
-    std::function<void(std::optional<std::string>&)> sendMsgCallback;
+    std::function<void(int,std::optional<std::string>&)> sendMsgCallback;
     std::function<void(std::optional<std::string>&)> changeMsgCallback;
     std::function<void(std::optional<std::string>&)> delMsgCallback;
     std::function<void(inf::UserInfo &info,std::optional<std::string>&)> userInfForMessage;
@@ -76,6 +75,7 @@ signals:
 public slots:
     void createMessage(Msg &_message,std::optional<QPixmap> &img);
     void newMessages(std::vector<MessageItem> msgs);
+    void msgsChecked();
 
 };
 

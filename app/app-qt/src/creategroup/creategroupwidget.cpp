@@ -1,8 +1,9 @@
 #include "creategroupwidget.h"
 #include "ui_creategroupwidget.h"
-#include <app-qt/src/delegates/friendsdelegate.h>
-#include <QDebug>
+#import <app-qt/src/delegates/friendsdelegate.h>
+#import <QDebug>
 #include "netlib/AppNetwork.h"
+
 CreateGroupWidget::CreateGroupWidget(QWidget *parent) :
     QStackedWidget(parent),
     ui(new Ui::CreateGroupWidget)
@@ -38,7 +39,6 @@ CreateGroupWidget::CreateGroupWidget(QWidget *parent) :
     ui->createGroupView->setSelectionMode(QAbstractItemView::MultiSelection);
     connect(this,&CreateGroupWidget::addFrinedSignal,friendModel.get(),&FriendsModel::addFriendSlot);
     connect(friendModel.get(),&FriendsModel::updateForNames,this,&CreateGroupWidget::updateOnAddFfriend);
-
 }
 
 CreateGroupWidget::~CreateGroupWidget()
@@ -83,18 +83,21 @@ void CreateGroupWidget::on_SearchLineEditFriends_textChanged(const QString &arg1
 
 void CreateGroupWidget::on_pushButton_2_clicked()
 {
-    if(!ui->createGroupView->selectionModel()->hasSelection())
+    if(!ui->createGroupView->selectionModel()->hasSelection()){
         return;
-    else
-    {
+    }
+    else{
+        if(ui->lineEdit->text().toStdString() == "")
+            return;
         QModelIndexList indexList = ui->createGroupView->selectionModel()->selectedRows();
         inf::ChatRoom item;
         std::vector<int> usrIds;
         for(auto& indexData : indexList){
             usrIds.push_back(indexData.data().value<UserInf>().id);
         }
-        usrIds.push_back(UserModel::instance()->getId());
-        item.idAdmins.push_back(UserModel::instance()->getId());
+        int myId = UserModel::instance()->getId();
+        usrIds.push_back(myId);
+        item.idAdmins.push_back(myId);
         item.idUsers = std::move(usrIds);
         item.name = ui->lineEdit->text().toStdString();
         emit groupCreated(item);

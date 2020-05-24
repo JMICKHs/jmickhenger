@@ -39,6 +39,8 @@ public slots:
     void showMainWidgetSlot();
     void stopAnimation();
     void upProtectedFlag(bool);
+    void changeRegInfo(const QString& str);
+    void changeLogInfo(const QString& str);
 signals:
    void openMainWidget();
 private:

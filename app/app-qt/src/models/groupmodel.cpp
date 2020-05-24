@@ -124,6 +124,11 @@ void GroupModel::addCallbacks()
         if(change.action == "delMessage"){
 
         }
+        if(change.action == "readMessage"){
+            if(self->currChatId == change.idChat){
+                emit self->messageChecked();
+            }
+        }
     };
     newUnknownChatCallback = [self](inf::ChatRoom &room, std::optional<std::string>&){
         Chat item;
@@ -204,6 +209,16 @@ std::function<void (inf::ChatRoom &, std::optional<std::string> &)> &GroupModel:
 std::vector<Chat> GroupModel::getItems()
 {
     return items;
+}
+
+Msg GroupModel::getLastMsg(int id) const
+{
+    auto it = std::find_if(items.begin(), items.end(),[id](const Chat &chat){
+        return  chat.idChat == id;
+    });
+    if(it != items.end()){
+        return it.base()->lastMessage;
+    }
 }
 
 void GroupModel::messageCreateByUser(const Msg &msg)

@@ -8,6 +8,7 @@
 #include <netlib/info/Info.h>
 #include <app-qt/src/creategroup/creategroupwidget.h>
 #include <app-qt/src/setavatarwidget/setavatarwidget.h>
+#include <app-qt/src/settingwidget/settingwidget.h>
 
 
 using namespace inf;
@@ -27,6 +28,7 @@ private:
     Ui::MenuWidget *ui;
     SetAvatarWidget *avatWidget;
     std::shared_ptr<CreateGroupWidget> friendsWidget;
+    SettingWidget *setting;
 
 signals:
     void getListFriendSignal();
@@ -41,6 +43,7 @@ private slots:
     void on_contactsButton_clicked();
     void on_pushButton_clicked();
     void on_exitButton_clicked();
+    void on_settingsButton_clicked();
 };
 
 #endif // MENUWIDGET_H

@@ -31,6 +31,7 @@ MenuWidget::MenuWidget(QWidget *parent)
     ui->pushButton->setMask(region);
 
     avatWidget = new SetAvatarWidget(parent);
+    setting = new SettingWidget(parent);
     friendsWidget = std::shared_ptr<CreateGroupWidget>(new CreateGroupWidget(parent));
     connect(friendsWidget.get(),&CreateGroupWidget::closeMenu,this,&MenuWidget::close);
     connect(avatWidget,&SetAvatarWidget::avatarChangeSignal,this,&MenuWidget::on_image_change);
@@ -106,4 +107,11 @@ void MenuWidget::on_pushButton_clicked()
 void MenuWidget::on_exitButton_clicked()
 {
     emit closeAndExit();
+}
+
+void MenuWidget::on_settingsButton_clicked()
+{
+    setting->show();
+    setting->move(parentWidget()->pos().x() + parentWidget()->size().width()/(4),
+               parentWidget()->pos().y() + parentWidget()->size().height()/(4));
 }

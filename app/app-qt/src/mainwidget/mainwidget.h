@@ -37,6 +37,7 @@ public:
     void resizeEvent(QResizeEvent *event) override;
     void moveEvent(QMoveEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
+    void focusInEvent(QFocusEvent *event) override;
     MenuWidget* getMenu();
 
 public slots:

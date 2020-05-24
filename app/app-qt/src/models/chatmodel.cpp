@@ -42,7 +42,7 @@ void ChatModel::createMessage(Msg &_message,std::optional<QPixmap> &img)
     if(_message.text != "")
     {
         if(img)
-            _message.image = std::make_shared<QPixmap>(img.value());
+            _message.img = std::make_shared<QPixmap>(img.value());
         items.push_back(_message);
         int row = this->rowCount();
     }
@@ -56,16 +56,41 @@ void ChatModel::newMessages(std::vector<MessageItem> msgs)
     int row = this->rowCount();
     auto iniqIds = getUniqueIds(msgs);
     beginInsertRows(QModelIndex(),row,row + msgs.size());
+    int myId = UserModel::instance()->getId();
     for(auto &obj : msgs){
         qDebug() << QString::fromStdString(obj.text);
         items.emplace_back(Msg(obj));
+        if(obj.checked && obj.idOwner == myId){
+            items[items.size() - 1].type = MessageType::SELF_MESSAGE_DONE;
+        }
+        else{
+            items[items.size() - 1].type = MessageType::SELF_MESSAGE_IN_PROGRESS;
+        }
+        if(obj.image != ""){
+            QString pix = QString::fromStdString(obj.image);
+            QByteArray buf2 = QByteArray::fromBase64(pix.toLocal8Bit());
+            QPixmap mp;
+            mp.loadFromData(buf2);
+            items[items.size() - 1].img = std::make_shared<QPixmap>(mp);
+        }
     }
     for(auto &obj : iniqIds){
-        AppNet::shared()->getUser(UserModel::instance()->getId(),obj,userInfForMessage);
+        AppNet::shared()->getUser(myId,obj,userInfForMessage);
     }
     endInsertRows();
     emit this->dataChanged(QModelIndex(),QModelIndex());
     emit updateItems();
+}
+
+void ChatModel::msgsChecked()
+{
+    qDebug() <<"checked";
+    int id = UserModel::instance()->getId();
+    std::for_each(items.begin(),items.end(),[id](Msg &msg){
+            if(msg.idOwner == id){
+                msg.type = MessageType::SELF_MESSAGE_DONE;
+            }
+    });
 }
 
 
@@ -80,9 +105,16 @@ void ChatModel::addCallbacks()
             self->errString = err;
         }
     };
-    sendMsgCallback = [self](std::optional<std::string>& err){
-
-        if(err != std::nullopt){
+    sendMsgCallback = [self](int number,std::optional<std::string>& err){
+        if(err == std::nullopt){
+            auto it = std::find_if(self->items.begin(),self->items.end(),[number](const Msg &msg){
+                return msg.number == number;
+            });
+            if(it != self->items.end()){
+                it.base()->type = MessageType::SELF_MESSAGE_DONE;
+            }
+        }
+        else{
             self->errString = err;
         }
     };
@@ -108,22 +140,24 @@ void ChatModel::addCallbacks()
             emit self->updateItems();
         }
     };
-    lastMsgAndGet = [self](MessageItem & msg, std::optional<std::string> &){
-        if(msg.text == ""){
-            AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,1,1,self->chatCallback);
-            return;
+    lastMsgAndGet = [self](MessageItem & msg, std::optional<std::string> &err){
+        if(err == std::nullopt){
+            if(msg.text == ""){
+                AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,1,1,self->chatCallback);
+                return;
+            }
+            int count = msg.number / 15;
+            int lastMsgs = msg.number % 15;
+            int curr = 0;
+            for(size_t i = 0; i < count; ++i){
+                AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,curr+1,curr + 15,self->chatCallback);
+                curr += 15;
+            }
+            if(count == 0)
+                AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,1,lastMsgs,self->chatCallback);
+            else
+                AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,curr+1,curr + lastMsgs,self->chatCallback);
         }
-        int count = msg.number / 20;
-        int lastMsgs = msg.number % 20;
-        int curr = 0;
-        for(size_t i = 0; i < count; ++i){
-            AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,curr+1,curr + 20,self->chatCallback);
-            curr += 20;
-        }
-        if(count == 0)
-            AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,1,lastMsgs,self->chatCallback);
-        else
-            AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,curr+1,curr + lastMsgs,self->chatCallback);
     };
 }
 
@@ -142,6 +176,7 @@ void ChatModel::setData(std::vector<MessageItem> &msgs)
     }
     endInsertRows();
     emit this->dataChanged(QModelIndex(),QModelIndex());
+    emit this->updateItems();
 }
 
 std::function<void(std::vector<MessageItem>&,std::optional<std::string>&)>& ChatModel::getChatCallback()
@@ -149,7 +184,7 @@ std::function<void(std::vector<MessageItem>&,std::optional<std::string>&)>& Chat
     return chatCallback;
 }
 
-std::function<void (std::optional<std::string> &)>& ChatModel::getSendMsgCallback()
+std::function<void (int,std::optional<std::string> &)>& ChatModel::getSendMsgCallback()
 {
     return sendMsgCallback;
 }
@@ -180,23 +215,6 @@ void ChatModel::DeleteMessage(int pos)
         items.erase(items.begin() + pos);
 }
 
-void ChatModel::getMessagesInChat(Msg lastMsg)
-{
-    qDebug() <<"NUMBER" <<lastMsg.number <<"TEXT" << QString::fromStdString(lastMsg.text);
-    if(lastMsg.text == ""){
-        AppNet::shared()->getMsgs(UserModel::instance()->getId(),lastMsg.chatId,1,1,chatCallback);
-        return;
-    }
-    int count = lastMsg.number / 10;
-    int lastMsgs = lastMsg.number % 10;
-    int curr = 0;
-    for(size_t i = 0; i < count; ++i){
-        AppNet::shared()->getMsgs(UserModel::instance()->getId(),lastMsg.chatId,curr+1,curr + 10,chatCallback);
-        curr += 10;
-    }
-    if(count == 0)
-        AppNet::shared()->getMsgs(UserModel::instance()->getId(),lastMsg.chatId,1,lastMsgs,chatCallback);
-}
 
 void ChatModel::Clear()
 {

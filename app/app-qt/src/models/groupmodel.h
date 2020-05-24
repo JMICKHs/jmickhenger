@@ -45,6 +45,7 @@ public:
     std::function<void(inf::ChatRoom &,std::optional<std::string>&)>& getChatRoom();
 
     std::vector<Chat> getItems();
+    Msg getLastMsg(int id) const;
     int currChatId;
 
 private:
@@ -67,6 +68,7 @@ signals:
     void sendChatRoom(const inf::ChatRoom &inf);
     void sendNewMessages(std::vector<MessageItem> msgs);
     void updateItems();
+    void messageChecked();
 public slots:
     void messageCreateByUser(const Msg &msg);
     void createChatByUser(const inf::ChatRoom &room);

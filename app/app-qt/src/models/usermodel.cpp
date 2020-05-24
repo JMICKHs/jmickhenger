@@ -51,8 +51,10 @@ void UserModel::setCallBacks()
             self->myAcc.id = id;
             emit self->showMainWidget();
         }
-        else
+        else{
             self->errString = err;
+            emit self->setRegInfo(QString::fromStdString(err.value()));
+        }
         emit self->stopAnimationSignal();
         emit self->upFlag(false);
 
@@ -62,8 +64,10 @@ void UserModel::setCallBacks()
             self->setData(newAcc);
             emit self->showMainWidget();
         }
-        else
+        else{
             self->errString = err;
+            emit self->setLogInfo(QString::fromStdString(err.value()));
+        }
         emit self->stopAnimationSignal();
         emit self->upFlag(false);
     };
