@@ -31,7 +31,6 @@ int main() {
             AppNet::shared()->stopClient();
         }
     });
-    sleep(3);
     net->stopClient();
     return 0;
 }
