@@ -8,7 +8,8 @@ SetAvatarWidget::SetAvatarWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     this->resize(500,300);
-    this->setWindowFlags(Qt::Popup);
+    this->setFocus(Qt::PopupFocusReason);
+    this->setWindowFlags(Qt::ToolTip);
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);

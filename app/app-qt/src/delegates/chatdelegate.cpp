@@ -12,9 +12,9 @@
 ChatDelegate::ChatDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
 {
-    avatar = new QPixmap("/home/kostikan/jmickhenger/app/img/standartAvatar.jpg");
-    check = new QPixmap("/home/kostikan/jmickhenger/app/img/check.png");
-    uncheck = new QPixmap("/home/kostikan/jmickhenger/app/img/unchecked.png");
+    avatar = new QPixmap(":/imges/standartAvatar.jpg");
+    check = new QPixmap(":/imges/check.png");
+    uncheck = new QPixmap(":/imges/unchecked.png");
     showPicture.move(parent->pos().x() + parent->size().width()/(4),
                      parent->pos().y() + parent->size().height()/(4));
     showPicture.setWindowFlag(Qt::Popup);
@@ -26,11 +26,11 @@ QSize ChatDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelInd
 {
     Msg item = index.model()->data(index).value<Msg>();
     QRect MessageRect = option.rect;
-    MessageRect.setY(MessageRect.y() + 15);
-    MessageRect.setX(45);
+    MessageRect.setY( mainMessageTopOffset + option.rect.y());
+    MessageRect.setX(avatarSize.width() + textOffset);
     MessageRect.setWidth(option.widget->width() - 80);
     QFontMetrics fMetrics(option.font);
-    int height = fMetrics.boundingRect(QRect(0,0,option.widget->width() - 240,0),Qt::TextWordWrap,QString::fromStdString(item.text)).height();
+    int height = fMetrics.boundingRect(QRect(0,0,option.widget->width() - MessageRect.x() - 35,0),Qt::TextWordWrap,QString::fromStdString(item.text)).height();
     if(item.img != nullptr){
         height += 200;
     }
@@ -94,8 +94,7 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 {
     Msg item = index.model()->data(index).value<Msg>();
     QStyleOptionViewItem myOpt = option;
-    myOpt.displayAlignment=Qt::AlignVCenter;
-    myOpt.displayAlignment = Qt::AlignLeft;
+    myOpt.displayAlignment =  Qt::AlignVCenter;
     painter->save();
     painter->setClipping(true);
 
@@ -138,19 +137,21 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
     painter->drawText(NameRect, Qt::TextSingleLine,
                    item.nickname);
 
-//    QRect TimeRect = myOpt.rect;
-//    TimeRect.setHeight(baseTextHeight);
-//    TimeRect.setX(45);
-//    TimeRect.setWidth(width - 45);
+    QRect TimeRect = myOpt.rect;
+    TimeRect.setHeight(baseTextHeight);
+    TimeRect.setX(myOpt.widget->width() - 80);
+    TimeRect.setWidth(width - rightMessageOffset);
+    painter->drawText(TimeRect, Qt::TextSingleLine,
+                   item.time);
 
     QRect MessageRect = myOpt.rect;
     MessageRect.setY(MessageRect.y() + mainMessageTopOffset);
     MessageRect.setX(avatarSize.width() + textOffset);
-    MessageRect.setWidth(width - rightMessageOffset);
+    MessageRect.setWidth(width - rightMessageOffset - 5);
 
     painter->setFont(f);
     painter->setPen(palette.text().color());
-    painter->drawText(MessageRect, Qt::TextWrapAnywhere,
+    painter->drawText(MessageRect, Qt::AlignVCenter | Qt::AlignLeft | Qt::TextWordWrap,
                    QString::fromStdString(item.text));
 
     painter->restore();
@@ -180,7 +181,7 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
               painter->fillRect(checkScaled.rect(),Qt::transparent);
               painter->drawPixmap(checkScaled.rect(),checkScaled);
          }
-         else{
+         if(item.type == MessageType::SELF_MESSAGE_DONE){
               QPixmap checkScaled = check->scaled(20, 20, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
               QBrush check(checkScaled);
               painter->setRenderHint(QPainter::Antialiasing);
@@ -188,6 +189,19 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
               painter->translate(QPointF(rect.width()-30,rect.y() + 10));
               painter->fillRect(checkScaled.rect(),Qt::transparent);
               painter->drawPixmap(checkScaled.rect(),checkScaled);
+         }
+         if(item.type == MessageType::READ_MESSAGE){
+
+             QPixmap checkScaled = check->scaled(20, 20, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+             QBrush check(checkScaled);
+             painter->setRenderHint(QPainter::Antialiasing);
+             painter->setBrush(check);
+             painter->translate(QPointF(rect.width()-30,rect.y() + 10));
+             painter->fillRect(checkScaled.rect(),Qt::transparent);
+             painter->drawPixmap(checkScaled.rect(),checkScaled);
+
+             painter->translate(QPointF(-10,0));
+             painter->drawPixmap(checkScaled.rect(),checkScaled);
          }
     }
      painter->restore();

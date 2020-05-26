@@ -11,7 +11,8 @@ using MessageItem = inf::Message;
 enum class MessageType{
     SELF_MESSAGE_IN_PROGRESS,
     SELF_MESSAGE_DONE,
-    OTHER_MESSAGE
+    OTHER_MESSAGE,
+    READ_MESSAGE
 };
 
 
@@ -41,8 +42,6 @@ class ChatModel : public QAbstractListModel,public std::enable_shared_from_this<
     Q_OBJECT
 public:
     ChatModel(QObject *parent = nullptr);
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     void addCallbacks();
 
     void setData(std::vector<MessageItem>& msgs);
@@ -52,12 +51,15 @@ public:
     std::function<void(std::optional<std::string>&)> &getDelMsgCallback() ;
     std::function<void(MessageItem &, std::optional<std::string> &)> &getLastMsgAndGet();
     std::vector<Msg> getItems();
-
+protected:
+//    void fetchMore(const QModelIndex &parent) override;
+//    bool canFetchMore(const QModelIndex &parent) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+public:
+    void changeMsg(const Msg &msg);
     void slotEditMessage();
-    void DeleteMessage(int pos);
     void Clear();
-
-
 private:
     std::vector<Msg> items;
     bool newMessageOnBottom;
@@ -68,14 +70,17 @@ private:
     std::function<void(std::optional<std::string>&)> delMsgCallback;
     std::function<void(inf::UserInfo &info,std::optional<std::string>&)> userInfForMessage;
     std::function<void(MessageItem &, std::optional<std::string> &)> lastMsgAndGet;
+
     std::vector<int> getUniqueIds(const std::vector<MessageItem> &vec);
 signals:
     void messageCreateByUser(const Msg &_message);
     void updateItems();
+    void setLastMessageInGroup(const Msg &msg);
 public slots:
     void createMessage(Msg &_message,std::optional<QPixmap> &img);
     void newMessages(std::vector<MessageItem> msgs);
     void msgsChecked();
+    void DeleteMessage(int pos);
 
 };
 

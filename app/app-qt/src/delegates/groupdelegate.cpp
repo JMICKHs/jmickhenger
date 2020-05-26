@@ -5,7 +5,7 @@
 GroupDelegate::GroupDelegate(QObject *parent)
     : QStyledItemDelegate(parent)
 {
-    groupIcon =  new QPixmap("/home/kostikan/jmickhenger/app/img/standartAvatar.jpg");
+    groupIcon =  new QPixmap(":/imges/standartAvatar.jpg");
 }
 
 void GroupDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const

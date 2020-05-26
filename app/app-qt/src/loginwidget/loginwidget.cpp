@@ -12,6 +12,7 @@ LoginWidget::LoginWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     log = new QWidget(this);
+    this->setWindowTitle("Jmicknger");
     reg = new QWidget(this);
 
     log->setLayout(ui->mainLayout);

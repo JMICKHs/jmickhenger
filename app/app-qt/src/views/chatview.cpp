@@ -13,11 +13,11 @@ ChatView::ChatView(QWidget *parent)
                        );
 
      this->setAutoFillBackground(true);
+
 }
 
 void ChatView::resizeEvent(QResizeEvent *event)
 {
-
     this->doItemsLayout();
     this->update();
 }
@@ -30,6 +30,29 @@ void ChatView::rowsInserted(const QModelIndex &parent, int start, int end)
     for(int i = start; i < end; ++i){
         currHeight += this->sizeHintForIndex(this->model()->index(i,0,parent)).height();
     }
+    emit insertRow(currHeight);
+    currHeight = 0;
+    QListView::scrollToBottom();
+}
+
+void ChatView::rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end)
+{
+    this->scrollToBottom();
+    QListView::rowsAboutToBeRemoved(parent,start,end);
+
+    for(int i = start; i < end; ++i){
+        currHeight -= this->sizeHintForIndex(this->model()->index(i,0,parent)).height();
+    }
+    emit insertRow(currHeight);
+    currHeight = 0;
+    QListView::scrollToBottom();
+}
+
+void ChatView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+{
+    this->scrollToBottom();
+    QListView::dataChanged(topLeft,bottomRight,roles);
+    currHeight = this->sizeHintForIndex(topLeft).height();
     emit insertRow(currHeight);
     currHeight = 0;
     QListView::scrollToBottom();

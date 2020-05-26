@@ -21,6 +21,7 @@ public:
     std::function<void(Account&,std::optional<std::string>&)> &getAuthCallback() ;
     std::function<void(int,std::optional<std::string>&)> &getRegistrationCallback();
     std::function<void(Account&,std::optional<std::string>&)>& getAuthWithCacheCallback();
+    std::function<void(int)>& getRunCallback();
     void setCallBacks();
     void setAvatar(const QString &avatar);
     void setAcc(Account &acc);
@@ -44,6 +45,7 @@ private:
     std::function<void(Account&,std::optional<std::string>&)> authCallback;
     std::function<void(int,std::optional<std::string>&)> registrationCallback;
     std::function<void(Account&,std::optional<std::string>&)> authWithCacheCallback;
+    std::function<void(int)> runCallback;
 
 signals:
     void showMainWidget();

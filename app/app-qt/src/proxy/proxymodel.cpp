@@ -22,7 +22,8 @@ bool ProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_pare
 
 bool ProxyModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
 {
-
+    qDebug() <<"kek:";
+   return source_left.data().value<Chat>().lastMessage.time > source_right.data().value<Chat>().lastMessage.time;
 }
 
 void ProxyModel::search_String_Changed(const QString &str)

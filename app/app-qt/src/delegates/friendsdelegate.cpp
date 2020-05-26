@@ -4,7 +4,7 @@
 friendsDelegate::friendsDelegate(QObject *parent)
     :QStyledItemDelegate(parent)
 {
-    avatar = new QPixmap("/home/kostikan/jmickhenger/app/img/standartAvatar.jpg");
+    avatar = new QPixmap(":/imges/standartAvatar.jpg");
 }
 
 void friendsDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const

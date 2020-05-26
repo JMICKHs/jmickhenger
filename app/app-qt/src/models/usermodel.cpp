@@ -32,6 +32,11 @@ std::function<void (Account &, std::optional<std::string> &)> &UserModel::getAut
     return authWithCacheCallback;
 }
 
+std::function<void (int)> &UserModel::getRunCallback()
+{
+    return runCallback;
+}
+
 void UserModel::setCallBacks()
 {
     auto self = instance();
@@ -78,6 +83,9 @@ void UserModel::setCallBacks()
         }
         else
             self->errString = err;
+    };
+    runCallback = [self](int err){
+        qDebug()<<err;
     };
 }
 

@@ -43,6 +43,7 @@ public:
     std::function<void(Change&)>& getUnknownChatChangeCallback();
     std::function<void(Change&)>& getUnknownChatRoomAdd();
     std::function<void(inf::ChatRoom &,std::optional<std::string>&)>& getChatRoom();
+    std::function<void(std::optional<std::string>&)>& getReadMsgCallback();
 
     std::vector<Chat> getItems();
     Msg getLastMsg(int id) const;
@@ -63,16 +64,19 @@ private:
     std::function<void(inf::ChatRoom &, std::optional<std::string>&)> newUnknownChatCallback;
     std::function<void(Change&)> unknownChatRoomAdd;
     std::function<void(inf::UserInfo &,std::optional<std::string>&)> userInfForMessage;
+    std::function<void(std::optional<std::string>&)> readMsgCallback;
 
 signals:
     void sendChatRoom(const inf::ChatRoom &inf);
     void sendNewMessages(std::vector<MessageItem> msgs);
     void updateItems();
     void messageChecked();
+    void deleteMsg(int pos);
 public slots:
     void messageCreateByUser(const Msg &msg);
     void createChatByUser(const inf::ChatRoom &room);
     void unknownChatCreate(inf::ChatRoom &room);
+    void setLastMessage(const Msg &msg);
 };
 
 #endif // GROUPMODEL_H

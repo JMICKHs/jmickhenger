@@ -108,12 +108,22 @@
             </spacer>
            </item>
            <item>
-            <widget class="CustomButton" name="menuButton">
+            <widget class="QPushButton" name="menuButton">
+             <property name="minimumSize">
+              <size>
+               <width>30</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
                <width>30</width>
                <height>30</height>
               </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">image: url(:/imges/menu.png);
+background:transparent; border:none</string>
              </property>
              <property name="text">
               <string/>
@@ -585,7 +595,7 @@ QFrame[frameShape=&quot;4&quot;]
             <enum>QAbstractScrollArea::AdjustToContents</enum>
            </property>
            <property name="resizeMode">
-            <enum>QListView::Adjust</enum>
+            <enum>QListView::Fixed</enum>
            </property>
           </widget>
          </item>
@@ -735,6 +745,10 @@ QFrame[frameShape=&quot;4&quot;]
                <width>30</width>
                <height>30</height>
               </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton{image: url(:/imges/send.jpg);background:transparent; border:none;}
+QPushButton:hover{ background: rgb(227, 227, 229);border:none; }</string>
              </property>
              <property name="text">
               <string/>

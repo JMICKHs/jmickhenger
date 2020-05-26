@@ -14,11 +14,21 @@ void ChatInput::keyPressEvent(QKeyEvent *e)
 {
     QPlainTextEdit::keyPressEvent(e);
     if(e->key() == Qt::Key_Return && !(e->modifiers() & Qt::ShiftModifier)){
-        emit sendMessageOnEnter();
+        if(changeMsg == false){
+            emit sendMessageOnEnter();
+        }
+        else
+        {
+            emit sendMessageForChange();
+            changeMsg = false;
+        }
         this->setMaximumHeight(this->minimumSize().height());
+        this->clear();
     }
     if(e->key() == Qt::Key_Return && (e->modifiers() & Qt::ShiftModifier)){
        this->setMaximumHeight(this->size().height() + this->fontMetrics().height());
+        baseHeight = this->fontMetrics().height();
+      // emit changeSpacer(this->fontMetrics().height());
     }
 }
 
@@ -37,4 +47,10 @@ void ChatInput::dragEnterEvent(QDragEnterEvent *e)
 void ChatInput::dropEvent(QDropEvent *e)
 {
 
+}
+
+void ChatInput::textForChange(const QString &str)
+{
+    changeMsg = true;
+    this->setPlainText(str);
 }

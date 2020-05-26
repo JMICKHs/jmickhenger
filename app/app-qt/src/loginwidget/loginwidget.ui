@@ -487,9 +487,10 @@ color:white;</string>
          </size>
         </property>
         <property name="styleSheet">
-         <string notr="true">
-
-border-image: url(&quot;/home/kostikan/jmickhenger/app/img/ret.png&quot;);
+         <string notr="true">image: url(:/imges/ret.png);
+background:transparent; 
+border:none;
+QPushButton#button:hover{ background: rgb(227, 227, 229); border:none;}
 </string>
         </property>
         <property name="text">
@@ -631,7 +632,7 @@ border-image: url(&quot;/home/kostikan/jmickhenger/app/img/ret.png&quot;);
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="avatarButton">
+       <widget class="AvatarButton" name="avatarButton">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -1009,6 +1010,11 @@ color:white;</string>
    <class>CustomInputForms</class>
    <extends>QLineEdit</extends>
    <header>app-qt/src/custominputforms/custominputforms.h</header>
+  </customwidget>
+  <customwidget>
+   <class>AvatarButton</class>
+   <extends>QPushButton</extends>
+   <header>app-qt/src/custommbutton/avatarbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

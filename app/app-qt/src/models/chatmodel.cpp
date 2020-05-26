@@ -47,7 +47,6 @@ void ChatModel::createMessage(Msg &_message,std::optional<QPixmap> &img)
         int row = this->rowCount();
     }
     endInsertRows();
-    emit this->dataChanged(QModelIndex(),QModelIndex());
     emit updateItems();
 }
 
@@ -60,14 +59,17 @@ void ChatModel::newMessages(std::vector<MessageItem> msgs)
     for(auto &obj : msgs){
         qDebug() << QString::fromStdString(obj.text);
         items.emplace_back(Msg(obj));
-        if(obj.checked && obj.idOwner == myId){
-            items[items.size() - 1].type = MessageType::SELF_MESSAGE_DONE;
+        if(obj.checked && (obj.idOwner == myId)){
+            items[items.size() - 1].type = MessageType::READ_MESSAGE;
         }
-        else{
-            items[items.size() - 1].type = MessageType::SELF_MESSAGE_IN_PROGRESS;
-        }
-        if(obj.image != ""){
-            QString pix = QString::fromStdString(obj.image);
+        else if(obj.idOwner == myId){
+             items[items.size() - 1].type = MessageType::SELF_MESSAGE_DONE;
+            }
+            else{
+                items[items.size() - 1].type = MessageType::OTHER_MESSAGE;
+            }
+        if(!(items[items.size() - 1].image.empty())){
+            QString pix = QString::fromStdString(items[items.size() - 1].image);
             QByteArray buf2 = QByteArray::fromBase64(pix.toLocal8Bit());
             QPixmap mp;
             mp.loadFromData(buf2);
@@ -78,7 +80,6 @@ void ChatModel::newMessages(std::vector<MessageItem> msgs)
         AppNet::shared()->getUser(myId,obj,userInfForMessage);
     }
     endInsertRows();
-    emit this->dataChanged(QModelIndex(),QModelIndex());
     emit updateItems();
 }
 
@@ -88,7 +89,7 @@ void ChatModel::msgsChecked()
     int id = UserModel::instance()->getId();
     std::for_each(items.begin(),items.end(),[id](Msg &msg){
             if(msg.idOwner == id){
-                msg.type = MessageType::SELF_MESSAGE_DONE;
+                msg.type = MessageType::READ_MESSAGE;
             }
     });
 }
@@ -105,14 +106,11 @@ void ChatModel::addCallbacks()
             self->errString = err;
         }
     };
-    sendMsgCallback = [self](int number,std::optional<std::string>& err){
+    sendMsgCallback = [self](int number,std::optional<std::string>& err){  
         if(err == std::nullopt){
-            auto it = std::find_if(self->items.begin(),self->items.end(),[number](const Msg &msg){
-                return msg.number == number;
-            });
-            if(it != self->items.end()){
-                it.base()->type = MessageType::SELF_MESSAGE_DONE;
-            }
+            self->items[self->items.size()-1].number = number;
+            self->items[self->items.size()-1].type = MessageType::SELF_MESSAGE_DONE;
+            emit self->updateItems();
         }
         else{
             self->errString = err;
@@ -146,9 +144,17 @@ void ChatModel::addCallbacks()
                 AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,1,1,self->chatCallback);
                 return;
             }
-            int count = msg.number / 15;
-            int lastMsgs = msg.number % 15;
+            size_t count = msg.number / 15;
+            size_t lastMsgs = msg.number % 15;
+            qDebug() <<lastMsgs;
             int curr = 0;
+           // if(count != 0){
+           //     count *= 15;
+           //     AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,count - 15,count,self->chatCallback);
+           // }
+           // else{
+           //     AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,1,lastMsgs,self->chatCallback);
+           // }
             for(size_t i = 0; i < count; ++i){
                 AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,curr+1,curr + 15,self->chatCallback);
                 curr += 15;
@@ -156,27 +162,43 @@ void ChatModel::addCallbacks()
             if(count == 0)
                 AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,1,lastMsgs,self->chatCallback);
             else
-                AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,curr+1,curr + lastMsgs,self->chatCallback);
+                AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,curr,curr + lastMsgs,self->chatCallback);
         }
     };
 }
 
 void ChatModel::setData(std::vector<MessageItem> &msgs)
 {
-    items.clear();
     int row = this->rowCount();
-    items.reserve(msgs.size());
     auto iniqIds = getUniqueIds(msgs);
     beginInsertRows(QModelIndex(),row,row + msgs.size());
+    int myId = UserModel::instance()->getId();
     for(auto &obj : msgs){
+        qDebug() << QString::fromStdString(obj.text);
         items.emplace_back(Msg(obj));
+        if(obj.checked && (obj.idOwner == myId)){
+            items[items.size() - 1].type = MessageType::READ_MESSAGE;
+        }
+        else if(obj.idOwner == myId){
+             items[items.size() - 1].type = MessageType::SELF_MESSAGE_DONE;
+            }
+            else{
+                items[items.size() - 1].type = MessageType::OTHER_MESSAGE;
+            }
+        qDebug() << "HERE"<< QString::fromStdString(items[items.size() - 1].image);
+        if(!(items[items.size() - 1].image.empty())){
+            QString pix = QString::fromStdString(items[items.size() - 1].image);
+            QByteArray buf2 = QByteArray::fromBase64(pix.toLocal8Bit());
+            QPixmap mp;
+            mp.loadFromData(buf2);
+            items[items.size() - 1].img = std::make_shared<QPixmap>(mp);
+        }
     }
     for(auto &obj : iniqIds){
-        AppNet::shared()->getUser(UserModel::instance()->getId(),obj,userInfForMessage);
+        AppNet::shared()->getUser(myId,obj,userInfForMessage);
     }
     endInsertRows();
-    emit this->dataChanged(QModelIndex(),QModelIndex());
-    emit this->updateItems();
+    emit updateItems();
 }
 
 std::function<void(std::vector<MessageItem>&,std::optional<std::string>&)>& ChatModel::getChatCallback()
@@ -204,15 +226,66 @@ std::function<void (MessageItem &, std::optional<std::string> &)> &ChatModel::ge
     return lastMsgAndGet;
 }
 
+
 std::vector<Msg> ChatModel::getItems()
 {
     return items;
 }
 
+//void ChatModel::fetchMore(const QModelIndex &parent)
+//{
+//    if (parent.isValid())
+//           return;
+////       int remainder = fileList.size() - fileCount;
+////       int itemsToFetch = qMin(100, remainder);
+
+////       if (itemsToFetch <= 0)
+////           return;
+
+////       beginInsertRows(QModelIndex(), fileCount, fileCount + itemsToFetch - 1);
+
+////       fileCount += itemsToFetch;
+
+////       endInsertRows();
+
+////       emit numberPopulated(itemsToFetch);
+//}
+
+//bool ChatModel::canFetchMore(const QModelIndex &parent) const
+//{
+//    if (parent.isValid())
+//           return false;
+//    if(items.empty()){
+//        return false;
+//    }
+//    return (items[0].number != 1);
+//}
+
+void ChatModel::changeMsg(const Msg &msg)
+{
+    auto it = std::find_if(items.begin(),items.end(),[msg](const Msg &ms){
+            return msg.number == ms.number;
+    });
+
+    if(it != items.end()){
+        it.base()->text = msg.text;
+        if(it == items.end() - 1){
+             emit setLastMessageInGroup(items[items.size() - 1]);
+        }
+    }
+    emit this->dataChanged(QModelIndex(),QModelIndex());
+    emit updateItems();
+}
+
 void ChatModel::DeleteMessage(int pos)
 {
+    beginRemoveRows(QModelIndex(),pos -1 ,pos);
     if(pos >= 0 && pos < items.size())
-        items.erase(items.begin() + pos);
+        items.erase(items.begin() + (pos - 1));
+    if(pos == (items.end() -1).base()->number)
+        emit setLastMessageInGroup(items[items.size() - 1]);
+    endRemoveRows();
+    this->updateItems();
 }
 
 

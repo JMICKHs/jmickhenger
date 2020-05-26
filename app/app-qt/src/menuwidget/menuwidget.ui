@@ -61,7 +61,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="AvatarButton" name="pushButton">
             <property name="maximumSize">
              <size>
               <width>60</width>
@@ -310,6 +310,11 @@ QFrame[frameShape=&quot;4&quot;]
    <class>CustomButton</class>
    <extends>QPushButton</extends>
    <header>app-qt/src/custommbutton/custombutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>AvatarButton</class>
+   <extends>QPushButton</extends>
+   <header>app-qt/src/custommbutton/avatarbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

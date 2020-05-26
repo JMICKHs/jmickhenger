@@ -37,7 +37,6 @@ public:
     void resizeEvent(QResizeEvent *event) override;
     void moveEvent(QMoveEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
-    void focusInEvent(QFocusEvent *event) override;
     MenuWidget* getMenu();
 
 public slots:
@@ -46,13 +45,17 @@ public slots:
     void after_Login_slot();
     void removeMessageFromChat();
     void editMessageInChat();
+    void messageEdited();
     void showContextMenu(const QPoint &pos);
     void setGroupInfoSlot(const inf::ChatRoom &room);
     void resizeSpacer(int height);
+    void closeAll();
+    void copyMessage();
 
 signals:
     void sendMessageFromInput_s(const Message &message);
     void sendAvatar(const QString &path);
+    void setTextForChange(const QString &text);
 private:
     void removeDoubleEnter(QString &str);
 
