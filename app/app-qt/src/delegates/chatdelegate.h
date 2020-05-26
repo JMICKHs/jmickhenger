@@ -26,7 +26,7 @@ private:
     QPixmap *uncheck;
     QPoint offset{5,5};
     int textOffset{15};
-    int mainMessageTopOffset{15};
+    int mainMessageTopOffset{14};
     int baseItemHeight{50};
     int rightMessageOffset{80};
     int avatarRadius{100};

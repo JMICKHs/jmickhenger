@@ -121,8 +121,6 @@ void GroupModel::addCallbacks()
                 return chat.idChat == change.idChat;
             });
             it.base()->lastMessage = change.messages[change.messages.size() -1];
-             AppNet::shared()->getUser(UserModel::instance()->getId(),
-                                       change.messages[change.messages.size() -1].idOwner,self->userInfForMessage);
             emit self->updateItems();
 
         }

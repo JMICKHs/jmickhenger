@@ -151,7 +151,7 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 
     painter->setFont(f);
     painter->setPen(palette.text().color());
-    painter->drawText(MessageRect, Qt::AlignVCenter | Qt::AlignLeft | Qt::TextWordWrap,
+    painter->drawText(MessageRect,  Qt::AlignLeft | Qt::TextWordWrap,
                    QString::fromStdString(item.text));
 
     painter->restore();
@@ -159,8 +159,8 @@ void ChatDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
     if(item.img != nullptr){
 
         QFontMetrics fMetrics(option.font);
-        int height = fMetrics.boundingRect(QRect(0,0,option.widget->width() - 240,0),Qt::TextWordWrap,QString::fromStdString(item.text)).height();
-
+          int height = fMetrics.boundingRect(QRect(0,0,option.widget->width() - MessageRect.x() - 35,0),Qt::TextWordWrap,QString::fromStdString(item.text)).height();
+        qDebug() << height;
         QPixmap map = item.img->scaled(200,200,Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
         QBrush brush(map);
         painter->setRenderHint(QPainter::Antialiasing);

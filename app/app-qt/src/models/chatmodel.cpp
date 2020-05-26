@@ -57,7 +57,7 @@ void ChatModel::newMessages(std::vector<MessageItem> msgs)
     beginInsertRows(QModelIndex(),row,row + msgs.size());
     int myId = UserModel::instance()->getId();
     for(auto &obj : msgs){
-        qDebug() << QString::fromStdString(obj.text);
+
         items.emplace_back(Msg(obj));
         if(obj.checked && (obj.idOwner == myId)){
             items[items.size() - 1].type = MessageType::READ_MESSAGE;
@@ -85,7 +85,7 @@ void ChatModel::newMessages(std::vector<MessageItem> msgs)
 
 void ChatModel::msgsChecked()
 {
-    qDebug() <<"checked";
+
     int id = UserModel::instance()->getId();
     std::for_each(items.begin(),items.end(),[id](Msg &msg){
             if(msg.idOwner == id){
@@ -134,7 +134,6 @@ void ChatModel::addCallbacks()
                      msg.avatar = QString::fromStdString(info.avatar);
                  }
             });
-
             emit self->updateItems();
         }
     };
@@ -174,7 +173,7 @@ void ChatModel::setData(std::vector<MessageItem> &msgs)
     beginInsertRows(QModelIndex(),row,row + msgs.size());
     int myId = UserModel::instance()->getId();
     for(auto &obj : msgs){
-        qDebug() << QString::fromStdString(obj.text);
+
         items.emplace_back(Msg(obj));
         if(obj.checked && (obj.idOwner == myId)){
             items[items.size() - 1].type = MessageType::READ_MESSAGE;
@@ -185,7 +184,7 @@ void ChatModel::setData(std::vector<MessageItem> &msgs)
             else{
                 items[items.size() - 1].type = MessageType::OTHER_MESSAGE;
             }
-        qDebug() << "HERE"<< QString::fromStdString(items[items.size() - 1].image);
+
         if(!(items[items.size() - 1].image.empty())){
             QString pix = QString::fromStdString(items[items.size() - 1].image);
             QByteArray buf2 = QByteArray::fromBase64(pix.toLocal8Bit());
@@ -279,9 +278,12 @@ void ChatModel::changeMsg(const Msg &msg)
 
 void ChatModel::DeleteMessage(int pos)
 {
-    beginRemoveRows(QModelIndex(),pos -1 ,pos);
-    if(pos >= 0 && pos < items.size())
-        items.erase(items.begin() + (pos - 1));
+    auto it = std::find_if(items.begin(),items.end(),[pos](const Msg &msg){
+       return msg.number == pos;
+    });
+    int index = std::distance(items.begin(),it);
+    beginRemoveRows(QModelIndex(),index -1 ,index);
+    items.erase(it);
     if(pos == (items.end() -1).base()->number)
         emit setLastMessageInGroup(items[items.size() - 1]);
     endRemoveRows();

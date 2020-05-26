@@ -2,6 +2,7 @@
 #define CHATVIEW_H
 
 #include <QListView>
+#include <QAbstractScrollArea>
 #include <QScrollEvent>
 
 class ChatView : public QListView

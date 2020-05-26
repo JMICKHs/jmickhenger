@@ -94,6 +94,7 @@ MainWidget::MainWidget(QWidget *parent) :
     this->setLayout(ui->MainLayout);
     ui->menuButton->setIcon(QIcon(":/img/menu.jpg"));
     spacerHeight = ui->offsetSpacer->maximumSize().height();
+    ui->chatList->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
 }
 
@@ -208,7 +209,10 @@ void MainWidget::removeMessageFromChat()
 {
     Msg msg = ui->chatList->selectionModel()->currentIndex().data().value<Msg>();
     chatModel->DeleteMessage(msg.number);
-    AppNet::shared()->dellMsg(UserModel::instance()->getId(),msg.chatId,msg.number,chatModel->getDelMsgCallback());
+    int id = UserModel::instance()->getId();
+    if(id == msg.idOwner){
+        AppNet::shared()->dellMsg(UserModel::instance()->getId(),msg.chatId,msg.number,chatModel->getDelMsgCallback());
+    }
     emit ui->chatList->doItemsLayout();
 }
 
