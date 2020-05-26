@@ -9,6 +9,7 @@ namespace ba = boost::asio;
 using namespace std;
 
 ba::io_service Client::service = ba::io_service();
+boost::asio::ssl::context Client::ctx = boost::asio::ssl::context(boost::asio::ssl::context::sslv23);
 std::string Client::endMsg = "\r\n";
 
 optional<pair<string, string>> getHostFromConfig() {
@@ -41,6 +42,9 @@ shared_ptr<Client> Client::shared()  {
 }
 
 void Client::run() {
+    sslSock.set_verify_mode(boost::asio::ssl::verify_peer);
+    ctx.load_verify_file("../netlib/certificates/server.crt");
+    sslSock.set_verify_callback(boost::bind(&Client::verifyCertificate, shared_from_this(), _1, _2));
     auto host = getHostFromConfig();
     tcp::resolver resolver(service);
     assert(host && "config неправильно заполнен"); //assert тут для того, чтобы во время разработки не ломать голову
@@ -65,7 +69,7 @@ void Client::write(const string &msg) {
 
 void Client::close() {
     auto handler = [self = shared_from_this()]() {
-        self->sock.close();
+        self->sslSock.lowest_layer().close();
     };
     service.post(handler);
     t.join();
@@ -79,22 +83,11 @@ void Client::setErrHandler(const function<void(int)> &f) {
     errHandler = f;
 }
 
-Client::Client(): sock(service) {}
+Client::Client(): sslSock(service, ctx) {}
 
 void Client::connect(tcp::resolver::iterator &it) {
-    auto handler = [self = shared_from_this()](boost::system::error_code err, const tcp::resolver::iterator& it) {
-        if (!err) {
-            self->loopRead();
-        } else {
-            if (self->errHandler) {
-                self->errHandler.value()(err.value());
-            } else {
-                cout << "err in connect " << err.value() << endl;
-                self->close();
-            }
-        }
-    };
-    ba::async_connect(sock, std::move(it), handler);
+    auto handler = boost::bind(&Client::handleConnect, shared_from_this(), boost::asio::placeholders::error);
+    ba::async_connect(sslSock.lowest_layer(), it, handler);
 }
 
 void Client::loopRead() {
@@ -110,15 +103,10 @@ void Client::loopRead() {
             }
             self->loopRead();
         } else {
-            if (self->errHandler) {
-                self->errHandler.value()(err.value());
-            } else {
-                cout << "err in connect " << err.value() << endl;
-                self->close();
-            }
+            self->handleErr(err);
         }
     };
-    ba::async_read_until(sock, bufRead, endMsg, handler);
+    ba::async_read_until(sslSock, bufRead, endMsg, handler);
 }
 
 void Client::writeFromQue() {
@@ -131,13 +119,39 @@ void Client::writeFromQue() {
             }
         }
         else {
-            if (self->errHandler) {
-                self->errHandler.value()(err.value());
-            } else {
-                cout << "err in connect " << err.value() << endl;
-                self->close();
-            }
+            self->handleErr(err);
         }
     };
-    ba::async_write(sock, buf, handler);
+    ba::async_write(sslSock, buf, handler);
+}
+
+bool Client::verifyCertificate(bool preverified, boost::asio::ssl::verify_context& ctx) {
+    X509* cert = X509_STORE_CTX_get_current_cert(ctx.native_handle());
+    return preverified;
+}
+
+void Client::handleConnect(const boost::system::error_code &error) {
+    auto handler = [self = shared_from_this()](const boost::system::error_code& err) {
+        if (!err) {
+            self->loopRead();
+        } else {
+            self->handleErr(err);
+        }
+    };
+
+    if (!error) {
+        sslSock.async_handshake(boost::asio::ssl::stream_base::client, handler);
+    }
+    else {
+        handleErr(error);
+    }
+}
+
+void Client::handleErr(const boost::system::error_code &error) {
+    if (errHandler) {
+        errHandler.value()(error.value());
+    } else {
+        cout << "err in connect " << error.message() << endl;
+        close();
+    }
 }

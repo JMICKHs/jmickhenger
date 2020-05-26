@@ -15,6 +15,7 @@ int main() {
     auto net = AppNet::shared();
     net->runClient([](int ec){
         cout << "ошибка соеденеия номер - " << ec << endl;
+        cout << "ошибка номер - " << ec << endl;
     });
     optional<string> login, pas;
     setInfoFromConfig(login, pas);

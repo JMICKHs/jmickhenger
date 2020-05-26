@@ -13,8 +13,9 @@
 #import <optional>
 #import <thread>
 
-#import <boost/asio.hpp>
-#import <boost/bind.hpp>
+#include <boost/asio.hpp>
+#include <boost/bind.hpp>
+#include <boost/asio/ssl.hpp>
 
 class AbstractClient {
 public:
@@ -42,17 +43,20 @@ private:
     void connect(boost::asio::ip::tcp::resolver::iterator & it);
     void loopRead();
     void writeFromQue();
+    bool verifyCertificate(bool preverified, boost::asio::ssl::verify_context& ctx);
+    void handleConnect(const boost::system::error_code& error);
+    void handleErr(const boost::system::error_code& error);
 private:
     std::thread t;
     static boost::asio::io_service service;
     static std::string endMsg;
-    boost::asio::ip::tcp::socket sock;
+    boost::asio::ssl::stream<boost::asio::ip::tcp::socket> sslSock;
+    static boost::asio::ssl::context ctx;
     boost::asio::ip::tcp::resolver::iterator eit;
     std::queue<std::string> writeMsgQue;
     std::optional<std::function<void(const std::string &)>> msgHandler;
     std::optional<std::function<void(int)>> errHandler;
     boost::asio::streambuf bufRead;
 };
-
 
 #endif //NETLIB_CLIENT_H
