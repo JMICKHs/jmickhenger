@@ -38,7 +38,7 @@ public:
     void close() override;
     void setMsgHandler(const std::function<void(const std::string &)> & f) override;
     void setErrHandler(const std::function<void(int)> & f) override;
-private:
+private: //методы
     explicit Client();
     void connect(boost::asio::ip::tcp::resolver::iterator & it);
     void loopRead();
@@ -46,7 +46,7 @@ private:
     bool verifyCertificate(bool preverified, boost::asio::ssl::verify_context& ctx);
     void handleConnect(const boost::system::error_code& error);
     void handleErr(const boost::system::error_code& error);
-private:
+private: // поля
     std::thread t;
     static boost::asio::io_service service;
     static std::string endMsg;

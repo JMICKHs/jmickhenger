@@ -36,8 +36,7 @@ public:
     std::optional<inf::MyAccount> getMyAccount() override;
     void save(const inf::UserInfo & user) override;
     std::optional<inf::UserInfo> getUser(int idUser) override;
-private:
-    Cache();
+private: //поля
     sqlite3 * db;
     char * zErrMsg = nullptr;
     int rc;
@@ -50,6 +49,8 @@ private:
     static std::string userName;
     static std::string userAvatar;
     static std::string userPassword;
+private: //методы
+    Cache();
     void removeUser(int id);
     static int callbackUser(void * data, int argc, char ** argv, char ** azColName);
     void createAccount();

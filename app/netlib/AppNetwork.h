@@ -48,16 +48,18 @@ public:
     void changeMsg(int idUser, const inf::Message & msg, const std::function<void(errstr &)> & callback);
     void changeMe(const inf::MyAccount & acc, const std::function<void(errstr &)> & callback){}//TODO
     void readChat(int idUser, int idChat, const std::function<void(errstr &)> & callback);
-private:
-    explicit AppNet();
-    void readHandler(const std::string & str);
-    void setHandlers();
+private: //поля
     std::unique_ptr<Announcer> announcer;
     std::shared_ptr<AbstractCache> cache;
     std::shared_ptr<AbstractClient> client;
-    std::unordered_map<int, std::function<void(int, errstr &, const std::string &)>> handlers;
     // почему unoredered? в среднем работает за O(1) и мы не меняем в нём данные, поэтому худшего случая не будет
+    std::unordered_map<int, std::function<void(int, errstr &, const std::string &)>> handlers;
     bool clientStarted = false;
+private: //методы
+    explicit AppNet();
+    void readHandler(const std::string & str);
+    void setHandlers();
+private:
     enum class Cmds: int {
         registration = 1,
         auth, //2

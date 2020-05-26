@@ -33,9 +33,6 @@ public:
 };
 
 class Parser: public AbstractParser {
-private:
-    boost::property_tree::ptree root;
-    static const std::string emptyArr;
 public:
     Parser(): root() {}
     void addBool(bool value, const std::string & name) override;
@@ -55,6 +52,9 @@ public:
     void addArrCustom(const std::vector<std::string> & jsons, const std::string & name) override;
     std::string getCustom(const std::string & name) override;
     std::vector<std::string> getArrCustom(const std::string & name) override;
+private:
+    boost::property_tree::ptree root;
+    static const std::string emptyArr;
 };
 
 
