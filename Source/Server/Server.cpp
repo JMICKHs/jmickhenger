@@ -15,9 +15,10 @@ boost::asio::io_service::strand& strand, const tcp::endpoint& endpoint) : io_ser
                                         acceptor_(io_service, endpoint),
                                         context_(boost::asio::ssl::context::sslv23) {
     context_.set_options(
-            boost::asio::ssl::context::default_workarounds
-            | boost::asio::ssl::context::no_sslv2
-            | boost::asio::ssl::context::single_dh_use);
+            boost::asio::ssl::context::default_workarounds,
+            boost::asio::ssl::context::no_sslv2,
+            boost::asio::ssl::context::single_dh_use);
+
     context_.set_password_callback(boost::bind(&Server::get_password, this));
     context_.use_certificate_chain_file("Server.pem");
     context_.use_private_key_file("Server.pem", boost::asio::ssl::context::pem);
