@@ -12,26 +12,29 @@ template <typename Parser>
 class BusinessLogic
 {
     Parser jsp;
-    std::map<int, std::shared_ptr<AbstractService<DBWorker, JsonParser>>> workers;
+    std::map<std::string, std::shared_ptr<AbstractService<DBWorker, JsonParser>>> workers;
     std::shared_ptr<Queue<ResponseStruct>> QueueOut;
+    Cmds cmds;
 
 public:
-    BusinessLogic();
-    BusinessLogic(Parser& ps);
-    void SetRequest(const std::string& JsonStr);
-    ResponseStruct GetResponse();
+    BusinessLogic(unsigned int queueSize = 10000);
+    BusinessLogic(Parser& ps, unsigned int queueSize = 10000);
+    void SetRequest(std::shared_ptr<std::pair<int, std::string>> JsonStr);
+    std::shared_ptr<ResponseStruct> GetResponse();
     ~BusinessLogic();
 };
 
 template<typename Parser>
-BusinessLogic<Parser>::BusinessLogic() {
-    QueueOut = std::make_shared<Queue<ResponseStruct>>();
+BusinessLogic<Parser>::BusinessLogic(unsigned int queueSize) {
+    QueueOut = std::make_shared<Queue<ResponseStruct>>(queueSize);
 
-    workers[1] = std::make_shared<NewUserService<DBWorker, JsonParser>>(QueueOut);
-    workers[2] = std::make_shared<LoginService<DBWorker, JsonParser>>(QueueOut);
-    workers[3] = std::make_shared<NewMessageService<DBWorker, JsonParser>>(QueueOut);
-    workers[4] = std::make_shared<NewChatService<DBWorker, JsonParser>>(QueueOut);
-    workers[5] = std::make_shared<LoadChatPartService<DBWorker, JsonParser>>(QueueOut);
+    workers["auth"] = std::make_shared<LoginService<DBWorker, JsonParser>>(QueueOut);
+    workers["sendMsg"] = std::make_shared<SendMessageService<DBWorker, JsonParser>>(QueueOut);
+    workers["friends"] = std::make_shared<FriendsService<DBWorker, JsonParser>>(QueueOut);
+    workers["userInfo"] = std::make_shared<UserInfoService<DBWorker, JsonParser>>(QueueOut);
+    workers["chatInfo"] = std::make_shared<GetChatInfoService<DBWorker, JsonParser>>(QueueOut);
+    workers["changeMsg"] = std::make_shared<ChangeMessageService<DBWorker, JsonParser>>(QueueOut);
+    workers["changeChat"] = std::make_shared<ChangeChatService<DBWorker, JsonParser>>(QueueOut);
 
     for (auto&& i : workers){
         i.second->Run();
@@ -46,20 +49,45 @@ BusinessLogic<Parser>::~BusinessLogic() {
 }
 
 template<typename Parser>
-BusinessLogic<Parser>::BusinessLogic(Parser &ps) : BusinessLogic() {
+BusinessLogic<Parser>::BusinessLogic(Parser &ps, unsigned int queueSize) : BusinessLogic() {
     jsp = ps;
+
+    QueueOut = std::make_shared<Queue<ResponseStruct>>(queueSize);
+
+    workers["auth"] = std::make_shared<LoginService<DBWorker, JsonParser>>(QueueOut);
+    workers["sendMsg"] = std::make_shared<SendMessageService<DBWorker, JsonParser>>(QueueOut);
+    workers["friends"] = std::make_shared<FriendsService<DBWorker, JsonParser>>(QueueOut);
+    workers["userInfo"] = std::make_shared<UserInfoService<DBWorker, JsonParser>>(QueueOut);
+    workers["chatInfo"] = std::make_shared<GetChatInfoService<DBWorker, JsonParser>>(QueueOut);
+    workers["changeMsg"] = std::make_shared<ChangeMessageService<DBWorker, JsonParser>>(QueueOut);
+    workers["changeChat"] = std::make_shared<ChangeChatService<DBWorker, JsonParser>>(QueueOut);
+
+    for (auto&& i : workers){
+        i.second->Run();
+    }
 }
 
 template<typename Parser>
-void BusinessLogic<Parser>::SetRequest(const std::string &JsonStr) {
-    jsp.SetJson(JsonStr);
+void BusinessLogic<Parser>::SetRequest(std::shared_ptr<std::pair<int, std::string>> JsonStr) {
+    jsp.SetJson(JsonStr->second);
     int cmd = jsp.GetInt("cmd");
-    workers[cmd]->PushRequest(JsonStr);
+    if (cmd == registration || cmd == auth)
+        workers["auth"]->PushRequest(*JsonStr);
+    else if (cmd == sendMessage)
+        workers["sendMsg"]->PushRequest(*JsonStr);
+    else if (cmd == getChatRoom || cmd == getMessages || cmd == getLastMsg)
+        workers["chatInfo"]->PushRequest(*JsonStr);
+    else if (cmd == addFrnd || cmd == getListFrnd || cmd == delFrnd || cmd == getListChat || cmd == addFrndNick)
+        workers["friends"]->PushRequest(*JsonStr);
+    else if (cmd == changeUser || cmd == getUser || cmd == getMe)
+        workers["userInfo"]->PushRequest(*JsonStr);
+    else if (cmd == createChat || cmd == delChat || cmd == changeChat)
+        workers["changeChat"]->PushRequest(*JsonStr);
+    else if (cmd == changeMessage || cmd == delMessage || cmd == readChat)
+        workers["changeMsg"]->PushRequest(*JsonStr);
 }
 
 template<typename Parser>
-ResponseStruct BusinessLogic<Parser>::GetResponse() {
-    auto tmp = QueueOut->Front();
-    QueueOut->Pop();
-    return tmp;
+std::shared_ptr<ResponseStruct> BusinessLogic<Parser>::GetResponse() {
+    return std::make_shared<ResponseStruct>(QueueOut->PopFront());
 }

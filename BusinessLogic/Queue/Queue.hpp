@@ -1,53 +1,43 @@
 #pragma once
 
 #include <queue>
+#include <mutex>
 #include <shared_mutex>
+#include <condition_variable>
 #include "../SupportStructures/SupportSructures.h"
 
 
 template <typename T>
-class Queue
-{
+class Queue {
 private:
-    std::queue<T> q;
-    std::shared_mutex m;
+    std::queue<T> queue;
+    std::mutex mutex;
+    std::condition_variable wBell, rBell;
+    unsigned int MAX_SIZE;
 
 public:
-    Queue() = default;
+    Queue(unsigned int size = 10000): MAX_SIZE(size) {};
 
-    bool IsEmpty(){
-        std::shared_lock<std::shared_mutex> l(m);
-        return q.empty();
+    T PopFront(){
+        std::unique_lock<std::mutex> lock(mutex);
+        rBell.wait(lock, [&](){return !queue.empty();});
+        unsigned int tmpSize = queue.size();
+        T tmp = queue.front();
+        queue.pop();
+        lock.unlock();
+        if (tmpSize == MAX_SIZE)
+            wBell.notify_all();
+        return tmp;
     }
 
-    T Front(){
-        std::shared_lock<std::shared_mutex> l(m);
-        return q.front();
-    }
-
-    void Pop(){
-        std::unique_lock<std::shared_mutex> l(m);
-        q.pop();
-    }
-
-    void Add(const T& data){
-        std::unique_lock<std::shared_mutex> l(m);
-        q.push(data);
-    }
-
-    bool UnsafeIsEmpty(){
-        return q.empty();
-    }
-
-    T UnsafeFront(){
-        return q.front();
-    }
-
-    void UnsafePop(){
-        q.pop();
-    }
-
-    void UnsafeAdd(const T& data){
-        q.push(data);
+    void Push(const T& data){
+        std::unique_lock<std::mutex> lock(mutex);
+        wBell.wait(lock, [&](){return queue.size() != MAX_SIZE;});
+        bool isEmpty = queue.empty();
+        queue.push(data);
+        lock.unlock();
+        if (isEmpty){
+            rBell.notify_all();
+        }
     }
 };
