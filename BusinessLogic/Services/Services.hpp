@@ -1397,7 +1397,7 @@ void ChangeMessageService<DB, Parser>::createResponse() {
             JsonStr = jsp.GetJson();
             int tmpServerCommand = 0;
             if (error.empty())
-                tmpServerCommand = 1;/// тут неважно что будет за число, главное, чтобы оно было больше 0, чтобы известить сервер, что это не последний ответ
+                tmpServerCommand = 1;
             ResponseStruct rs(JsonStr, msg.IdUser, tmpServerCommand);
             queueOut->Push(rs);
 

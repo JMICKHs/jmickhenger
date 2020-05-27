@@ -71,7 +71,9 @@ template<typename Parser>
 void BusinessLogic<Parser>::SetRequest(std::shared_ptr<std::pair<int, std::string>> JsonStr) {
     jsp.SetJson(JsonStr->second);
     int cmd = jsp.GetInt("cmd");
-    if (cmd == registration || cmd == auth)
+    if (cmd < 1 || cmd > 21){
+        return;
+    else if (cmd == registration || cmd == auth)
         workers["auth"]->PushRequest(*JsonStr);
     else if (cmd == sendMessage)
         workers["sendMsg"]->PushRequest(*JsonStr);
