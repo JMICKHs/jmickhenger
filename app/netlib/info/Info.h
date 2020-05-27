@@ -108,11 +108,12 @@ namespace inf {
         std::string encode() const override;
         void decode(const std::string & json) override;
         static const std::string nameId;
-        static const std::string nameChat;
+        static const std::string nameTitle;
         static const std::string nameUsers;
         static const std::string nameAdmins;
         static const std::string nameStart;
         static const std::string nameEnd;
+        static const std::string nameRoom;
     };
 
     class ChatChange : public Codeble {

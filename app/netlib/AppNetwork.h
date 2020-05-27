@@ -43,10 +43,10 @@ public:
     void getUser(int myId, int id, const std::function<void(inf::UserInfo &, errstr &)> & callback);
     void createChat(const inf::ChatRoom & room, const std::function<void(int, errstr &)> & callback);
     void dellChat(int idUser, int idChat, const std::function<void(errstr &)> & callback);
-    void addAdminChat(int myId, int idChat, int idUser, const std::function<void(errstr &)> & callback){}//TODO
     void dellMsg(int idUser, int idChat, int numberMsg, const std::function<void(errstr &)> & callback);
     void changeMsg(int idUser, const inf::Message & msg, const std::function<void(errstr &)> & callback);
-    void changeMe(const inf::MyAccount & acc, const std::function<void(errstr &)> & callback){}//TODO
+    void changeMe(const inf::MyAccount & acc, const std::function<void(errstr &)> & callback);
+    void changeChat(const inf::ChatRoom & room, int idUser, const std::function<void(errstr &)> & callback);
     void readChat(int idUser, int idChat, const std::function<void(errstr &)> & callback);
 private: //поля
     std::unique_ptr<Announcer> announcer;

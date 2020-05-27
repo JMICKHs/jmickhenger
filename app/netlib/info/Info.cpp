@@ -153,7 +153,7 @@ inf::ChatRoom::ChatRoom(int id, const string &name, const vector<int> & users, c
 string inf::ChatRoom::encode() const {
     parser->clear();
     parser->addInt(idChat, nameId);
-    parser->addStr(name, nameChat);
+    parser->addStr(name, nameTitle);
     parser->addArrInt(idUsers, nameUsers);
     parser->addArrInt(idAdmins, nameAdmins);
     return parser->getJson();
@@ -162,17 +162,18 @@ string inf::ChatRoom::encode() const {
 void inf::ChatRoom::decode(const string & json) {
     parser->setJson(json);
     idChat = parser->getInt(nameId);
-    name = parser->getStr(nameChat);
+    name = parser->getStr(nameTitle);
     idUsers = parser->getArrInt(nameUsers);
     idAdmins = parser->getArrInt(nameAdmins);
 }
 
 const string inf::ChatRoom::nameId = "idChat";
-const string inf::ChatRoom::nameChat = "name";
+const string inf::ChatRoom::nameTitle = "name";
 const string inf::ChatRoom::nameUsers = "users";
 const string inf::ChatRoom::nameAdmins = "admins";
 const string inf::ChatRoom::nameStart = "start";
 const string inf::ChatRoom::nameEnd = "end";
+const string inf::ChatRoom::nameRoom = "room";
 
 inf::ChatChange::ChatChange()
     : idChat(-1) {}

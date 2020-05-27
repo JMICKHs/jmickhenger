@@ -240,6 +240,21 @@ void AppNet::changeMsg(int idUser, const inf::Message &msg, const std::function<
     client->write(query.encode());
 }
 
+void AppNet::changeMe(const MyAccount &acc, const function<void(errstr &)> &callback) {
+    Query query((int)Cmds::changeUser, acc.encode());
+    announcer->addCallback<int, errstr &>((int)Cmds::changeUser, acc.id, callback);
+    client->write(query.encode());
+}
+
+void AppNet::changeChat(const inf::ChatRoom & room, int idUser, const std::function<void(errstr &)> & callback) {
+    Parser parser;
+    parser.addCustom(room.encode(), ChatRoom::nameRoom);
+    parser.addInt(idUser, MyAccount::nameId);
+    Query query((int)Cmds::changeChat, parser.getJson());
+    announcer->addCallback<int, errstr &>((int)Cmds::changeUser, room.idChat, callback);
+    client->write(query.encode());
+}
+
 void AppNet::setHandlers() {
     auto self = shared_from_this();
     handlers.reserve((int)Cmds::test); // test - последняя по номеру команда
@@ -460,9 +475,22 @@ void AppNet::setHandlers() {
     };
     handlers[(int)Cmds::delChat] = f16;
 
+    auto f17 = [self](int cmd, errstr & err, const string & body) {
+        Parser parser;
+        parser.setJson(body);
+        int id = parser.getInt(MyAccount::nameId);
+        auto f = self->announcer->getCallback<int, errstr &>(cmd, id);
+        if (f) {
+            f.value()(err);
+        } else {
+            cout << "cmd " << cmd << " " << body << " не найден callback\n";
+        }
+    };
+    handlers[(int)Cmds::changeUser] = f17;
+
     auto f18 = [self](int cmd, errstr & err, const string & body) {
         Message msg;
-        auto f = self->announcer->getCallback< pair<int, int>, errstr&>((int)Cmds::readChat, pair<int, int>(msg.number, msg.chatId));
+        auto f = self->announcer->getCallback< pair<int, int>, errstr&>(cmd, pair<int, int>(msg.number, msg.chatId));
         if (f) {
             f.value()(err);
         } else {
@@ -486,6 +514,19 @@ void AppNet::setHandlers() {
     };
     handlers[(int)Cmds::delMessage] = f19;
 
+    auto f20 = [self](int cmd, errstr & err, const string & body) {
+        Parser parser;
+        parser.setJson(body);
+        int chatId = parser.getInt(ChatRoom::nameId);
+        auto f = self->announcer->getCallback<int, errstr &>(cmd, chatId);
+        if (f) {
+            f.value()(err);
+        } else {
+            cout << "cmd " << cmd << " " << body << " не найден callback\n";
+        }
+    };
+    handlers[(int)Cmds::changeChat] = f20;
+
     auto f21 = [self](int cmd, errstr & err, const string & body) {
         Parser parser;
         parser.setJson(body);
@@ -504,7 +545,7 @@ optional<MyAccount> AppNet::accFromCache() {
 }
 
 void AppNet::setClientDelegate(std::shared_ptr<AbstractClient> clientDelegate) {
-    this->client = clientDelegate;
+    this->client = move(clientDelegate);
     clientStarted = false;
 }
 
