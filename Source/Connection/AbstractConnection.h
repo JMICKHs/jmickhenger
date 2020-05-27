@@ -8,7 +8,6 @@
 #include "../async_client_for_serGay/config.h"
 #include <iostream>
 #include <boost/asio/detail/array.hpp>
-
 class abstract_Connection {
 public:
     virtual ~abstract_Connection() {}

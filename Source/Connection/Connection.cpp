@@ -5,21 +5,31 @@
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
 #include "Connection.h"
-#include "../buckup/info/Info.h"
 
-#define MEM_FN2(x,y,z)  boost::bind(&self_type::x, shared_from_this(),y,z)
-#define MEM_FN1(x,y)  boost::bind(&self_type::x, shared_from_this(),y)
+
+typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket;
+
 using boost::asio::ip::tcp;
 
-tcp::socket &Connection::socket() {
-    return socket_;
+ssl_socket::lowest_layer_type& Connection::socket() {
+    return socket_.lowest_layer();
 }
 
-void Connection::start() {
-    boost::asio::async_read(socket_,
-                            boost::asio::buffer(nickname_, nickname_.size()),
-                            boost::bind(&Connection::readCondition, shared_from_this(), _1, _2),
-                            strand_.wrap(boost::bind(&Connection::name_handler, shared_from_this(), _1)));
+void Connection::handshake() {
+    socket_.async_handshake(boost::asio::ssl::stream_base::server,
+                            boost::bind(&Connection::start, shared_from_this(),
+                                        boost::asio::placeholders::error));
+}
+
+
+
+void Connection::start(const boost::system::error_code& error) {
+    if (!error) {
+        socket_.async_read_some(boost::asio::buffer(nickname_, nickname_.size()),
+                                strand_.wrap(boost::bind(&Connection::name_handler,
+                                        shared_from_this(),
+                                        _1)));
+    }
 }
 
 void Connection::on_message(std::array<char, MAX_IP_PACK_SIZE> &msg) {
@@ -33,40 +43,29 @@ void Connection::on_message(std::array<char, MAX_IP_PACK_SIZE> &msg) {
 }
 
 void Connection::name_handler(const boost::system::error_code &error) {
-    std::cout << nickname_.data();
-//    тут магия с id_number будет
+    std::cout << "username : "<< nickname_.data() << std::endl;
     room_.enter(shared_from_this(), std::string(nickname_.data()));
-
-    boost::asio::async_read(socket_,
-                            boost::asio::buffer(read_msg_,read_msg_.size()),
-                            boost::bind(&Connection::readCondition, shared_from_this(), _1, _2),
-
-                            strand_.wrap(boost::bind(&Connection::read_handler, shared_from_this(), _1)));
-}
-bool Connection::readCondition(const boost::system::error_code &err, size_t length) {
-    if (err) return false;
-    bool key = read_msg_[length - 2] == '\r' && read_msg_[length - 1] == '\n'; // в конце \r\n
-    return key;
+    read_msg_.consume(read_msg_.size());
+    boost::asio::async_read_until(socket_, read_msg_, "\r\n",
+                                  strand_.wrap(boost::bind(&Connection::read_handler, shared_from_this(), _1)));
 }
 
 void Connection::read_handler(const boost::system::error_code &error) {
     if (!error) {
+        if (!this) {
+            return;
+        }
         room_.mailing(read_msg_, shared_from_this());
-
-        boost::asio::async_read(socket_,
-                                boost::asio::buffer(read_msg_,read_msg_.size()),
-                                boost::bind(&Connection::readCondition, shared_from_this(), _1, _2),
-
-                                strand_.wrap(boost::bind(&Connection::read_handler, shared_from_this(), _1)));
-    }
-    else {
+        read_msg_.consume(read_msg_.size());
+        boost::asio::async_read_until(socket_, read_msg_, "\r\n",
+                                      strand_.wrap(boost::bind(&Connection::read_handler, shared_from_this(), _1)));
+    } else {
         room_.leave(shared_from_this());
     }
 }
 
 void Connection::write_handler(const boost::system::error_code &error) {
-    if (!error)
-    {
+    if (!error) {
         write_msgs_.pop_front();
 
         if (!write_msgs_.empty())
@@ -81,3 +80,4 @@ void Connection::write_handler(const boost::system::error_code &error) {
         room_.leave(shared_from_this());
     }
 }
+

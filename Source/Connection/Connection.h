@@ -9,27 +9,37 @@
 #include "AbstractConnection.h"
 #include <array>
 #include "../BusinessLogicProxy/BusinessLogicProxy.h"
+#include <boost/bind.hpp>
+#include <boost/asio.hpp>
+#include <boost/asio/ssl.hpp>
+#include <boost/asio/ssl/stream.hpp>
 
 using boost::asio::ip::tcp;
+typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket;
 
 class Connection : public abstract_Connection,
         public std::enable_shared_from_this<Connection> {
     typedef Connection self_type;
 public:
     Connection(boost::asio::io_service& io_service,
-               boost::asio::io_service::strand& strand, BusinessLogicProxy& room)
-            : socket_(io_service), strand_(strand), room_(room)
+               boost::asio::ssl::context& context,
+               boost::asio::io_service::strand& strand,
+               BusinessLogicProxy& room)
+            : socket_(io_service, context), strand_(strand), room_(room)
     {
     }
 public:
+
+
+    ssl_socket::lowest_layer_type& socket();
+
     typedef boost::system::error_code error_code;
     typedef std::shared_ptr<Connection> ptr;
 
 
-    tcp::socket& socket();
-    bool readCondition(const boost::system::error_code &err, size_t length);
+    void handshake();
 
-    void start();
+    void start(const boost::system::error_code& error);
 
     void on_message(std::array<char, MAX_IP_PACK_SIZE>& msg);
 
@@ -43,13 +53,12 @@ private:
     void write_handler(const boost::system::error_code& error);
 
 private:
-    tcp::socket socket_;
+    ssl_socket socket_;
     boost::asio::io_service::strand& strand_;
     BusinessLogicProxy& room_;
     std::array<char, MAX_NICKNAME> nickname_;
-    std::array<char, MAX_IP_PACK_SIZE> read_msg_;
-    int connection_id;
-    std::deque<std::array<char, MAX_IP_PACK_SIZE> > write_msgs_;
+    boost::asio::streambuf read_msg_;
+    std::deque<std::string> write_msgs_;
 };
 
 #endif //TCP_CONNECTION_H

@@ -25,20 +25,16 @@ public:
 
 private:
 
+    std::string get_password() const;
     void run();
-
     void on_accept(std::shared_ptr<Connection> new_abstract_Connection, const boost::system::error_code& error);
 
-//    BusinessLogicProxy BusinessLogicProxy_;
     boost::asio::io_service &io_service_;
     tcp::acceptor acceptor_;
+    boost::asio::ssl::context context_;
     boost::asio::io_service::strand& strand_;
     BusinessLogicProxy room_;
-//    endpoint endpoint;
-//    std::vector<std::thread> threads;
     std::map<int, std::shared_ptr<Connection>> client_collection;
-//    std::deque<>
-    int user_count;
 };
 
 #endif //JMICKHENGER_SERVER_H

@@ -10,25 +10,28 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
+#include <boost/asio/streambuf.hpp>
 #include "../async_client_for_serGay/config.h"
 #include "../Connection/AbstractConnection.h"
+#include "../BusinessLogic/Business-Logic/Business-Logic.hpp"
+
 class BusinessLogicProxy {
 public:
     void enter(std::shared_ptr<abstract_Connection> abstract_Connection, const std::string & nickname);
 
     void leave(std::shared_ptr<abstract_Connection> abstract_Connection);
 
-    void mailing(std::array<char, MAX_IP_PACK_SIZE>& msg, std::shared_ptr<abstract_Connection> abstract_Connection);
-
-    std::string get_name(std::shared_ptr<abstract_Connection> abstract_Connection);
-
-    int watch_first_package_id();
+    void mailing(boost::asio::streambuf& msg, std::shared_ptr<abstract_Connection> abstract_Connection);
 
 private:
     enum { max_recent_msgs = 100 };
     std::unordered_set<std::shared_ptr<abstract_Connection>> connections_;
-    std::unordered_map<std::shared_ptr<abstract_Connection>, std::string> client_collection;
+    int negative_id = -1;
+    std::vector<int> alive_users_id;
+    std::unordered_map<int, std::shared_ptr<abstract_Connection>> id_collection;
     std::deque<std::array<char, MAX_IP_PACK_SIZE>> recent_msgs_;
+    BusinessLogic<JsonParser> msg_queue;
+
 };
 
 #endif  // JMICKHENGER_BUSINESSLOGICPROXY_H

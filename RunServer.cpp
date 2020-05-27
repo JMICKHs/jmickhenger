@@ -21,6 +21,15 @@ using boost::asio::ip::tcp;
 //----------------------------------------------------------------------
 
 int main(int argc, char* argv[]) {
+
+       // DBWorker a("Users");
+       // a.AddInt("_id", 0);
+       // a.AddInt("counter", 0);
+       // a.SaveDoc();
+       // a.ChangeCollection("Info");
+       // a.AddInt("_id", 0);
+       // a.AddInt("last_chat_id", 0);
+       // a.SaveDoc();
     try
     {
         if (argc < 2)
@@ -44,7 +53,7 @@ int main(int argc, char* argv[]) {
         }
 
         boost::thread_group workers;
-        for (int i = 0; i < 10; ++i)
+        for (int i = 0; i < 1; ++i)
         {
             boost::thread * t = new boost::thread{ boost::bind(&worker_thread::run, io_service) };
 
@@ -65,3 +74,7 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
+
+
+//{"cmd": "2","body": {"login": "kek","password": "123"}}
