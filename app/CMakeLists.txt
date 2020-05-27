@@ -19,10 +19,10 @@ add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
 enable_testing()
 add_subdirectory(tests-netlib)
 
-
-include_directories(BEFORE /usr/local/Cellar/openssl@1.1/1.1.1g/include)
-find_library(OPENSSL_LIB ssl PATHS /usr/local/Cellar/openssl@1.1/1.1.1g/lib NO_DEFAULT_PATH)
-find_library(CRYPTO_LIB crypto PATHS /usr/local/Cellar/openssl@1.1/1.1.1g/lib NO_DEFAULT_PATH)
+# если проблемы с openssl, покдлючить согласно примеру ниже
+#include_directories(BEFORE /usr/local/Cellar/openssl@1.1/1.1.1g/include)
+#find_library(OPENSSL_LIB ssl PATHS /usr/local/Cellar/openssl@1.1/1.1.1g/lib NO_DEFAULT_PATH)
+#find_library(CRYPTO_LIB crypto PATHS /usr/local/Cellar/openssl@1.1/1.1.1g/lib NO_DEFAULT_PATH)
 
 
 find_package(Boost)
