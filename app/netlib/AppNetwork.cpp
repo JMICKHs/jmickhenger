@@ -207,12 +207,12 @@ void AppNet::dellMsg(int idUser, int idChat, int numberMsg, const std::function<
     client->write(query.encode());
 }
 
-void AppNet::addFrndNick(int idUser, const std::string &nick, const std::function<void(errstr &)> &callback) {
+void AppNet::addFrndNick(int idUser, const std::string &nick, const std::function<void(int, errstr &)> &callback) {
     Parser parser;
     parser.addInt(idUser, MyAccount::nameId);
     parser.addStr(nick, UserInfo::nameLogin);
     Query query((int)Cmds::addFrndNick, parser.getJson());
-    announcer->addCallback<string, errstr&>((int)Cmds::addFrndNick, nick, callback);
+    announcer->addCallback<string, int, errstr&>((int)Cmds::addFrndNick, nick, callback);
     client->write(query.encode());
 }
 
@@ -466,9 +466,10 @@ void AppNet::setHandlers() {
         Parser parser;
         parser.setJson(body);
         auto frndNick = parser.getStr(UserInfo::nameLogin);
-        auto f = self->announcer->getCallback<string, errstr&>(cmd, frndNick);
+        int idFrnd = parser.getInt(UserInfo::nameId);
+        auto f = self->announcer->getCallback<string, int, errstr&>(cmd, frndNick);
         if (f) {
-            f.value()(err);
+            f.value()(idFrnd, err);
         } else {
             cout << "cmd " << cmd << " " << body << " не найден callback\n";
         }

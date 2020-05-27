@@ -36,7 +36,7 @@ public:
     void getMsgs(int idUser, int idChat, int start, int end, const std::function<void(std::vector<inf::Message> &, errstr &)> & callback);
     void getLastMsg(int idUser, int idChat, const std::function<void(inf::Message &, errstr &)> & callback);
     void addFrnd(int idUser, int idFrnd, const std::function<void(errstr &)> & callback);
-    void addFrndNick(int idUser, const std::string & nick, const std::function<void(errstr &)> & callback);
+    void addFrndNick(int idUser, const std::string & nick, const std::function<void(int, errstr &)> & callback);
     void getListFrnd(int id, const std::function<void(std::vector<int> &, errstr &)> & callback);
     void delFrnd(int idUser, int idFrnd, const std::function<void(errstr &)> & callback);
     void getInfoMe(int id, const std::function<void(inf::MyAccount &, errstr &)> & callback);
