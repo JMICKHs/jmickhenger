@@ -3,11 +3,6 @@ project(app)
 
 set(CMAKE_CXX_STANDARD 20)
 
-find_package(Boost)
-include_directories(${Boost_INCLUDE_DIRS})
-
-add_executable(app main.cpp)
-
 
 #gtests
 configure_file(CMakeLists.txt.in
