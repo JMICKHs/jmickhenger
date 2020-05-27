@@ -33,7 +33,7 @@ public slots:
     void on_SearchLineEditFriends_textChanged(const QString &arg1);
 
     void on_pushButton_2_clicked();
-    void on_addFriend(int id1);
+    void on_addFriend(const QString &str);
     void on_addFriendButton_clicked();
     void getListFriend();
     void updateOnAddFfriend();
@@ -41,7 +41,7 @@ public slots:
 signals:
     void text_changed(const QString&);
     void groupCreated(const inf::ChatRoom &);
-    void addFrinedSignal(int id);
+    void addFrinedSignal(const QString &str);
     void closeMenu();
 
 private:

@@ -97,9 +97,6 @@ void GroupModel::addCallbacks()
               self->errString = err;
     };
     chatChangeCallback = [self](inf::ChatChange &change){
-        if(change.action == "changeChat"){
-
-        }
         if(change.action == "delChat"){
             auto it = std::find_if(self->items.begin(), self->items.end(),[change](const Chat &chat){
                 return  chat.idChat == change.idChat;
@@ -121,6 +118,7 @@ void GroupModel::addCallbacks()
                 return chat.idChat == change.idChat;
             });
             it.base()->lastMessage = change.messages[change.messages.size() -1];
+            AppNet::shared()->getUser(UserModel::instance()->getId(),(*it).lastMessage.idOwner,self->userInfForMessage);
             emit self->updateItems();
 
         }
@@ -128,6 +126,11 @@ void GroupModel::addCallbacks()
             if(change.idChat == self->currChatId){
                 qDebug() <<change.messages.begin().base()->number;
                emit self->deleteMsg(change.messages.begin().base()->number);
+            }
+        }
+        if(change.action == "changeMessage"){
+            if(change.idChat == self->currChatId){
+                 emit self->editMsg(change.messages[change.messages.size() -1]);
             }
         }
         if(change.action == "readMessage"){

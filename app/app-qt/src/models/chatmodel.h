@@ -52,12 +52,9 @@ public:
     std::function<void(MessageItem &, std::optional<std::string> &)> &getLastMsgAndGet();
     std::vector<Msg> getItems();
 protected:
-//    void fetchMore(const QModelIndex &parent) override;
-//    bool canFetchMore(const QModelIndex &parent) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 public:
-    void changeMsg(const Msg &msg);
     void slotEditMessage();
     void Clear();
 private:
@@ -80,6 +77,7 @@ public slots:
     void createMessage(Msg &_message,std::optional<QPixmap> &img);
     void newMessages(std::vector<MessageItem> msgs);
     void msgsChecked();
+    void changeMsg(const Msg &msg);
     void DeleteMessage(int pos);
 
 };

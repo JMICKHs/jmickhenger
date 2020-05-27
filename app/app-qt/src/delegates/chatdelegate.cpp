@@ -55,7 +55,6 @@ bool ChatDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const Q
     MessageRect.setWidth(option.widget->width() - rightMessageOffset);
     QFontMetrics fMetrics(option.font);
     int height = fMetrics.boundingRect(QRect(0,0,option.widget->width() - 240,0),Qt::TextWordWrap,QString::fromStdString(item.text)).height();
-   // QPixmap map = item.image->scaled(200,200,Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 
     QRect pictureRect = QRect(QPoint(avatarSize.width() + textOffset,MessageRect.y()+height),QSize(200,200));
 
@@ -64,18 +63,6 @@ bool ChatDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const Q
     ButtonRect.setWidth(45);
     if (option.rect.contains(mouse_event->pos()))
     {
-         if(ButtonRect.contains(mouse_event->pos())) {
-             qDebug() << "ButtonRect";
-         }
-         if(NameRect.contains(mouse_event->pos())){
-             qDebug() <<" Namerect";
-
-             //QLabel* editor = qobject_cast<QLabel*>(this->createEditor(nullptr,option,index));
-             //editor->setTextInteractionFlags(Qt::TextSelectableByMouse);
-             //editor->setCursor(Qt::IBeamCursor);
-             //editor->setText(item.nickname);
-             //editor->repaint(NameRect);
-        }
          if(pictureRect.contains(mouse_event->pos()) && item.img != nullptr){
             qDebug() <<"PictureRect";
             QPixmap pix1 = item.img->scaled(600,600,Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);

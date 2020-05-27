@@ -22,12 +22,12 @@ void FriendsModel::setData(std::vector<int> &_ids)
     endInsertRows();
 }
 
-void FriendsModel::addFriend(int login)
+void FriendsModel::addFriend(int nid)
 {
     int row = this->rowCount();
     beginInsertRows(QModelIndex(),row,row);
     UserInf user;
-    user.id = login;
+    user.id = nid;
     items.push_back(std::move(user));
     endInsertRows();
 }
@@ -56,10 +56,10 @@ QVariant FriendsModel::data(const QModelIndex &index, int role) const
 void FriendsModel::addCallbacks()
 {
     auto self = shared_from_this();
-    addFriendCallback = [self](std::optional<std::string> &err){
+    addFriendCallback = [self](int id,std::optional<std::string> &err){
         if(err == std::nullopt){
-            self->addFriend(self->currId);
-            AppNet::shared()->getUser(UserModel::instance()->getId(),self->currId,self->userForFriend);
+            self->addFriend(id);
+            AppNet::shared()->getUser(UserModel::instance()->getId(),id,self->userForFriend);
         }
         else
             self->errString = err;
@@ -89,7 +89,7 @@ void FriendsModel::addCallbacks()
 
     };
 }
-std::function<void(std::optional<std::string> &)>& FriendsModel::getAddFriendCallback()
+std::function<void(int,std::optional<std::string> &)>& FriendsModel::getAddFriendCallback()
 {
     return addFriendCallback;
 }
@@ -106,8 +106,7 @@ void FriendsModel::Clear()
     this->endResetModel();
 }
 
-void FriendsModel::addFriendSlot(int id)
+void FriendsModel::addFriendSlot(const QString& str)
 {
-    currId = id;
-    AppNet::shared()->addFrnd(UserModel::instance()->getId(),currId,addFriendCallback);
+    AppNet::shared()->addFrndNick(UserModel::instance()->getId(),str.toStdString(),addFriendCallback);
 }

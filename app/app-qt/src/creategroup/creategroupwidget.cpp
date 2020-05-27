@@ -3,6 +3,7 @@
 #import <app-qt/src/delegates/friendsdelegate.h>
 #import <QDebug>
 #include "netlib/AppNetwork.h"
+#include "app-qt/src/utils.h"
 
 CreateGroupWidget::CreateGroupWidget(QWidget *parent) :
     QStackedWidget(parent),
@@ -48,8 +49,7 @@ CreateGroupWidget::~CreateGroupWidget()
 
 void CreateGroupWidget::setWidget(WidgetType type)
 {
-     this->move(parentWidget()->pos().x() + parentWidget()->size().width()/(4),
-                parentWidget()->pos().y() + parentWidget()->size().height()/(4));
+     this->move(Utils::moveToCenter(this->parentWidget()));
     if(type == WidgetType::CONTACTS)
         setCurrentWidget(contactsWidget);
     else
@@ -101,21 +101,21 @@ void CreateGroupWidget::on_pushButton_2_clicked()
         item.idUsers = std::move(usrIds);
         item.name = ui->lineEdit->text().toStdString();
         emit groupCreated(item);
+        ui->lineEdit->clear();
         this->close();
         emit closeMenu();
     }
 }
 
-void CreateGroupWidget::on_addFriend(int id1)
+void CreateGroupWidget::on_addFriend(const QString &str)
 {
-    emit addFrinedSignal(id1);
+    emit addFrinedSignal(str);
 }
 
 void CreateGroupWidget::on_addFriendButton_clicked()
 {
     addFriend->show();
-    addFriend->move(pos().x() + size().width()/(4),
-                    pos().y() + size().height()/(4));
+    addFriend->move(Utils::moveToCenter(this));
 }
 
 void CreateGroupWidget::getListFriend()

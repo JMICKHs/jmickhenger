@@ -24,6 +24,7 @@ public:
     explicit MenuWidget(QWidget *parent = nullptr);
     ~MenuWidget();
     CreateGroupWidget* getCreateWidget();
+
 private:
     Ui::MenuWidget *ui;
     SetAvatarWidget *avatWidget;

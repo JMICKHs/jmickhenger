@@ -72,6 +72,7 @@ signals:
     void updateItems();
     void messageChecked();
     void deleteMsg(int pos);
+    void editMsg(const Msg& msg);
 public slots:
     void messageCreateByUser(const Msg &msg);
     void createChatByUser(const inf::ChatRoom &room);

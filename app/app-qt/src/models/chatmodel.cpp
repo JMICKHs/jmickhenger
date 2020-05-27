@@ -147,13 +147,6 @@ void ChatModel::addCallbacks()
             size_t lastMsgs = msg.number % 15;
             qDebug() <<lastMsgs;
             int curr = 0;
-           // if(count != 0){
-           //     count *= 15;
-           //     AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,count - 15,count,self->chatCallback);
-           // }
-           // else{
-           //     AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,1,lastMsgs,self->chatCallback);
-           // }
             for(size_t i = 0; i < count; ++i){
                 AppNet::shared()->getMsgs(UserModel::instance()->getId(),msg.chatId,curr+1,curr + 15,self->chatCallback);
                 curr += 15;
@@ -231,34 +224,6 @@ std::vector<Msg> ChatModel::getItems()
     return items;
 }
 
-//void ChatModel::fetchMore(const QModelIndex &parent)
-//{
-//    if (parent.isValid())
-//           return;
-////       int remainder = fileList.size() - fileCount;
-////       int itemsToFetch = qMin(100, remainder);
-
-////       if (itemsToFetch <= 0)
-////           return;
-
-////       beginInsertRows(QModelIndex(), fileCount, fileCount + itemsToFetch - 1);
-
-////       fileCount += itemsToFetch;
-
-////       endInsertRows();
-
-////       emit numberPopulated(itemsToFetch);
-//}
-
-//bool ChatModel::canFetchMore(const QModelIndex &parent) const
-//{
-//    if (parent.isValid())
-//           return false;
-//    if(items.empty()){
-//        return false;
-//    }
-//    return (items[0].number != 1);
-//}
 
 void ChatModel::changeMsg(const Msg &msg)
 {

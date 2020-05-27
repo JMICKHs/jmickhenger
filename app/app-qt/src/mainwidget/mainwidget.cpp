@@ -91,6 +91,8 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(groupModel.get(),&GroupModel::deleteMsg,chatModel.get(),&ChatModel::DeleteMessage);
     connect(ui->messageInput,&ChatInput::sendMessageForChange,this,&MainWidget::messageEdited);
     connect(ui->messageInput,&ChatInput::changeSpacer,this,&MainWidget::resizeSpacer);
+     connect(UserModel::instance(),&UserModel::nickNameChanged,menuWidget,&MenuWidget::on_nickname_rename);
+     connect(groupModel.get(),&GroupModel::editMsg,chatModel.get(),&ChatModel::changeMsg);
     this->setLayout(ui->MainLayout);
     ui->menuButton->setIcon(QIcon(":/img/menu.jpg"));
     spacerHeight = ui->offsetSpacer->maximumSize().height();
@@ -202,7 +204,6 @@ void MainWidget::after_Login_slot()
     AppNet::shared()->getListChat(ac.id,groupModel->getChatCallBack());
     menuWidget->setName(QString::fromStdString(ac.login));
     emit sendAvatar(QString::fromStdString(ac.avatar));
-    connect(UserModel::instance(),&UserModel::nickNameChanged,menuWidget,&MenuWidget::on_nickname_rename);
 }
 
 void MainWidget::removeMessageFromChat()
@@ -228,7 +229,10 @@ void MainWidget::messageEdited()
      msg.text = ui->messageInput->toPlainText().toStdString();
      chatModel->changeMsg(msg);
      ui->messageInput->clear();
-    // AppNet::shared()->changeMsg(UserModel::instance()->getId(),msg,[](std::optional<std::string> &){});
+     int id = UserModel::instance()->getId();
+     if(id == msg.idOwner){
+        AppNet::shared()->changeMsg(id,msg,[](std::optional<std::string> &){});
+     }
 }
 
 void MainWidget::showContextMenu(const QPoint &pos)
@@ -273,23 +277,14 @@ void MainWidget::copyMessage()
 
 
 void MainWidget::removeDoubleEnter(QString &str){
-
     int counter = 0;
-    int pos = 0;
-    for(int i = 0; i < str.size(); ++i){
-        if(str[i] == '\n'){
-            pos = i;
-            counter++;
-            ++i;
-            while(str[i] == '\n'){
-                counter++;
-                ++i;
-            }
-        }
+    std::string s = str.toStdString();
+    s.erase(std::remove_if(s.begin(), s.end(), [&counter](char c){
+        if(c == '\n')
+            ++counter;
         else
             counter = 0;
-        if(counter > 1){
-            str.remove(pos + 1,counter - 1);
-        }
-    }
+        return (counter > 1);
+    }), s.end());
+    str = QString::fromStdString(s);
 }

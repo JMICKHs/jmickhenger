@@ -18,7 +18,7 @@ public:
 private slots:
     void on_addFriendButton_clicked();
 signals:
-    void friendAddSignal(int id);
+    void friendAddSignal(const QString&);
 
 private:
     Ui::addFriendWidget *ui;

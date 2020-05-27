@@ -1,6 +1,7 @@
 #include "menuwidget.h"
 #include "ui_menuwidget.h"
 #include "netlib/AppNetwork.h"
+#include "app-qt/src/utils.h"
 #include <QDebug>
 
 MenuWidget::MenuWidget(QWidget *parent)
@@ -98,11 +99,8 @@ void MenuWidget::on_image_change(const QString &str)
 void MenuWidget::on_pushButton_clicked()
 {
     avatWidget->show();
-    avatWidget->move(parentWidget()->pos().x() + parentWidget()->size().width()/(4),
-               parentWidget()->pos().y() + parentWidget()->size().height()/(4));
+    avatWidget->move(Utils::moveToCenter(parentWidget()));
 }
-
-
 
 void MenuWidget::on_exitButton_clicked()
 {
@@ -112,6 +110,5 @@ void MenuWidget::on_exitButton_clicked()
 void MenuWidget::on_settingsButton_clicked()
 {
     setting->show();
-    setting->move(parentWidget()->pos().x() + parentWidget()->size().width()/(4),
-               parentWidget()->pos().y() + parentWidget()->size().height()/(4));
+    setting->move(Utils::moveToCenter(parentWidget()));
 }

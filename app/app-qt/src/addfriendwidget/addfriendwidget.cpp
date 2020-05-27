@@ -23,5 +23,5 @@ addFriendWidget::~addFriendWidget()
 void addFriendWidget::on_addFriendButton_clicked()
 {
     close();
-    emit friendAddSignal(ui->loginInput->text().toInt());
+    emit friendAddSignal(ui->loginInput->text());
 }
