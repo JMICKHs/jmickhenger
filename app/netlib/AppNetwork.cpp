@@ -474,7 +474,7 @@ void AppNet::setHandlers() {
             cout << "cmd " << cmd << " " << body << " не найден callback\n";
         }
     };
-    handlers[(int)Cmds::delChat] = f16;
+    handlers[(int)Cmds::addFrndNick] = f16;
 
     auto f17 = [self](int cmd, errstr & err, const string & body) {
         Parser parser;
