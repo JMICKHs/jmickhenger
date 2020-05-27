@@ -35,14 +35,13 @@ public:
                 auto tmpF = tmpIter->second.second; // берем указатель void на функцию
                 auto f = reinterpret_cast<std::function<void(Args...)> *>(tmpF); // возвращаем тип на нужный
                 callbacks.erase(tmpIter); // удаляем пару ключ значение
-                //(возможно подумать и переделать на умный указатель), но решение с двумя void * кажется красивым
                 return *f;
             }
         }
         return std::nullopt;
     }
 private:
-    std::map<int, std::function<void(inf::ChatChange &)>> chatCallbacks;
+    std::map<int, std::function<void(inf::ChatChange &)>> chatCallbacks;  //хранение обсерверов для чатов
     std::optional<std::function<void(inf::ChatChange &)>> generalCallback; // для обработки чатов, о которых юзер пока не знает
     std::multimap<int, std::pair<std::shared_ptr<void>, void *>> callbacks; // для хранения различных callback
     // int - cmd различных callback
