@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/imges">
+        <file>check.jpg</file>
+        <file>img518924.png</file>
+        <file>standartAvatar.jpg</file>
+        <file>ZKZg.gif</file>
+        <file>avatar2.jpg</file>
+        <file>avatar3.jpg</file>
+        <file>avatar4.jpg</file>
+        <file>avatar5.jpg</file>
+        <file>avatar6.jpg</file>
+        <file>send.jpg</file>
+        <file>menu.jpg</file>
+        <file>ret.png</file>
+        <file>menu.png</file>
+        <file>check.png</file>
+        <file>unchecked.png</file>
+    </qresource>
+</RCC>
