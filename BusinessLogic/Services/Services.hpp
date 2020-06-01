@@ -54,6 +54,7 @@ class SendMessageService : public virtual AbstractService<DBWorker, JsonParser>
 {
     ChatMessage msg;
     int chatId;
+    std::string chatName;
     int msgNum;
     std::vector<int> participants;
     int requestTime;
@@ -367,9 +368,12 @@ void SendMessageService<DB, Parser>::dbWork() {///разнести на 2 мет
     msgNum = dbw.GetInt(DBValueNames::lastMsgNumber);
     msgNum++;
     participants = dbw.GetIntVec(DBValueNames::participants);
+    chatName = dbw.GetStr(DBValueNames::chatName);
     dbw.AddInt(DBValueNames::id, 0);
     dbw.AddInt(DBValueNames::lastMsgNumber, msgNum, true);
     dbw.UpdateDoc(DBCollectionNames::chat + ss.str());
+    if (chatName == "SavedMessages")
+        msg.checked = true;
     dbw.AddInt(DBValueNames::id, msgNum);
     dbw.AddStr(DBValueNames::msg, msg.message);
     dbw.AddInt(DBValueNames::msgOwner, msg.IdUser);
@@ -411,6 +415,7 @@ void SendMessageService<DB, Parser>::clear(){
     error.clear();
     jsp.Clear();
     dbw.Clear();
+    chatName.clear();
 }
 
 template<class DB, class Parser>
@@ -474,6 +479,42 @@ void LoginService<DB, Parser>::dbWork() {
             dbw.FindInt(DBValueNames::id, 0);
             userId = dbw.GetInt(DBValueNames::cntr);
             userId++;
+
+            /// создание чата с самим собой
+
+            dbw.ChangeCollection(DBCollectionNames::info);
+            dbw.FindInt(DBValueNames::id, 0);
+            int chatId = dbw.GetInt(DBValueNames::lastChatId);
+            chatId++;
+            dbw.AddInt(DBValueNames::id, 0);
+            dbw.AddInt(DBValueNames::lastChatId, chatId, true);
+            dbw.UpdateDoc(DBCollectionNames::info);
+
+            std::stringstream ss;
+            ss << chatId;
+            dbw.ChangeCollection(DBCollectionNames::chat + ss.str());
+            dbw.AddInt(DBValueNames::id, 0);
+            dbw.AddInt(DBValueNames::chatId, chatId);
+            dbw.AddStr(DBValueNames::chatName, "SavedMessages");
+            dbw.AddIntVec(DBValueNames::participants, {userId});
+            dbw.AddInt(DBValueNames::lastMsgNumber, 1);
+            dbw.AddInt(DBValueNames::admin, userId);
+            dbw.SaveDoc();
+
+            int ttime = time(nullptr);
+            ChatMessage msg = ChatMessage("Here u can save messages you need.  ©team JMICKHs", "", 1, ttime, true);
+            dbw.AddInt(DBValueNames::id, 1);
+            dbw.AddStr(DBValueNames::msg, msg.message);
+            dbw.AddStr(DBValueNames::image, msg.image);
+            dbw.AddInt(DBValueNames::msgOwner, userId);
+            dbw.AddInt(DBValueNames::time, msg.time);
+            dbw.AddBool(DBValueNames::isChecked, msg.checked);
+
+            dbw.AddBool(DBValueNames::isChecked, msg.checked);
+            dbw.SaveDoc();
+
+            ///////////////////////////////
+
             dbw.AddInt(DBValueNames::id, 0);
             dbw.AddInt(DBValueNames::cntr, userId, true);
             dbw.UpdateDoc(DBCollectionNames::users);
@@ -482,8 +523,9 @@ void LoginService<DB, Parser>::dbWork() {
             dbw.AddStr(DBValueNames::password, password);
             dbw.AddStr(DBValueNames::avatar, avatar);
             dbw.AddIntVec(DBValueNames::friends, friends);
+            chats.push_back(chatId);
             dbw.AddIntVec(DBValueNames::chatIds, chats);
-            dbw.AddStrVec(DBValueNames::chatNames, std::vector<std::string>{});
+            dbw.AddStrVec(DBValueNames::chatNames, {"SavedMessages"});
             dbw.SaveDoc();
             break;
         }
