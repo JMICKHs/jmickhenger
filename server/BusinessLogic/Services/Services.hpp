@@ -506,7 +506,7 @@ void LoginService<DB, Parser>::dbWork() {
             dbw.AddInt(DBValueNames::id, 1);
             dbw.AddStr(DBValueNames::msg, msg.message);
             dbw.AddStr(DBValueNames::image, msg.image);
-            dbw.AddInt(DBValueNames::msgOwner, userId);
+            dbw.AddInt(DBValueNames::msgOwner, msg.IdUser);
             dbw.AddInt(DBValueNames::time, msg.time);
             dbw.AddBool(DBValueNames::isChecked, msg.checked);
 
